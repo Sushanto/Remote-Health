@@ -21,8 +21,10 @@ public class RHClient
 		{
 			// myCon.sendString(bin.readLine());
 			// System.out.println(myCon.receiveString());
-			myCon.sendFile("ClientPrograms/test.jpg");
-			// myCon.receiveFile("ClientPrograms/test2.txt");
+			myCon.sendFile("ClientPrograms/test1.jpg");
+			myCon.receiveFile("ClientPrograms/test2.jpg");
+			myCon.sendFile("ClientPrograms/test3.jpg");
+			myCon.receiveFile("ClientPrograms/test4.jpg");
 		}
 	}
 }

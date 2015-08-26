@@ -8,19 +8,19 @@ public class Connection
 	private Socket clientSocket;
 	private PrintWriter strWriter;
 	private BufferedReader strReader;
-	private OutputStream outStream;
-	private InputStream inStream;
-	private static final int FILE_SIZE=Integer.MAX_VALUE;
+	private DataOutputStream outStream;
+	private DataInputStream inStream;
+	private static final int FILE_SIZE=6022386;
 
 	public Connection(Socket socket)
 	{
 		try
 		{
 			clientSocket=socket;
-			outStream=clientSocket.getOutputStream();
-			inStream=clientSocket.getInputStream();
-			strWriter=new PrintWriter(outStream,true);
-			strReader=new BufferedReader(new InputStreamReader(inStream));
+			outStream=new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
+			inStream=new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
+			strWriter=new PrintWriter(clientSocket.getOutputStream(),true);
+			strReader=new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		}
 		catch(Exception e)
 		{
@@ -57,6 +57,8 @@ public class Connection
 				byte[] byteArray=new byte[(int)inFile.length()];
 				biStream.read(byteArray,0,byteArray.length);
 
+				outStream.writeLong((long)inFile.length());
+
 				outStream.write(byteArray,0,byteArray.length);
 				outStream.flush();
 			}
@@ -77,17 +79,17 @@ public class Connection
 			FileOutputStream ofStream=new FileOutputStream(outFile);
 			BufferedOutputStream boStream=new BufferedOutputStream(ofStream);
 
-			byte[] byteArray=new byte[FILE_SIZE];
-			int current=0,byteRead=0;
+			long fileLength=inStream.readLong();
 
-			// while(byteRead>0)
+			byte[] byteArray=new byte[FILE_SIZE];
+			int byteRead=0;
+
+			while(fileLength>0 && (byteRead=inStream.read(byteArray,0,(int)Math.min(byteArray.length,fileLength)))!=-1)
 			{
-				byteRead=inStream.read(byteArray,current,byteArray.length-current);
-				if(byteRead>=0)
-					current+=byteRead;
+				boStream.write(byteArray,0,byteRead);
+				fileLength-=byteRead;
 			}
 
-			boStream.write(byteArray,0,current);
 			boStream.flush();
 
 			boStream.close();

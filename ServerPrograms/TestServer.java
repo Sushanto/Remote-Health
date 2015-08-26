@@ -40,7 +40,9 @@ public class TestServer
 		// 	}
 		// }
 
-		myCon.receiveFile("ServerPrograms/test.jpg");
-		// myCon.sendFile("ServerPrograms/test2.txt");
+		myCon.receiveFile("ServerPrograms/test1.jpg");
+		myCon.sendFile("ServerPrograms/test2.jpg");
+		myCon.receiveFile("ServerPrograms/test3.jpg");
+		myCon.sendFile("ServerPrograms/test4.jpg");
 	}
 }
