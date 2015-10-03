@@ -63,7 +63,7 @@ class DoctorLoginApplet extends JFrame
 	private JButton signinButton;
 	private JCheckBox showPassword;
 	private String confirmMessage,networkErrorMessage;
-	private Connection connection;
+	private DoctorClient connection;
 
 	/**
 	*Set language specified by language
@@ -87,7 +87,7 @@ class DoctorLoginApplet extends JFrame
 		signinButton.setFont(Constants.SMALLBUTTONFONT);
 
 		confirmMessage="Are you sure?";
-		networkErrorMessage="Connection error! Try again later!";
+		networkErrorMessage="connection error! Try again later!";
 	}
 
 	/**
@@ -177,7 +177,7 @@ class DoctorLoginApplet extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				connection=createNewConnection();
+				connection=createNewDoctorClient();
 				String username=useridBox.getText();
 				String password=new String(passwordBox.getPassword());
 				if(connection!=null)
@@ -206,7 +206,14 @@ class DoctorLoginApplet extends JFrame
 						errorLabel.setVisible(true);
 						useridBox.setText(null);
 						passwordBox.setText(null);
-						connection.disconnect();
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
 					}
 				}
 				else
@@ -252,15 +259,15 @@ class DoctorLoginApplet extends JFrame
 	}
 
 	/**
-	*Creates new connection
-	*@return Connection object
+	*Creates new DoctorClient
+	*@return DoctorClient object
 	*/
 
 	private Doctor getDoctor(String username)
 	{
 		try
 		{
-			int response=connection.receiveFromServer("Data/"+username+".xml","tempFolder/tempDoctor.xml");
+			int response=connection.getRequest(username+".xml","tempFolder/tempDoctor.xml");
 			if(response==0)
 			{
 				File doctorFile=new File("tempFolder/tempDoctor.xml");
@@ -277,7 +284,14 @@ class DoctorLoginApplet extends JFrame
 				File doctorFile=new File("tempFolder/tempDoctor.xml");
 				if(doctorFile.isFile())
 					doctorFile.delete();
-				connection.disconnect();
+				try
+				{
+					connection.logoutRequest();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				connection=null;
 				if(response==-1)
 					errorLabel.setVisible(true);
@@ -289,7 +303,7 @@ class DoctorLoginApplet extends JFrame
 				return null;
 			}
 		}
-		catch(JAXBException jaxbe)
+		catch(Exception jaxbe)
 		{
 			File doctorFile=new File("tempFolder/tempDoctor.xml");
 			if(doctorFile.isFile())
@@ -299,20 +313,21 @@ class DoctorLoginApplet extends JFrame
 		}
 	}
 
-	private Connection createNewConnection()
+	private DoctorClient createNewDoctorClient()
 	{
 		try
 		{
-			Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
-			Connection myCon=new Connection(mySocket);
+			// Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
+			// DoctorClient myCon=new DoctorClient(mySocket);
+			DoctorClient myCon=new DoctorClient(System.getProperty("user.name"),Constants.SERVER,Constants.PORT);
 			
 			return myCon;
 		}
-		catch(UnknownHostException uhe)
-		{
-			return null;
-		}
-		catch(IOException ioe)
+		// catch(UnknownHostException uhe)
+		// {
+		// 	return null;
+		// }
+		catch(Exception ioe)
 		{
 			return null;
 		}
@@ -327,6 +342,17 @@ class DoctorLoginApplet extends JFrame
 
 	private boolean check(String user,String pw)
 	{
-		return true;
+		try
+		{
+			int response=connection.loginRequest(user,pw);
+			if(response>=0)
+				return true;
+			else return false;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

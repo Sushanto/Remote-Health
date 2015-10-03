@@ -98,7 +98,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	private String imgstr,kioskNumber;
 	private String confirmMessage,networkErrorMessage,newComplaintErrorMessage,imageString=null;
 	private ArrayList<File> selectedFiles=new ArrayList<File>();
-	private final Connection connection;
+	private final DoctorClient connection;
 
     // Webcam webcam;
     // WebcamPanel webcamPanel;
@@ -252,11 +252,11 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 
 		confirmMessage="Are you sure?";
-		networkErrorMessage="Connection error! Try again later!";
+		networkErrorMessage="DoctorClient error! Try again later!";
 		newComplaintErrorMessage="Previous Complaint has not solved yet!";
 	}
 
-	public PatientPrescriptionForm(Connection myCon,Doctor doc,PatientReport pr,String kioskNum)
+	public PatientPrescriptionForm(DoctorClient myCon,Doctor doc,PatientReport pr,String kioskNum)
 	{
 	//initialize Form
 		connection=myCon;
@@ -708,12 +708,37 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String fileName=(String)additionalReportsComboBox.getSelectedItem();
-				File file=new File("tempFolder/"+fileName);
-				if(!file.isFile())
+				try
 				{
-					int response=connection.receiveFromServer("Data/"+fileName,"tempFolder/"+fileName);
-					if(response==0)
+					String fileName=(String)additionalReportsComboBox.getSelectedItem();
+					File file=new File("tempFolder/"+fileName);
+					if(!file.isFile())
+					{
+						int response=connection.getRequest(fileName,"tempFolder/"+fileName);
+						if(response==0)
+						{
+							try
+							{
+								Desktop.getDesktop().open(file);
+							}
+							catch(IOException ioe)
+							{
+								ioe.printStackTrace();
+							}
+						}
+						else if(response==-1)
+							JOptionPane.showMessageDialog(jframe,"File does not exist");
+						else if(response==-2)
+						{
+							JOptionPane.showMessageDialog(jframe,networkErrorMessage);
+							connection.logoutRequest();
+							for(File tempFile: new File("tempFolder/").listFiles())
+								tempFile.delete();
+							new DoctorLogin();
+							dispose();
+						}
+					}
+					else
 					{
 						try
 						{
@@ -724,28 +749,10 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 							ioe.printStackTrace();
 						}
 					}
-					else if(response==-1)
-						JOptionPane.showMessageDialog(jframe,"File does not exist");
-					else if(response==-2)
-					{
-						JOptionPane.showMessageDialog(jframe,networkErrorMessage);
-						connection.disconnect();
-						for(File tempFile: new File("tempFolder/").listFiles())
-							tempFile.delete();
-						new DoctorLogin();
-						dispose();
-					}
 				}
-				else
+				catch(Exception e)
 				{
-					try
-					{
-						Desktop.getDesktop().open(file);
-					}
-					catch(IOException ioe)
-					{
-						ioe.printStackTrace();
-					}
+					e.printStackTrace();
 				}
 			}
 		});
@@ -1184,7 +1191,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			Marshaller jm=jc.createMarshaller();
 			jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
 			jm.marshal(patientReport,file);
-			int response = connection.sendToServer(fileName,"Data/"+reg_no_field.getText()+".xml");
+			int response = connection.putRequest(fileName,reg_no_field.getText()+".xml");
 			if(response!=0)
 			{
 				if(file.isFile())
@@ -1194,7 +1201,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 				else if(response==-2)
 				{
 					JOptionPane.showMessageDialog(this,networkErrorMessage);
-					connection.disconnect();
+					connection.logoutRequest();
 					for(File tempFile: new File("tempFolder/").listFiles())
 						tempFile.delete();
 					new PatientSelect(connection,doctor);
@@ -1204,7 +1211,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			else
 				file.delete();
 		}
-		catch(JAXBException jaxbe)
+		catch(Exception jaxbe)
 		{
 			jaxbe.printStackTrace();
 			(new File("tempFolder/tempPatientReport.xml")).delete();
@@ -1416,60 +1423,68 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 	private boolean updatePatientLog()
 	{
-		String localFileName = "tempFolder/log.xml",serverFileName = "Data/Patient_"+kioskNumber+"_Log.xml";
-		File localFile = new File(localFileName);
-		int receiveResponse = connection.receiveFromServer(serverFileName,localFileName);
-		if(receiveResponse==0)
+		try
 		{
-			try
+			String localFileName = "tempFolder/log.xml",serverFileName = "Patient_"+kioskNumber+"_Log.xml";
+			File localFile = new File(localFileName);
+			int receiveResponse = connection.getRequest(serverFileName,localFileName);
+			if(receiveResponse==0)
 			{
-				JAXBContext jc=JAXBContext.newInstance(PatientLog.class);
-				Unmarshaller um=jc.createUnmarshaller();
-				PatientLog patientLog=(PatientLog)um.unmarshal(localFile);
+				try
+				{
+					JAXBContext jc=JAXBContext.newInstance(PatientLog.class);
+					Unmarshaller um=jc.createUnmarshaller();
+					PatientLog patientLog=(PatientLog)um.unmarshal(localFile);
 
-				if(patientLog.Normal.indexOf(reg_no_field.getText())!=-1)
-					patientLog.Normal.remove(reg_no_field.getText());
-				else if(patientLog.Emergency.indexOf(reg_no_field.getText())!=-1)
-					patientLog.Emergency.remove(reg_no_field.getText());
+					if(patientLog.Normal.indexOf(reg_no_field.getText())!=-1)
+						patientLog.Normal.remove(reg_no_field.getText());
+					else if(patientLog.Emergency.indexOf(reg_no_field.getText())!=-1)
+						patientLog.Emergency.remove(reg_no_field.getText());
 
-				Marshaller jm=jc.createMarshaller();
-				jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-				jm.marshal(patientLog,localFile);
-			}
-			catch(JAXBException jaxbe)
-			{
-				jaxbe.printStackTrace();
-			}
-			int sendResponse=connection.sendToServer(localFileName,serverFileName);
-			if(sendResponse == -1 || sendResponse == -2)
-			{
+					Marshaller jm=jc.createMarshaller();
+					jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+					jm.marshal(patientLog,localFile);
+				}
+				catch(JAXBException jaxbe)
+				{
+					jaxbe.printStackTrace();
+				}
+				int sendResponse=connection.putRequest(localFileName,serverFileName);
+				if(sendResponse == -1 || sendResponse == -2)
+				{
+					localFile.delete();
+					JOptionPane.showMessageDialog(this,networkErrorMessage);
+					connection.logoutRequest();
+					for(File tempFile: new File("tempFolder/").listFiles())
+						tempFile.delete();
+					new DoctorLogin();
+					dispose();
+					return false;
+				}
 				localFile.delete();
-				JOptionPane.showMessageDialog(this,networkErrorMessage);
-				connection.disconnect();
-				for(File tempFile: new File("tempFolder/").listFiles())
-					tempFile.delete();
-				new DoctorLogin();
-				dispose();
+				return true;
+			}
+			else
+			{
+				if(localFile.isFile())
+					localFile.delete();
+				if(receiveResponse==-1)
+					JOptionPane.showMessageDialog(this,"File does not exists");
+				else if(receiveResponse==-2)
+					JOptionPane.showMessageDialog(this,networkErrorMessage);
 				return false;
 			}
-			localFile.delete();
-			return true;
 		}
-		else
+		catch(Exception e)
 		{
-			if(localFile.isFile())
-				localFile.delete();
-			if(receiveResponse==-1)
-				JOptionPane.showMessageDialog(this,"File does not exists");
-			else if(receiveResponse==-2)
-				JOptionPane.showMessageDialog(this,networkErrorMessage);
+			e.printStackTrace();
 			return false;
 		}
 	}
 
 	private boolean updateDoctorLog()
 	{
-		String localFileName = "tempFolder/tempDoctor.xml",serverFileName = "Data/"+doctor.doctorId+".xml";
+		String localFileName = "tempFolder/tempDoctor.xml",serverFileName = doctor.doctorId+".xml";
 		File localFile = new File(localFileName);
 		try
 		{
@@ -1487,13 +1502,20 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
 			jm.marshal(doctor,localFile);
 
-			int sendResponse=connection.sendToServer(localFileName,serverFileName);
+			int sendResponse=connection.putRequest(localFileName,serverFileName);
 			if(sendResponse == -1 || sendResponse == -2)
 			{
 				if(localFile.isFile())
 					localFile.delete();
 				JOptionPane.showMessageDialog(this,networkErrorMessage);
-				connection.disconnect();
+				try
+				{
+					connection.logoutRequest();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				for(File tempFile: new File("tempFolder/").listFiles())
 					tempFile.delete();
 				new DoctorLogin();
@@ -1503,7 +1525,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			localFile.delete();
 			return true;
 		}
-		catch(JAXBException jaxbe)
+		catch(Exception jaxbe)
 		{
 			jaxbe.printStackTrace();
 			return false;
@@ -1512,38 +1534,45 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 	private void getPatientReport(String PatientId)
 	{
-		String fileName="tempFolder/tempPatientReport.xml";
-		File file = new File(fileName);
-		int response=connection.receiveFromServer("Data/"+PatientId+".xml",fileName);
-		if(response==0)
+		try
 		{
-			try
+			String fileName="tempFolder/tempPatientReport.xml";
+			File file = new File(fileName);
+			int response=connection.getRequest(PatientId+".xml",fileName);
+			if(response==0)
 			{
-				JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
-				Unmarshaller um=jc.createUnmarshaller();
-				patientReport=(PatientReport)um.unmarshal(new File("tempFolder/tempPatientReport.xml"));
-			}
-			catch(JAXBException jaxbe)
-			{
-				jaxbe.printStackTrace();
-			}
-			file.delete();
-
-		}
-		else
-		{
-			if(file.isFile())
+				try
+				{
+					JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
+					Unmarshaller um=jc.createUnmarshaller();
+					patientReport=(PatientReport)um.unmarshal(new File("tempFolder/tempPatientReport.xml"));
+				}
+				catch(JAXBException jaxbe)
+				{
+					jaxbe.printStackTrace();
+				}
 				file.delete();
-			if(response == -1)
-				JOptionPane.showMessageDialog(this,"File does not exist");
-			else if(response == -2)
-			{
-				JOptionPane.showMessageDialog(this,networkErrorMessage);
-				for(File tempFile: new File("tempFolder/").listFiles())
-					tempFile.delete();
-				new PatientSelect(connection,doctor);
-				dispose();
+
 			}
+			else
+			{
+				if(file.isFile())
+					file.delete();
+				if(response == -1)
+					JOptionPane.showMessageDialog(this,"File does not exist");
+				else if(response == -2)
+				{
+					JOptionPane.showMessageDialog(this,networkErrorMessage);
+					for(File tempFile: new File("tempFolder/").listFiles())
+						tempFile.delete();
+					new PatientSelect(connection,doctor);
+					dispose();
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
 		}
 		
 	}
@@ -2085,157 +2114,157 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 /***********************************************************************************************************************************/
 
-	private static PatientReport getPatientReportStatic(Connection connection,String patientId)
-	{
-		String fileName="tempFolder/tempPatientReport.xml";
-		File file=new File(fileName);
-		int response=connection.receiveFromServer("Data/"+patientId+".xml",fileName);
-		PatientReport patientReport;
-		if(response==0)
-		{
-			try
-			{
-				JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
-				Unmarshaller jum=jc.createUnmarshaller();
-				patientReport=(PatientReport)jum.unmarshal(file);
-				file.delete();
-				return patientReport;
-				// nameValue.setVisible(true);
-				// nameValue.setText(patientReport.patientBasicData.getName()+"/ "+patientReport.patientBasicData.getAge()+" yrs");
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-			return null;
-			// group3WarningLabel.setVisible(false);
-		}
-		else
-		{
-			if(file.isFile())
-				file.delete();
-			if(response==-1)
-			{
-				// group3WarningLabel.setVisible(true);
-				// nameValue.setVisible(false);
-				System.err.println("File not found");
-			}
-			else if(response==-2)
-			{
-				// JOptionPane.showMessageDialog(this,networkErrorMessage);
-				connection.disconnect();
-				System.err.println("networkErrorMessage");
-				// new DoctorLogin();
-				// dispose();
-			}
-			return null;
-		}
-	}
+	// private static PatientReport getPatientReportStatic(DoctorClient connection,String patientId)
+	// {
+	// 	String fileName="tempFolder/tempPatientReport.xml";
+	// 	File file=new File(fileName);
+	// 	int response=connection.getRequest(patientId+".xml",fileName);
+	// 	PatientReport patientReport;
+	// 	if(response==0)
+	// 	{
+	// 		try
+	// 		{
+	// 			JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
+	// 			Unmarshaller jum=jc.createUnmarshaller();
+	// 			patientReport=(PatientReport)jum.unmarshal(file);
+	// 			file.delete();
+	// 			return patientReport;
+	// 			// nameValue.setVisible(true);
+	// 			// nameValue.setText(patientReport.patientBasicData.getName()+"/ "+patientReport.patientBasicData.getAge()+" yrs");
+	// 		}
+	// 		catch(Exception e)
+	// 		{
+	// 			e.printStackTrace();
+	// 		}
+	// 		return null;
+	// 		// group3WarningLabel.setVisible(false);
+	// 	}
+	// 	else
+	// 	{
+	// 		if(file.isFile())
+	// 			file.delete();
+	// 		if(response==-1)
+	// 		{
+	// 			// group3WarningLabel.setVisible(true);
+	// 			// nameValue.setVisible(false);
+	// 			System.err.println("File not found");
+	// 		}
+	// 		else if(response==-2)
+	// 		{
+	// 			// JOptionPane.showMessageDialog(this,networkErrorMessage);
+	// 			connection.logoutRequest();
+	// 			System.err.println("networkErrorMessage");
+	// 			// new DoctorLogin();
+	// 			// dispose();
+	// 		}
+	// 		return null;
+	// 	}
+	// }
 
-	private static Doctor getDoctor(Connection connection,String username)
-	{
-		try
-		{
-			int response=connection.receiveFromServer("Data/"+username+".xml","tempFolder/tempDoctor.xml");
-			if(response==0)
-			{
-				File doctorFile=new File("tempFolder/tempDoctor.xml");
-				JAXBContext jc=JAXBContext.newInstance(Doctor.class);
-				Unmarshaller jum=jc.createUnmarshaller();
-				// jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-				Doctor doctor=(Doctor)jum.unmarshal(doctorFile);
-				doctorFile.delete();
-				// errorLabel.setVisible(false);
-				return doctor;
-			}
-			else
-			{
-				File doctorFile=new File("tempFolder/tempDoctor.xml");
-				if(doctorFile.isFile())
-					doctorFile.delete();
-				connection.disconnect();
-				connection=null;
-				if(response==-1)
-					// errorLabel.setVisible(true);
-					System.err.println("File not present");
-				else if(response==-2)
-				{
-					// errorLabel.setVisible(false);
-					// JOptionPane.showMessageDialog(this,networkErrorMessage);
-					System.err.println("networkErrorMessage");
-				}
-				return null;
-			}
-		}
-		catch(JAXBException jaxbe)
-		{
-			File doctorFile=new File("tempFolder/tempDoctor.xml");
-			if(doctorFile.isFile())
-				doctorFile.delete();
-			jaxbe.printStackTrace();
-			return null;
-		}
-	}
+	// private static Doctor getDoctor(DoctorClient connection,String username)
+	// {
+	// 	try
+	// 	{
+	// 		int response=connection.getRequest(username+".xml","tempFolder/tempDoctor.xml");
+	// 		if(response==0)
+	// 		{
+	// 			File doctorFile=new File("tempFolder/tempDoctor.xml");
+	// 			JAXBContext jc=JAXBContext.newInstance(Doctor.class);
+	// 			Unmarshaller jum=jc.createUnmarshaller();
+	// 			// jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+	// 			Doctor doctor=(Doctor)jum.unmarshal(doctorFile);
+	// 			doctorFile.delete();
+	// 			// errorLabel.setVisible(false);
+	// 			return doctor;
+	// 		}
+	// 		else
+	// 		{
+	// 			File doctorFile=new File("tempFolder/tempDoctor.xml");
+	// 			if(doctorFile.isFile())
+	// 				doctorFile.delete();
+	// 			connection.logoutRequest();
+	// 			connection=null;
+	// 			if(response==-1)
+	// 				// errorLabel.setVisible(true);
+	// 				System.err.println("File not present");
+	// 			else if(response==-2)
+	// 			{
+	// 				// errorLabel.setVisible(false);
+	// 				// JOptionPane.showMessageDialog(this,networkErrorMessage);
+	// 				System.err.println("networkErrorMessage");
+	// 			}
+	// 			return null;
+	// 		}
+	// 	}
+	// 	catch(JAXBException jaxbe)
+	// 	{
+	// 		File doctorFile=new File("tempFolder/tempDoctor.xml");
+	// 		if(doctorFile.isFile())
+	// 			doctorFile.delete();
+	// 		jaxbe.printStackTrace();
+	// 		return null;
+	// 	}
+	// }
 
-	private static Connection createNewConnection()
-	{
-		try
-		{
-			Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
-			Connection myCon=new Connection(mySocket);
+	// private static DoctorClient createNewConnection()
+	// {
+	// 	try
+	// 	{
+	// 		Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
+	// 		DoctorClient myCon=new DoctorClient(mySocket);
 			
-			return myCon;
-		}
-		catch(UnknownHostException uhe)
-		{
-			return null;
-		}
-		catch(IOException ioe)
-		{
-			return null;
-		}
-	}
+	// 		return myCon;
+	// 	}
+	// 	catch(UnknownHostException uhe)
+	// 	{
+	// 		return null;
+	// 	}
+	// 	catch(IOException ioe)
+	// 	{
+	// 		return null;
+	// 	}
+	// }
 
-	public static void main(String args[])
-	{
-		final Connection connection=createNewConnection();
-		final Doctor doctor=getDoctor(connection,"Doctor_01");
-		final PatientReport patientReport=getPatientReportStatic(connection,"Patient_01_01");
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-            		for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            		{
-                		if ("Nimbus".equals(info.getName()))
-                		{
-							javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    		break;
-                		}
-            		}
-        		}
-        		catch (ClassNotFoundException ex)
-        		{
-            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-        		catch (InstantiationException ex)
-        		{
-            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-        		catch (IllegalAccessException ex)
-        		{
-            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-        		catch (javax.swing.UnsupportedLookAndFeelException ex)
-        		{
-            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-				new PatientPrescriptionForm(connection,doctor,patientReport,"01");
-			}
-		});
-	}
+	// public static void main(String args[])
+	// {
+	// 	final DoctorClient connection=createNewConnection();
+	// 	final Doctor doctor=getDoctor(connection,"Doctor_01");
+	// 	final PatientReport patientReport=getPatientReportStatic(connection,"Patient_01_01");
+	// 	SwingUtilities.invokeLater(new Runnable()
+	// 	{
+	// 		public void run()
+	// 		{
+	// 			try
+	// 			{
+ //            		for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
+ //            		{
+ //                		if ("Nimbus".equals(info.getName()))
+ //                		{
+	// 						javax.swing.UIManager.setLookAndFeel(info.getClassName());
+ //                    		break;
+ //                		}
+ //            		}
+ //        		}
+ //        		catch (ClassNotFoundException ex)
+ //        		{
+ //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+ //        		}
+ //        		catch (InstantiationException ex)
+ //        		{
+ //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+ //        		}
+ //        		catch (IllegalAccessException ex)
+ //        		{
+ //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+ //        		}
+ //        		catch (javax.swing.UnsupportedLookAndFeelException ex)
+ //        		{
+ //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+ //        		}
+	// 			new PatientPrescriptionForm(connection,doctor,patientReport,"01");
+	// 		}
+	// 	});
+	// }
 
 }
 
