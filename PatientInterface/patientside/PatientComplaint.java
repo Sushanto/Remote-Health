@@ -1,12 +1,10 @@
 package patientside;
 
-import javax.xml.bind.annotation.*;
-
-import javax.xml.bind.*;
- 
-import java.text.*;
-
-import java.util.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @XmlRootElement
 @XmlType(propOrder={"complaint","complaint_date",

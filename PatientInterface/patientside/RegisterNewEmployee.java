@@ -1,87 +1,135 @@
 package patientside;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.JRadioButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.ButtonGroup;
+import javax.swing.BorderFactory;
+import javax.swing.SwingUtilities;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.JAXBException;
 
-import java.awt.*;
 
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
-import java.sql.*;
-import javax.xml.bind.*;
-import javax.xml.bind.annotation.*;
 
- 
+public class RegisterNewEmployee
+{
+    RegisterNewEmployee()
+    {
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                new Registration();
+            }
+        });
+    }
+}
 
 class Registration extends JFrame implements ActionListener
-  { 
-    Constants Constant=new Constants();
-    final JFrame jframe=this;
-    JLabel form_label,id_label,empid_label, name_label, gender_label,address_label, pass_label, confirm_pass_label, country_label, state_label, ph_no_label;
-    JTextField name_field,country_field, state_field, ph_no_field;  
-    JTextArea address_area;
-    JRadioButton female_check, male_check;    
-    ButtonGroup bG;
-    JButton submit_button, clear_button, back_button;
-    JPasswordField pass_field, pass_confirm_field;
-    String EmployeeId,KioskNumber;
+{ 
+    private final JFrame jframe=this;
+    private JLabel form_label,id_label,empid_label, name_label, gender_label,address_label, pass_label, confirm_pass_label, country_label, state_label, ph_no_label;
+    private JTextField name_field,country_field, state_field, ph_no_field;  
+    private JTextArea address_area;
+    private JRadioButton female_check, male_check;    
+    private ButtonGroup bG;
+    private JButton submit_button, clear_button, back_button;
+    private JPasswordField pass_field, pass_confirm_field;
+    private String EmployeeId,KioskNumber;
     private int countId;
+    private final Connection connection;
 
-    public void createId()
+    private void IncrementEmployeeIdCount()
     {
         try
         {
-        	if(Constant.RecieveFromServer("Server/EmployeeInfo/Employee_"+KioskNumber+"_IdCount.abc","tempFolder/EmployeeIdCount.abc"))
-        	{
-	            BufferedReader bin=new BufferedReader(new FileReader("tempFolder/EmployeeIdCount.abc"));
-	            countId=Integer.parseInt(bin.readLine());
-	            bin.close();
-	            String temp="Employee_"+countId;
-	            EmployeeId=temp;
-	            countId++;
-	        }
-	        else
-	        {
-	        	JOptionPane.showMessageDialog(jframe,"Connection error. Try again later");
-	        	new kiosk_login();
-	        	dispose();
-	        }
+            File file=new File("tempFolder/EmployeeIdCount.abc");
+            file.createNewFile();
+            BufferedWriter bout=new BufferedWriter(new FileWriter(file));
+            bout.write(String.valueOf(countId));
+            bout.close();
+            if(!connection.sendToServer("tempFolder/EmployeeIdCount.abc","Server/EmployeeInfo/Employee_"+KioskNumber+"_IdCount.abc"))
+            {
+                JOptionPane.showMessageDialog(jframe,"networkErrorMessage");
+                file.delete();
+                connection.disconnect();
+                new KioskLogin();
+                jframe.dispose();
+            }
+            else file.delete();
         }
-        catch(Exception e)
+        catch(IOException ioe)
         {
-            e.printStackTrace();
+            ioe.printStackTrace();
         }
     }
 
-    public void IncrementEmployeeIdCount()
+    private void createId()
     {
         try
         {
-        	BufferedWriter bout=new BufferedWriter(new FileWriter("tempFolder/EmployeeIdCount.abc"));
-        	bout.write(String.valueOf(countId));
-        	bout.close();
-        	if(!Constant.SendToServer("tempFolder/EmployeeIdCount.abc","Server/EmployeeInfo/Employee_"+KioskNumber+"_IdCount.abc"))
-	        {
-	        	(new File("tempFolder/EmployeeIdCount.abc")).delete();
-	        	JOptionPane.showMessageDialog(jframe,"Connection error. Try again later");
-	        	new kiosk_login();
-	        	dispose();
-	        }
-	        (new File("tempFolder/EmployeeIdCount.abc")).delete();
+            if(connection.receiveFromServer("Server/EmployeeInfo/Employee_"+KioskNumber+"_IdCount.abc","tempFolder/EmployeeIdCount.abc"))
+            {
+                BufferedReader bin=new BufferedReader(new FileReader("tempFolder/EmployeeIdCount.abc"));
+                countId=Integer.parseInt(bin.readLine());
+                bin.close();
+                String temp="Employee_"+KioskNumber+"_"+String.format("%02d",(countId++));
+                EmployeeId=temp;
+                if((new File("tempFolder/EmployeeIdCount.abc")).isFile())
+                    (new File("tempFolder/EmployeeIdCount.abc")).delete();
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(jframe,"networkErrorMessage"+"createId");
+                connection.disconnect();
+                new KioskLogin();
+                jframe.dispose();
+            }
         }
-        catch(Exception e)
+        catch(IOException ioe)
         {
-            e.printStackTrace();
-            (new File("tempFolder/EmployeeIdCount.abc")).delete();
-        }
+            ioe.printStackTrace();
+            JOptionPane.showMessageDialog(jframe,"networkErrorMessage");
+            connection.disconnect();
+            new KioskLogin();
+            jframe.dispose();
+        }   
     }
 
-    Registration()
+    public Registration()
     {
-        KioskNumber=Constant.getKioskNumber();
+        connection=createNewConnection();
+        if(connection==null)
+        {
+            dispose();
+            connection.disconnect();
+            new KioskLogin();
+        }
+        KioskNumber=Constants.getKioskNumber();
         createId();
         setVisible(true);
-        setSize(Constant.SIZE_X,Constant.SIZE_Y);
+        setSize(Constants.SIZE_X,Constants.SIZE_Y);
         setLayout(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter()
@@ -100,7 +148,7 @@ class Registration extends JFrame implements ActionListener
         setTitle("REGISTRATION FORM");
  
         form_label = new JLabel("REGISTRATION FORM");
-        form_label.setForeground(Constant.HEADERCOLOR1);
+        form_label.setForeground(Constants.HEADERCOLOR1);
         // form_label.setBackground(Color.white);
         form_label.setFont(new Font("Serif", Font.BOLD, 20));
 
@@ -124,8 +172,8 @@ class Registration extends JFrame implements ActionListener
     	bG.add(male_check);
 
 
-        male_check.setBackground(Constant.JPANELCOLOR1);
-        female_check.setBackground(Constant.JPANELCOLOR1);
+        male_check.setBackground(Constants.JPANELCOLOR1);
+        female_check.setBackground(Constants.JPANELCOLOR1);
 
     	address_area=new JTextArea();
     	address_area.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -168,7 +216,7 @@ class Registration extends JFrame implements ActionListener
         clear_button.setBounds(480, 600, 100, 30);
         back_button.setBounds(80,590,100,30);
 
-        form_label.setFont(Constant.HEADERFONT);
+        form_label.setFont(Constants.HEADERFONT);
  
 
         add(form_label);
@@ -195,8 +243,8 @@ class Registration extends JFrame implements ActionListener
         add(clear_button);
         add(back_button);
 
-        add(Constant.JPANEL2);
-        add(Constant.JPANEL1);
+        add(Constants.JPANEL2);
+        add(Constants.JPANEL1);
     }
 
  
@@ -243,7 +291,7 @@ class Registration extends JFrame implements ActionListener
     				Marshaller jm=jc.createMarshaller();
                     jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
     				jm.marshal(emp,file);
-    				if(Constant.SendToServer("tempFolder/tempEmployee.xml","Server/EmployeeInfo/"+EmployeeId+".xml"))
+    				if(connection.sendToServer("tempFolder/tempEmployee.xml","Server/EmployeeInfo/"+EmployeeId+".xml"))
     				{
     					JOptionPane.showMessageDialog(jframe, "Data Saved Successfully");
     					IncrementEmployeeIdCount();
@@ -255,7 +303,8 @@ class Registration extends JFrame implements ActionListener
     				}
     				if(file.isFile())
 	    				file.delete();
-	    			new kiosk_login();
+                    connection.disconnect();
+	    			new KioskLogin();
 	    			dispose();
     			}
     			catch(JAXBException exc)
@@ -300,20 +349,39 @@ class Registration extends JFrame implements ActionListener
         else  if(e.getSource() == back_button)
         {
         	(new File("tempFolder/EmployeeIdCount.abc")).delete();
-            new kiosk_login();
+            connection.disconnect();
+            new KioskLogin();
             dispose();
         }
     }
 
-	public static boolean valid_email(String n)
+	private boolean valid_email(String n)
     {
     	if (n.contains("@") && (n.contains(".com")||n.contains(".co.in")||n.contains(".in")))
             return true;
     	else 
             return false;
-	}	
+	}
 
-	boolean notNumber(String n)
+    private Connection createNewConnection()
+    {
+        try
+        {
+            Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
+            Connection myCon=new Connection(mySocket);
+            return myCon;
+        }
+        catch(UnknownHostException uhe)
+        {
+            return null;
+        }
+        catch(IOException ioe)
+        {
+            return null;
+        }
+    }
+
+	private boolean notNumber(String n)
 	{
     	if (n.matches("[0-9]+") && n.length() > 2)
             return false;
@@ -322,36 +390,11 @@ class Registration extends JFrame implements ActionListener
 	}
 	
 	
-	boolean onlyNumber(String n)
+	private boolean onlyNumber(String n)
 	{
        	if (n.matches("[0-9]+") && n.length() > 2)
             return true;
     	else 
             return false;
-    }
-}
-
-public class RegisterNewEmployee
-{
-    RegisterNewEmployee()
-    {
-        SwingUtilities.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                new Registration();
-            }
-        });
-    }
-
-    public static void main(String args[])
-    {
-        SwingUtilities.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                new Registration();
-            }
-        });
     }
 }

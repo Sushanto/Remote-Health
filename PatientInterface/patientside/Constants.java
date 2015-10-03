@@ -1,10 +1,17 @@
 package patientside;
 
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import java.net.*;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.BorderFactory;
+import javax.swing.UIManager;
+import java.awt.Color;
+import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileInputStream;
 
 public class Constants
 {
@@ -15,14 +22,14 @@ public class Constants
 	public static JLabel NAME_LABEL;
 	public static Font HEADERFONT,SMALLLABELFONT,SMALLBUTTONFONT,BENGALILABELFONT,BENGALIBUTTONFONT;
 	// public static final String SERVER="192.168.250.58";
-	public static final String SERVER="203.197.107.110";
+	// public static final String SERVER="203.197.107.110";
 	// public static final String SERVER="192.168.137.240";
-	// public static final String SERVER="10.10.149.108";
+	public static final String SERVER="127.0.0.1";
 	// public static final String SERVER="192.168.43.73";
 	public static final String USERNAME="user1";
 	public static final int PORT=5000;
 
-	Constants()
+	static
 	{
 		JPANELCOLOR1=UIManager.getColor("Button.click");
 		// JPANELCOLOR1=Color.WHITE;
@@ -61,7 +68,7 @@ public class Constants
 
 	}
 
-	String readCurrentLanguage()
+	public static String readCurrentLanguage()
 	{
 		File file=new File("tempFolder/Language.abc");
 		if(file.isFile())
@@ -84,7 +91,7 @@ public class Constants
 		return "বাংলা";
 	}
 
-	String getKioskNumber()
+	public static String getKioskNumber()
 	{
 		try
 		{
@@ -99,128 +106,4 @@ public class Constants
 			return null;
 		}
 	}
-
-	static boolean RecieveFromServer(String ServerFile,String LocalFile)
-	{
-		try
-		{
-			// Thread.sleep(100);
-			Socket socket=new Socket(InetAddress.getByName(SERVER),5000);
-			PrintWriter pwriter=new PrintWriter(socket.getOutputStream(),true);
-			BufferedReader bin=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			pwriter.println(USERNAME);
-			pwriter.println("FILE_CLIENT");
-			pwriter.println("SEND_FILE");
-			String signal=bin.readLine();
-			if(signal.equals("File sending initiated"))
-			{
-				pwriter.println(ServerFile);
-				String signal2=bin.readLine();
-				if(signal2.startsWith("RTS"))
-				{
-					String filesize=signal2.substring(signal2.lastIndexOf(" ")+1);
-					File file=new File(LocalFile);
-					file.createNewFile();
-					FileOutputStream fos=new FileOutputStream(file);
-					BufferedOutputStream bos=new BufferedOutputStream(fos);
-					byte[] bytearray=new byte[6022386];
-					InputStream is=socket.getInputStream();
-					int byteread=0,current=0;
-					while(byteread>-1)
-					{
-						byteread=is.read(bytearray,current,bytearray.length-current);
-						if(byteread>=0)
-							current+=byteread;
-					}
-					bos.write(bytearray,0,current);
-					bos.flush();
-					bos.close();
-					fos.close();
-					bin.close();
-					pwriter.close();
-					socket.close();
-					if(filesize.equals(String.valueOf(file.length())))
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					} 
-				}
-			}
-			bin.close();
-			pwriter.close();
-			socket.close();
-			return false;
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	static boolean SendToServer(String LocalFile,String ServerFile)
-    {
-        try
-        {
-			// Thread.sleep(100);
-            Socket socket=new Socket(InetAddress.getByName(SERVER),PORT);
-            File file=new File(LocalFile);
-            PrintWriter pwriter=new PrintWriter(socket.getOutputStream(),true);
-            BufferedReader bin=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			pwriter.println(USERNAME);
-			pwriter.println("FILE_CLIENT");
-
-            pwriter.println("RECEIVE_FILE");
-            String signal=bin.readLine();
-            if(signal.equals("File recieving initiated"))
-            {
-                pwriter.println(ServerFile);
-                pwriter.println(String.valueOf(file.length()));
-                String signal2=bin.readLine();
-                if(signal2.equals("CTS"))
-                {
-	                FileInputStream fis=new FileInputStream(file);
-	                BufferedInputStream bis=new BufferedInputStream(fis);
-	                byte[] bytearray=new byte[(int)file.length()];
-	                bis.read(bytearray,0,bytearray.length);
-
-	                OutputStream os=socket.getOutputStream();
-	                os.write(bytearray,0,bytearray.length);
-	                os.flush();
-	                os.close();
-	                bis.close();
-	                fis.close();
-	                socket.close();
-
-	                socket=new Socket(InetAddress.getByName(SERVER),PORT);
-	                bin=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-	                String ack=bin.readLine();
-		            bin.close();
-		            pwriter.close();
-	                socket.close();
-	                if(ack.equals("ACK"))
-	                {
-		                return true;
-	                }
-		           	else
-		           	{
-		           		return false;
-		           	}
-	            }
-            }
-            bin.close();
-            pwriter.close();
-            socket.close();
-            return false;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-
-    }
 }

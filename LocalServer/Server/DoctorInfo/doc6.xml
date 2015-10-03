@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<doctorXml>
+    <name>qqq</name>
+    <registration_number>qqq</registration_number>
+    <age>20</age>
+    <gender>Male</gender>
+    <qualification>q</qualification>
+    <specialization>q</specialization>
+    <experience>2</experience>
+    <achievement></achievement>
+    <hospital_name></hospital_name>
+    <clinic_name></clinic_name>
+    <address>qqaqq</address>
+    <city>qqqq</city>
+    <state>aqaq</state>
+    <zipcode>000000</zipcode>
+    <country>aqaqaqaa</country>
+    <email></email>
+    <phone_no>0000000000</phone_no>
+    <mobile_no></mobile_no>
+    <fax_no></fax_no>
+    <doctor_id>doc6</doctor_id>
+    <password>111111</password>
+</doctorXml>

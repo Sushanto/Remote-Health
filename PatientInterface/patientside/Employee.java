@@ -1,8 +1,9 @@
 package patientside;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
-import javax.xml.bind.*;
 @XmlRootElement
 @XmlType(propOrder={"employeeId","name","ph_no","address","country","state","gender", "password"})
 public class Employee

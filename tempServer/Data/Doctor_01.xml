@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Doctor>
+    <DoctorId>Doctor_01</DoctorId>
+    <DoctorName>Sushanto Halder</DoctorName>
+    <DoctorSignature>Signature</DoctorSignature>
+    <DoctorRegistrationNumber>Regi No.</DoctorRegistrationNumber>
+    <PatientIdList>Patient_01_01</PatientIdList>
+    <PatientIdList>Patient_01_02</PatientIdList>
+    <PatientIdList>Patient_01_03</PatientIdList>
+    <PatientIdList>Patient_01_07</PatientIdList>
+    <PatientIdList>Patient_01_04</PatientIdList>
+    <PatientIdList>Patient_01_06</PatientIdList>
+    <PatientNameList>Sushanto Halder</PatientNameList>
+    <PatientNameList>Akansha Subba</PatientNameList>
+    <PatientNameList>Sumit Kumar</PatientNameList>
+    <PatientNameList>Arvinda Das</PatientNameList>
+    <PatientNameList>Priti kana ghosh</PatientNameList>
+    <PatientNameList>skhskd</PatientNameList>
+</Doctor>

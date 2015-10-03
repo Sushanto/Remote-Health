@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<patientLog>
+    <Emergency>Patient_01_01</Emergency>
+    <Emergency>Patient_01_06</Emergency>
+    <Emergency>Patient_01_04</Emergency>
+    <Emergency>Patient_01_08</Emergency>
+    <Emergency>Patient_01_02</Emergency>
+    <Normal>Patient_01_07</Normal>
+</patientLog>

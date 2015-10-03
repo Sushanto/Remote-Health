@@ -1,45 +1,93 @@
 package patientside;
 
-import java.io.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.awt.FlowLayout;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import javax.imageio.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
+import javax.swing.JScrollPane;
+import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import javax.swing.BorderFactory;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 import sun.misc.BASE64Encoder;
 import sun.misc.BASE64Decoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import javax.xml.bind.*;
+import java.util.Date;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.JAXBException;
 
 
 
-class BasicInformation {
-	Constants Constant=new Constants();
-	public JFrame frame;
-	public JTextField nameField,phoneField,ageField,referenceField,occuField,heightField;
+public class RegisterNewPatient
+{
+	public RegisterNewPatient(Connection myCon,Employee e)
+	{
+		final Connection connection=myCon;
+		final Employee emp=e;
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				new BasicInformation(connection,emp);
+			}
+		});
+	}
+}			
 
-	public final ButtonGroup jb = new ButtonGroup();
-	public final ButtonGroup cb=new ButtonGroup();
-	public JTextArea addressArea,familyHisArea,medicalHisArea;
-	public JButton btnSubmit,btnReset,btnBack;
-	public JRadioButton rdbtnMale,rdbtnFemale;
-	public JLabel warnField,lblPidvalue,lblOccupation,lblStatus,lblReview,lblHeight,heightUnit_label,lblFamilyHistory,lblMedicalHistory;
-	public JCheckBox chckbxSon,chckbxDaughter,chckbxW;
-	public JLabel status_value,lblImage;
-	JLabel lblPatientId,lblBasicInformation,lblName,lblDate,lblDateValue,lblGender,lblAge,ageUnit_label,lblPhoneNumber,lblAddress;
+
+class BasicInformation
+{
+	private JFrame frame;
+	private JTextField nameField,phoneField,ageField,referenceField,occuField,heightField;
+
+	private final ButtonGroup jb = new ButtonGroup();
+	private final ButtonGroup cb=new ButtonGroup();
+	private JTextArea addressArea,familyHisArea,medicalHisArea;
+	private JButton btnSubmit,btnReset,btnBack;
+	private JRadioButton rdbtnMale,rdbtnFemale;
+	private JLabel warnField,lblPidvalue,lblOccupation,lblStatus,lblReview,lblHeight,heightUnit_label,lblFamilyHistory,lblMedicalHistory;
+	private JCheckBox chckbxSon,chckbxDaughter,chckbxW;
+	private JLabel status_value,lblImage;
+	private JLabel lblPatientId,lblBasicInformation,lblName,lblDate,lblDateValue,lblGender,lblAge,ageUnit_label,lblPhoneNumber,lblAddress;
 	private Font LABELFONT=new Font("Serif",Font.BOLD,16);
 
-	public String patientId,fileDirectory,Language,confirmMessage="আপনি কি নিশ্চিত?",networkErrorMessage="নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
-	public String imagePath,imageString,KioskNumber;
+	private String patientId,fileDirectory,Language,confirmMessage="আপনি কি নিশ্চিত?",networkErrorMessage="নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
+	private String imagePath,imageString,KioskNumber;
 
 	private int countId,imageSet;
 
-	String nameVar,reNameVar,dateVar,referenceVar,genVar,ageVar,phoneVar,addressVar,occuVar,statusVar,heightVar,familyVar,medicalVar;
+	private String nameVar,reNameVar,dateVar,referenceVar,genVar,ageVar,phoneVar,addressVar,occuVar,statusVar,heightVar,familyVar,medicalVar;
+	private final Connection connection;
+	private Employee emp;
+	private PatientReport patientReport;
 
-	public boolean checkField(){
+	private boolean checkField()
+	{
 		boolean emptyCheck=!(nameVar.trim().isEmpty() || addressVar.trim().isEmpty() 
 		 || occuVar.trim().isEmpty() || referenceField.getText().trim().isEmpty() || ageVar.trim().isEmpty()
 		 || heightVar.trim().isEmpty());
@@ -79,13 +127,17 @@ class BasicInformation {
 		return (emptyCheck & nameCheck & sdwCheck & occupationCheck & phoneCheck & ageCheck & heightCheck);
 	}
 
-	private  void encodeToString() {
-
+	private  void encodeToString()
+	{
 		BufferedImage image=null;
         try
         {
             image = ImageIO.read(new File(imagePath+"patient_Picture.jpg"));
-        }catch(IOException e){}
+        }
+        catch(IOException e)
+        {
+
+        }
         
         String type="jpg";
 
@@ -111,7 +163,7 @@ class BasicInformation {
 	    }
 	}
 
-	String CheckNullString(String str)
+	private String CheckNullString(String str)
 	{
 		if(str.equals(""))
 			return null;
@@ -123,17 +175,17 @@ class BasicInformation {
 		f.delete();
 	}      	
 
-	public void takeCare(){
+	private void takeCare(){
 		this.IncrementPatientIdCount();
 
 		encodeToString();
 		createPatientBasicData();
 		deleteImage();
-		new PatientForm(patientId);
+		new PatientForm(connection,patientReport,emp);
 		frame.dispose();
 	}
 
-	public void getValues(){
+	private void getValues(){
 		nameVar=nameField.getText();
 		addressVar=addressArea.getText();
 		phoneVar=phoneField.getText();
@@ -160,7 +212,7 @@ class BasicInformation {
 
 	}
 
-	public void resetField(){
+	private void resetField(){
 		phoneField.setText("");
 		addressArea.setText("");
 		nameField.setText("");
@@ -178,7 +230,7 @@ class BasicInformation {
 	}
 
 
-	public void IncrementPatientIdCount()
+	private void IncrementPatientIdCount()
 	{
 		try
 		{
@@ -187,22 +239,22 @@ class BasicInformation {
 			BufferedWriter bout=new BufferedWriter(new FileWriter(file));
 			bout.write(String.valueOf(countId));
 			bout.close();
-			if(!Constant.SendToServer("tempFolder/PatientIdCount.abc","Server/PatientInfo/Patient_"+KioskNumber+"_IdCount.abc"))
+			if(!connection.sendToServer("tempFolder/PatientIdCount.abc","Server/PatientInfo/Patient_"+KioskNumber+"_IdCount.abc"))
 			{
 				JOptionPane.showMessageDialog(frame,networkErrorMessage);
 				file.delete();
-				new patient_login();
+				new PatientLogin(connection,emp);
 				frame.dispose();
 			}
 			else file.delete();
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
 	}
 
-	public void createId()
+	private void createId()
 	{
 		Date date=new Date();
 		SimpleDateFormat ft=new SimpleDateFormat("dd-MM-yyyy");
@@ -210,8 +262,8 @@ class BasicInformation {
 		this.fileDirectory="tempFolder/";
 		try
 		{
-			Thread.sleep(100);
-			if(Constant.RecieveFromServer("Server/PatientInfo/Patient_"+KioskNumber+"_IdCount.abc","tempFolder/PatientIdCount.abc"))
+			// Thread.sleep(100);
+			if(connection.receiveFromServer("Server/PatientInfo/Patient_"+KioskNumber+"_IdCount.abc","tempFolder/PatientIdCount.abc"))
 			{
 				BufferedReader bin=new BufferedReader(new FileReader(this.fileDirectory+"PatientIdCount.abc"));
 				countId=Integer.parseInt(bin.readLine());
@@ -224,15 +276,15 @@ class BasicInformation {
 			else
 			{
 				JOptionPane.showMessageDialog(frame,networkErrorMessage+"createId");
-				new patient_login();
+				new PatientLogin(connection,emp);
 				frame.dispose();
 			}
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(frame,networkErrorMessage);
-			new patient_login();
+			new PatientLogin(connection,emp);
 			frame.dispose();
 		}	
 	}
@@ -241,12 +293,16 @@ class BasicInformation {
 	{
 		try
 		{
-			Process ps=Runtime.getRuntime().exec("java -cp PatientApp.jar webTake.myCam");
+			Process ps=Runtime.getRuntime().exec("java "/*-cp PatientApp.jar*/+"webTake.myCam");
 			ps.waitFor();
 		}
-		catch(Exception e)
+		catch(InterruptedException ie)
 		{
-			e.printStackTrace();
+			ie.printStackTrace();
+		}
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
 		}
 	
 	}
@@ -274,7 +330,8 @@ class BasicInformation {
 		}
 		else System.out.println("no image");
 	}
-	void setLanguage(String str)
+
+	private void setLanguage(String str)
 	{
 		if(str.equals("বাংলা"))
 		{
@@ -304,31 +361,31 @@ class BasicInformation {
 			btnBack.setText("ফেরত যান");
 			btnReset.setText("পরিষ্কার");
 
-			lblPatientId.setFont(Constant.BENGALILABELFONT);
-			// lblBasicInformation.setFont(Constant.BENGALILABELFONT);
-			lblName.setFont(Constant.BENGALILABELFONT);
-			chckbxSon.setFont(Constant.BENGALILABELFONT);
-			chckbxDaughter.setFont(Constant.BENGALILABELFONT);
-			chckbxW.setFont(Constant.BENGALILABELFONT);
-			lblDate.setFont(Constant.BENGALILABELFONT);
-			lblGender.setFont(Constant.BENGALILABELFONT);
-			rdbtnMale.setFont(Constant.BENGALILABELFONT);
-			rdbtnFemale.setFont(Constant.BENGALILABELFONT);
-			lblAge.setFont(Constant.BENGALILABELFONT);
-			ageUnit_label.setFont(Constant.BENGALILABELFONT);
-			lblPhoneNumber.setFont(Constant.BENGALILABELFONT);
-			lblAddress.setFont(Constant.BENGALILABELFONT);
-			warnField.setFont(Constant.BENGALILABELFONT);
-			lblOccupation.setFont(Constant.BENGALILABELFONT);
-			lblStatus.setFont(Constant.BENGALILABELFONT);
-			lblReview.setFont(Constant.BENGALILABELFONT);
-			lblHeight.setFont(Constant.BENGALILABELFONT);
-			heightUnit_label.setFont(Constant.BENGALILABELFONT);
-			lblFamilyHistory.setFont(Constant.BENGALILABELFONT);
-			lblMedicalHistory.setFont(Constant.BENGALILABELFONT);
-			btnSubmit.setFont(Constant.BENGALILABELFONT);
-			btnBack.setFont(Constant.BENGALILABELFONT);
-			btnReset.setFont(Constant.BENGALILABELFONT);
+			lblPatientId.setFont(Constants.BENGALILABELFONT);
+			// lblBasicInformation.setFont(Constants.BENGALILABELFONT);
+			lblName.setFont(Constants.BENGALILABELFONT);
+			chckbxSon.setFont(Constants.BENGALILABELFONT);
+			chckbxDaughter.setFont(Constants.BENGALILABELFONT);
+			chckbxW.setFont(Constants.BENGALILABELFONT);
+			lblDate.setFont(Constants.BENGALILABELFONT);
+			lblGender.setFont(Constants.BENGALILABELFONT);
+			rdbtnMale.setFont(Constants.BENGALILABELFONT);
+			rdbtnFemale.setFont(Constants.BENGALILABELFONT);
+			lblAge.setFont(Constants.BENGALILABELFONT);
+			ageUnit_label.setFont(Constants.BENGALILABELFONT);
+			lblPhoneNumber.setFont(Constants.BENGALILABELFONT);
+			lblAddress.setFont(Constants.BENGALILABELFONT);
+			warnField.setFont(Constants.BENGALILABELFONT);
+			lblOccupation.setFont(Constants.BENGALILABELFONT);
+			lblStatus.setFont(Constants.BENGALILABELFONT);
+			lblReview.setFont(Constants.BENGALILABELFONT);
+			lblHeight.setFont(Constants.BENGALILABELFONT);
+			heightUnit_label.setFont(Constants.BENGALILABELFONT);
+			lblFamilyHistory.setFont(Constants.BENGALILABELFONT);
+			lblMedicalHistory.setFont(Constants.BENGALILABELFONT);
+			btnSubmit.setFont(Constants.BENGALILABELFONT);
+			btnBack.setFont(Constants.BENGALILABELFONT);
+			btnReset.setFont(Constants.BENGALILABELFONT);
 
 
 			confirmMessage="আপনি কি নিশ্চিত?";
@@ -364,31 +421,31 @@ class BasicInformation {
 			btnBack.setText("Back");
 			btnReset.setText("Clear");
 
-			lblPatientId.setFont(Constant.SMALLLABELFONT);
-			// lblBasicInformation.setFont(Constant.SMALLLABELFONT);
-			lblName.setFont(Constant.SMALLLABELFONT);
-			chckbxSon.setFont(Constant.SMALLLABELFONT);
-			chckbxDaughter.setFont(Constant.SMALLLABELFONT);
-			chckbxW.setFont(Constant.SMALLLABELFONT);
-			lblDate.setFont(Constant.SMALLLABELFONT);
-			lblGender.setFont(Constant.SMALLLABELFONT);
-			rdbtnMale.setFont(Constant.SMALLLABELFONT);
-			rdbtnFemale.setFont(Constant.SMALLLABELFONT);
-			lblAge.setFont(Constant.SMALLLABELFONT);
-			ageUnit_label.setFont(Constant.SMALLLABELFONT);
-			lblPhoneNumber.setFont(Constant.SMALLLABELFONT);
-			lblAddress.setFont(Constant.SMALLLABELFONT);
-			warnField.setFont(Constant.SMALLLABELFONT);
-			lblOccupation.setFont(Constant.SMALLLABELFONT);
-			lblStatus.setFont(Constant.SMALLLABELFONT);
-			lblReview.setFont(Constant.SMALLLABELFONT);
-			lblHeight.setFont(Constant.SMALLLABELFONT);
-			heightUnit_label.setFont(Constant.SMALLLABELFONT);
-			lblFamilyHistory.setFont(Constant.SMALLLABELFONT);
-			lblMedicalHistory.setFont(Constant.SMALLLABELFONT);
-			btnSubmit.setFont(Constant.SMALLLABELFONT);
-			btnBack.setFont(Constant.SMALLLABELFONT);
-			btnReset.setFont(Constant.SMALLLABELFONT);
+			lblPatientId.setFont(Constants.SMALLLABELFONT);
+			// lblBasicInformation.setFont(Constants.SMALLLABELFONT);
+			lblName.setFont(Constants.SMALLLABELFONT);
+			chckbxSon.setFont(Constants.SMALLLABELFONT);
+			chckbxDaughter.setFont(Constants.SMALLLABELFONT);
+			chckbxW.setFont(Constants.SMALLLABELFONT);
+			lblDate.setFont(Constants.SMALLLABELFONT);
+			lblGender.setFont(Constants.SMALLLABELFONT);
+			rdbtnMale.setFont(Constants.SMALLLABELFONT);
+			rdbtnFemale.setFont(Constants.SMALLLABELFONT);
+			lblAge.setFont(Constants.SMALLLABELFONT);
+			ageUnit_label.setFont(Constants.SMALLLABELFONT);
+			lblPhoneNumber.setFont(Constants.SMALLLABELFONT);
+			lblAddress.setFont(Constants.SMALLLABELFONT);
+			warnField.setFont(Constants.SMALLLABELFONT);
+			lblOccupation.setFont(Constants.SMALLLABELFONT);
+			lblStatus.setFont(Constants.SMALLLABELFONT);
+			lblReview.setFont(Constants.SMALLLABELFONT);
+			lblHeight.setFont(Constants.SMALLLABELFONT);
+			heightUnit_label.setFont(Constants.SMALLLABELFONT);
+			lblFamilyHistory.setFont(Constants.SMALLLABELFONT);
+			lblMedicalHistory.setFont(Constants.SMALLLABELFONT);
+			btnSubmit.setFont(Constants.SMALLLABELFONT);
+			btnBack.setFont(Constants.SMALLLABELFONT);
+			btnReset.setFont(Constants.SMALLLABELFONT);
 
 			confirmMessage="Are you sure?";
 			networkErrorMessage="Connection error! Try again later!";
@@ -399,8 +456,11 @@ class BasicInformation {
 	}
 
 
-	public void initialize() {
-		KioskNumber=Constant.getKioskNumber();
+	public BasicInformation(Connection myCon,Employee e)
+	{
+		connection=myCon;
+		emp=e;
+		KioskNumber=Constants.getKioskNumber();
 		frame = new JFrame();
 		frame.setVisible(true);
 		
@@ -421,11 +481,6 @@ class BasicInformation {
 
 				if(JOptionPane.showConfirmDialog(frame,confirmMessage)==JOptionPane.YES_OPTION)
 				{
-
-					if((new File("tempFolder/tempEmployee.abc")).isFile())
-						(new File("tempFolder/tempEmployee.abc")).delete();
-					// if(!(new File("tempFolder")).exists())
-					// 	(new File("tempFolder")).delete();
 					deleteImage();
 					frame.dispose();
                     System.exit(0);
@@ -452,8 +507,8 @@ class BasicInformation {
 		
 		//BASIC INFORMATION
 		lblBasicInformation = new JLabel("প্রাথমিক তথ্য");
-		lblBasicInformation.setForeground(Constant.HEADERCOLOR1);
-		lblBasicInformation.setFont(Constant.HEADERFONT);
+		lblBasicInformation.setForeground(Constants.HEADERCOLOR1);
+		lblBasicInformation.setFont(Constants.HEADERFONT);
 		lblBasicInformation.setBounds(380, 12, 500, 43);
 		frame.add(lblBasicInformation);
 		
@@ -766,7 +821,7 @@ class BasicInformation {
 		//SUBMIT BUTTON
 		btnSubmit = new JButton("জমা");
 		btnSubmit.setBorder(UIManager.getBorder("EditorPane.border"));
-		btnSubmit.setFont(Constant.BENGALIBUTTONFONT);
+		btnSubmit.setFont(Constants.BENGALIBUTTONFONT);
 		btnSubmit.setForeground(Color.BLACK);
 		btnSubmit.setBounds(720, 380, 110, 30);
 		frame.add(btnSubmit);
@@ -791,7 +846,7 @@ class BasicInformation {
 		//BACK BUTTON
 		btnBack = new JButton("ফেরত যান");
 		btnBack.setForeground(Color.BLACK);
-		btnBack.setFont(Constant.BENGALIBUTTONFONT);
+		btnBack.setFont(Constants.BENGALIBUTTONFONT);
 		btnBack.setBorder(UIManager.getBorder("EditorPane.border"));
 		btnBack.setBounds(10, 380, 110, 30);
 		frame.add(btnBack);
@@ -799,7 +854,7 @@ class BasicInformation {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				deleteImage();
-				new patient_login();
+				new PatientLogin(connection,emp);
 				frame.dispose();
 			}
 		});
@@ -807,12 +862,12 @@ class BasicInformation {
 		//RESET BUTTON
 		btnReset = new JButton("পরিষ্কার");
 		btnReset.setForeground(Color.BLACK);
-		btnReset.setFont(Constant.BENGALIBUTTONFONT);
+		btnReset.setFont(Constants.BENGALIBUTTONFONT);
 		btnReset.setBorder(UIManager.getBorder("EditorPane.border"));
 		btnReset.setBounds(720, 420, 110, 30);
 		frame.add(btnReset);
 
-		setLanguage(Constant.readCurrentLanguage());
+		setLanguage(Constants.readCurrentLanguage());
 
 
 		btnReset.addActionListener(new ActionListener() {
@@ -831,47 +886,47 @@ class BasicInformation {
 			}
 		});
 				
-		frame.add(Constant.JPANEL2);
-		frame.add(Constant.JPANEL1);
+		frame.add(Constants.JPANEL2);
+		frame.add(Constants.JPANEL1);
 	}
 
-	public void createPatientBasicData()
+	private void createPatientBasicData()
 	{
-		Patient_Report patient_Report=new Patient_Report();
-		patient_Report.patientBasicData=new PatientBasicData();
+		patientReport=new PatientReport();
+		patientReport.patientBasicData=new PatientBasicData();
 
 
-		patient_Report.patientBasicData.setId(patientId);
-		patient_Report.patientBasicData.setName(nameVar);
-		patient_Report.patientBasicData.setDate(dateVar);
-		patient_Report.patientBasicData.setAddress(addressVar);
-		patient_Report.patientBasicData.setPhone(phoneVar);
-		// patient_Report.patientBasicData.setDateofbirth(birthVar);
-		patient_Report.patientBasicData.setGender(genVar);
-		patient_Report.patientBasicData.setReference(reNameVar);
-		patient_Report.patientBasicData.setAge(ageVar);
-		patient_Report.patientBasicData.setOccupation(occuVar);
-		patient_Report.patientBasicData.setStatus(statusVar);
-		patient_Report.patientBasicData.setHeight(heightVar);
-		patient_Report.patientBasicData.setImage(imageString);
-		// patient_Report.patientBasicData.setWeight(weightVar);
-		// patient_Report.patientBasicData.setTemperature(tempVar);
-		// patient_Report.patientBasicData.setBp(bpVar);
-		// patient_Report.patientBasicData.setBmi(bmiVar);
-		// patient_Report.patientBasicData.setPulse(pulseVar);
-		patient_Report.patientBasicData.setFamilyhistory(familyVar);
-		patient_Report.patientBasicData.setMedicalhistory(medicalVar);
+		patientReport.patientBasicData.setId(patientId);
+		patientReport.patientBasicData.setName(nameVar);
+		patientReport.patientBasicData.setDate(dateVar);
+		patientReport.patientBasicData.setAddress(addressVar);
+		patientReport.patientBasicData.setPhone(phoneVar);
+		// patientReport.patientBasicData.setDateofbirth(birthVar);
+		patientReport.patientBasicData.setGender(genVar);
+		patientReport.patientBasicData.setReference(reNameVar);
+		patientReport.patientBasicData.setAge(ageVar);
+		patientReport.patientBasicData.setOccupation(occuVar);
+		patientReport.patientBasicData.setStatus(statusVar);
+		patientReport.patientBasicData.setHeight(heightVar);
+		patientReport.patientBasicData.setImage(imageString);
+		// patientReport.patientBasicData.setWeight(weightVar);
+		// patientReport.patientBasicData.setTemperature(tempVar);
+		// patientReport.patientBasicData.setBp(bpVar);
+		// patientReport.patientBasicData.setBmi(bmiVar);
+		// patientReport.patientBasicData.setPulse(pulseVar);
+		patientReport.patientBasicData.setFamilyhistory(familyVar);
+		patientReport.patientBasicData.setMedicalhistory(medicalVar);
 
 		try
 		{
-			JAXBContext context = JAXBContext.newInstance(Patient_Report.class);
+			JAXBContext context = JAXBContext.newInstance(PatientReport.class);
 		    Marshaller m = context.createMarshaller();
 		    m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		    m.marshal(patient_Report, new File("tempFolder/tempPatient.xml"));
-		    if(!Constant.SendToServer("tempFolder/tempPatient.xml","Server/PatientInfo/"+patientId+".xml"))
+		    m.marshal(patientReport, new File("tempFolder/tempPatient.xml"));
+		    if(!connection.sendToServer("tempFolder/tempPatient.xml","Server/PatientInfo/"+patientId+".xml"))
 		    {
 		    	JOptionPane.showMessageDialog(frame,networkErrorMessage);
-		    	new patient_login();
+		    	new PatientLogin(connection,emp);
 		    	frame.dispose();
 		    }
 		    (new File("tempFolder/tempPatient.xml")).delete();
@@ -880,53 +935,8 @@ class BasicInformation {
 		{
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(frame,networkErrorMessage);
-			new patient_login();
+			new PatientLogin(connection,emp);
 			frame.dispose();
 		}
 	}
 }
-
-public class RegisterNewPatient
-{
-	RegisterNewPatient()
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				BasicInformation bi=new BasicInformation();
-				bi.initialize();
-			}
-		});
-	}
-
-	public static void main(String[] args)
-	{
-		
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RegisterNewPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RegisterNewPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RegisterNewPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RegisterNewPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-				BasicInformation bi=new BasicInformation();
-				bi.initialize(); 
-			}
-		});
-	}
-}			

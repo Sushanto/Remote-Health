@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<doctorXml>
+    <name>abc</name>
+    <registration_number>123</registration_number>
+    <age>21</age>
+    <gender>Male</gender>
+    <qualification>qqq</qualification>
+    <specialization>qq</specialization>
+    <experience>3</experience>
+    <achievement></achievement>
+    <hospital_name></hospital_name>
+    <clinic_name></clinic_name>
+    <address>qqqq</address>
+    <city>q</city>
+    <state>q</state>
+    <zipcode>111111</zipcode>
+    <country>q</country>
+    <email></email>
+    <phone_no>1111111111</phone_no>
+    <mobile_no></mobile_no>
+    <fax_no></fax_no>
+    <doctor_id>doc4</doctor_id>
+    <password>11111</password>
+</doctorXml>

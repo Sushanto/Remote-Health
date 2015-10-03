@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<doctorXml>
+    <name>susu haldor</name>
+    <registration_number>007</registration_number>
+    <age>90</age>
+    <gender>Female</gender>
+    <qualification>posu chikitsae nobel ache</qualification>
+    <specialization>only person in the world who just wash his head during bath</specialization>
+    <experience>20</experience>
+    <achievement>suor theke chorano pleague roger vaccine o e banae </achievement>
+    <hospital_name>duttopukur posu chikitsha kendro</hospital_name>
+    <clinic_name>duutpuk</clinic_name>
+    <address>africa</address>
+    <city>bon</city>
+    <state>jongol</state>
+    <zipcode>999999</zipcode>
+    <country>south africa</country>
+    <email>bono@jongol.com</email>
+    <phone_no>0101010100</phone_no>
+    <mobile_no></mobile_no>
+    <fax_no></fax_no>
+    <doctor_id>doc3</doctor_id>
+    <password>11111</password>
+</doctorXml>

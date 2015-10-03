@@ -1,9 +1,8 @@
 package patientside;
 
-import java.util.*;
-import javax.xml.bind.annotation.*;
-import java.io.File;
-import javax.xml.bind.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 @XmlRootElement(name="PatientBasicData")
