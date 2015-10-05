@@ -1,31 +1,37 @@
-package DoctorSide;
+package ServerCode;
 
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 import java.util.Scanner;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 import java.io.File;
-// import commons.RHErrors;
 
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 
 /**
 *	DoctorClient: a ClientConnection object wrapper for connecting with the server at the doctor end
 */
-public class DoctorClient
+public class KioskClient
 {
 	private ClientConnection con = null; 		/* The connection to the data server (if any) */
 	private String mode = null;	 		/* Either "DS"(directly connected to data server) or "GD" (connected via google drive) */
-	private static String logintype = "DOC";	/* This will only run at the doctor end */
+	private String syncpath = null;			/* Where to put sync files */
+	private static String logintype = "KOP";	/* This will only run at the kiosk end */
 
 	/**
-	* Initiate a doctor object with an ID(specific to machine), server name and port
-	* @param id The ID of the machine of the doctor
+	* Initiate a kiosk object with an ID(specific to machine), server name, port and syncfolder location
+	* @param id The ID of the machine of the kiosk
 	* @param serverHostName The hostname of the data server
 	* @param port The remote health application port number
 	*/
-	DoctorClient(String id, String serverHostName, int port)
+	KioskClient(String id, String serverHostName, int port, String syncfolder)
 	{
 		Socket sock = connectToServer(serverHostName, port);
 		if (sock != null) {
@@ -34,6 +40,7 @@ public class DoctorClient
 		} else {
 			this.mode = "GD";
 		}
+		this.syncpath = syncfolder;
 	}
 
 	/**
@@ -56,6 +63,24 @@ public class DoctorClient
 			iae.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	* Utility function for copying a file from one location to another
+	* @param source source path (including filename)
+	* @param destination destination path (including filename)
+	* @return File a File object of the copied file
+	* @throws DirectoryNotEmptyException see java.nio.files.Files.copy()
+	* @throws IOException see java.nio.files.Files.copy()
+	* @throws SecurityException see java.nio.files.Files.copy()
+	**/
+	private File copyFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	{
+		Path src = Paths.get(source);
+		Path dst = Paths.get(destination);
+		Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+		File copied = dst.toFile();
+		return copied;
 	}
 
 	/**
@@ -103,18 +128,27 @@ public class DoctorClient
 	* Do a get request to the data server.
 	* @param serverFileName File name to get at server
 	* @param localFileName File name to store as locally
-	* @return int Sizeo f received file or error number
+	* @return int Size of received file or error number
 	* @throws Exception if socket was closed before receiving reply,
-	* in case of error, try to reconnect by re-making the DoctorClient object
+	* in case of error, try to reconnect by re-making the KioskClient object
 	*/
 	public int getRequest(String serverFileName, String localFileName) throws Exception
 	{
 		if (this.mode.equals("DS")) {
-			String command = "get " + serverFileName;// + " " + localFileName;
+			String command = "get " + serverFileName;
 			con.sendString(command);
 			int resp = con.receiveInt();
-			if (resp > 0)
-				con.receiveFile(localFileName,resp);
+                        if (resp > 0) {
+				File toget = new File(this.syncpath + serverFileName);
+				int k = 0;
+				while (!toget.exists() || toget.length() != resp) {
+					Thread.sleep(1000);
+					k++;
+					if (k > 900)
+						break;
+				}
+				copyFile(this.syncpath + serverFileName, localFileName);
+                        }
 			return resp;
 		} else {
 			return runGDScript(new String[]{"get", serverFileName, localFileName});
@@ -138,7 +172,7 @@ public class DoctorClient
 			int resp = RHErrors.RHE_GENERAL;
 			if (localFile.exists()) {
 				con.sendString(command);
-				con.sendFile(localFile);
+				File sent = copyFile(localFileName, this.syncpath + serverFileName);
 				resp = con.receiveInt();
 			}
 			return resp;

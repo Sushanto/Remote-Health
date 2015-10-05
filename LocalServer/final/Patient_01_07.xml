@@ -643,7 +643,17 @@ Stool --&gt; Watery
                 <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
                 <prevDiagnosis></prevDiagnosis>
             </patientComplaint>
-            <doctorPrescription/>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>Date :</prescription_date>
+                <provisionalDiagnosis>provi</provisionalDiagnosis>
+                <finalDiagnosis>final</finalDiagnosis>
+                <advice>adv</advice>
+                <medication>Tablet: ACAREX, 1 times in a day() X 1 Days
+Syrup: SALBAIR, 2 times in a day(Before Food) X 2 Weeks</medication>
+                <diagnosis>dt</diagnosis>
+                <referral>rf</referral>
+            </doctorPrescription>
         </Report>
     </Reports>
 </PatientReport>

@@ -1176,50 +1176,65 @@ class Form extends JFrame //implements ActionListener
 					print_button.setVisible(true);
 					patientComplaintEdit_button.setVisible(true);
 
-					try
+					int response=connection.receiveFromServer(patientReport.patientBasicData.getId()+".xml","tempFolder/tempPatientReport.xml");
+					File file=new File("tempFolder/tempPatientReport.xml");
+					if(response>=0)
 					{
-						if(connection.receiveFromServer("Server/PatientInfo/"+patientReport.patientBasicData.getId()+".xml","tempFolder/tempPatientReport.xml"))
+						try
 						{
 							JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
 							Unmarshaller um=jc.createUnmarshaller();
-							patientReport=(PatientReport)um.unmarshal(new File("tempFolder/tempPatientReport.xml"));
-							(new File("tempFolder/tempPatientReport.xml")).delete();
-
-							encodeToString();
-							patientReport.patientBasicData.setName(name_field.getText());
-							patientReport.patientBasicData.setReference(sdw_of_field.getText());
-							patientReport.patientBasicData.setOccupation(occupation_field.getText());
-							patientReport.patientBasicData.setPhone(ph_no_field.getText());
-							patientReport.patientBasicData.setAddress(address_area.getText());
-							patientReport.patientBasicData.setAge(age_field.getText());
-							patientReport.patientBasicData.setHeight(height_field.getText());
-							patientReport.patientBasicData.setFamilyhistory(family_history_area.getText());
-							patientReport.patientBasicData.setMedicalhistory(medical_history_area.getText());
-							if(imageString!=null)
-								patientReport.patientBasicData.setImage(imageString);
-
-
+							patientReport=(PatientReport)um.unmarshal(file);
+							file.delete();
 						}
-						else
+						catch(Exception e)
 						{
-							JOptionPane.showMessageDialog(jframe,networkErrorMessage);
+							if(file.isFile())
+								file.delete();
+							e.printStackTrace();
 						}
 
+						encodeToString();
+						patientReport.patientBasicData.setName(name_field.getText());
+						patientReport.patientBasicData.setReference(sdw_of_field.getText());
+						patientReport.patientBasicData.setOccupation(occupation_field.getText());
+						patientReport.patientBasicData.setPhone(ph_no_field.getText());
+						patientReport.patientBasicData.setAddress(address_area.getText());
+						patientReport.patientBasicData.setAge(age_field.getText());
+						patientReport.patientBasicData.setHeight(height_field.getText());
+						patientReport.patientBasicData.setFamilyhistory(family_history_area.getText());
+						patientReport.patientBasicData.setMedicalhistory(medical_history_area.getText());
+						if(imageString!=null)
+							patientReport.patientBasicData.setImage(imageString);
+					}
+					else
+					{
+						if(file.isFile())
+							file.delete();
+						if(response==-1)
+							JOptionPane.showMessageDialog(jframe,"File does not exist");
+						else if(response==-2)
+							JOptionPane.showMessageDialog(jframe,networkErrorMessage);
+					}
+
+					try
+					{
 						JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
 						Marshaller jm=jc.createMarshaller();
 						jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-						jm.marshal(patientReport,new File("tempFolder/tempPatientReport.xml"));
-						if(!connection.sendToServer("tempFolder/tempPatientReport.xml","Server/PatientInfo/"+reg_no_field.getText()+".xml"))
-						{
-							JOptionPane.showMessageDialog(jframe,networkErrorMessage);
-						}
-						(new File("tempFolder/tempPatientReport.xml")).delete();
+						jm.marshal(patientReport,file);
 					}
 					catch(JAXBException jaxbe)
 					{
 						jaxbe.printStackTrace();
-						(new File("tempFolder/tempPatientReport.xml")).delete();
+						file.delete();
 					}
+					response=connection.sendToServer("tempFolder/tempPatientReport.xml",Constants.finalDataPath+reg_no_field.getText()+".xml");
+					if(response<0)
+					{
+						JOptionPane.showMessageDialog(jframe,networkErrorMessage);
+					}
+					file.delete();
 
 					// getPatientReport(patientReport.patientBasicData.getId());
 					setPatientReport();
@@ -1370,63 +1385,85 @@ class Form extends JFrame //implements ActionListener
 			{
 				if(validatePatientComplaint())
 				{
-					try
+					int response=connection.receiveFromServer(patientReport.patientBasicData.getId()+".xml","tempFolder/tempPatientReport.xml");
+					File file=new File("tempFolder/tempPatientReport.xml");
+					if(response>=0)
 					{
-						if(connection.receiveFromServer("Server/PatientInfo/"+patientReport.patientBasicData.getId()+".xml","tempFolder/tempPatientReport.xml"))
+						try
 						{
 							JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
 							Unmarshaller um=jc.createUnmarshaller();
-							patientReport=(PatientReport)um.unmarshal(new File("tempFolder/tempPatientReport.xml"));
-							(new File("tempFolder/tempPatientReport.xml")).delete();
-
-							Report report=patientReport.Reports.get(current_report_count);
-							report.patientComplaint.setcomplaint(complaint_of_area.getText());
-							report.patientComplaint.setPrevDiagnosis(prev_diagnosis_field.getText());
-							report.patientComplaint.setWeight(weight_field.getText());
-							report.patientComplaint.setBmi(bmi_field.getText());
-							report.patientComplaint.setBp(bp_field.getText());
-							report.patientComplaint.setPulse(pulse_field.getText());
-							report.patientComplaint.setTemperature(temperature_field.getText());
-							report.patientComplaint.setSpo2(spO2_field.getText());
-							report.patientComplaint.setOtherResults(on_examination_area.getText());
-
-							boolean FileSendingComplete=true;
-							for(int i=0;i<selectedFiles.size();i++)
-							{
-								if(!connection.sendToServer(selectedFiles.get(i).getPath(),"Server/PatientInfo/"+reg_no_field.getText()+"/"+selectedFiles.get(i).getName()))
-								{
-									FileSendingComplete=false;
-									JOptionPane.showMessageDialog(jframe,"File upload failed : "+selectedFiles.get(i).getName());
-								}
-							}
-							selectedFiles=null;
-							selectedFiles=new ArrayList<File>();
-
-							if(FileSendingComplete)
-								report.patientComplaint.setFileNames(filename_area.getText());
-
-							patientReport.Reports.set(current_report_count,report);
+							patientReport=(PatientReport)um.unmarshal(file);
 						}
-						else
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						file.delete();
+					}
+					else 
+					{
+						if(file.isFile())
+							file.delete();
+						if(response==-1)
+							JOptionPane.showMessageDialog(jframe,"File does not exist");
+						else if(response==-2)
 						{
 							JOptionPane.showMessageDialog(jframe,networkErrorMessage);
+							new KioskLogin();
+							dispose();
 						}
+					}
 
+					Report report=patientReport.Reports.get(current_report_count);
+					report.patientComplaint.setcomplaint(complaint_of_area.getText());
+					report.patientComplaint.setPrevDiagnosis(prev_diagnosis_field.getText());
+					report.patientComplaint.setWeight(weight_field.getText());
+					report.patientComplaint.setBmi(bmi_field.getText());
+					report.patientComplaint.setBp(bp_field.getText());
+					report.patientComplaint.setPulse(pulse_field.getText());
+					report.patientComplaint.setTemperature(temperature_field.getText());
+					report.patientComplaint.setSpo2(spO2_field.getText());
+					report.patientComplaint.setOtherResults(on_examination_area.getText());
+
+					boolean FileSendingComplete=true;
+					for(int i=0;i<selectedFiles.size();i++)
+					{
+						if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath+selectedFiles.get(i).getName())<0)
+						{
+							FileSendingComplete=false;
+							JOptionPane.showMessageDialog(jframe,"File upload failed : "+selectedFiles.get(i).getName());
+						}
+					}
+					selectedFiles=null;
+					selectedFiles=new ArrayList<File>();
+
+					if(FileSendingComplete)
+						report.patientComplaint.setFileNames(filename_area.getText());
+
+					patientReport.Reports.set(current_report_count,report);
+
+					try
+					{
 						JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
 						Marshaller jm=jc.createMarshaller();
 						jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-						jm.marshal(patientReport,new File("tempFolder/tempPatientReport.xml"));
-						if(!connection.sendToServer("tempFolder/tempPatientReport.xml","Server/PatientInfo/"+reg_no_field.getText()+".xml"))
-						{
-							JOptionPane.showMessageDialog(jframe,networkErrorMessage);
-						}
-						(new File("tempFolder/tempPatientReport.xml")).delete();
+						jm.marshal(patientReport,file);
 					}
-					catch(JAXBException e)
+					catch(Exception e)
 					{
+						if(file.isFile())
+							file.delete();
 						e.printStackTrace();
-						(new File("tempFolder/tempPatientReport.xml")).delete();
 					}
+
+					if(connection.sendToServer("tempFolder/tempPatientReport.xml",Constants.finalDataPath+reg_no_field.getText()+".xml")<0)
+					{
+						JOptionPane.showMessageDialog(jframe,networkErrorMessage);
+						new KioskLogin();
+						dispose();
+					}
+					file.delete();
 
 
 					HealthInfoPanel.setBackground(Constants.JPANELCOLOR1);
@@ -1903,7 +1940,7 @@ class Form extends JFrame //implements ActionListener
 		boolean FileSendingComplete=true;
 		for(int i=0;i<selectedFiles.size();i++)
 		{
-			if(!connection.sendToServer(selectedFiles.get(i).getPath(),"Server/PatientInfo/"+reg_no_field.getText()+"/"+selectedFiles.get(i).getName()))
+			if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath+selectedFiles.get(i).getName())<0)
 			{
 				FileSendingComplete=false;
 				JOptionPane.showMessageDialog(this,"File upload failed : "+selectedFiles.get(i).getName());
@@ -1927,7 +1964,7 @@ class Form extends JFrame //implements ActionListener
 			Marshaller jm=jc.createMarshaller();
 			jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
 			jm.marshal(patientReport,new File("tempFolder/tempPatientReport.xml"));
-			if(!connection.sendToServer("tempFolder/tempPatientReport.xml","Server/PatientInfo/"+reg_no_field.getText()+".xml"))
+			if(connection.sendToServer("tempFolder/tempPatientReport.xml",Constants.finalDataPath+reg_no_field.getText()+".xml")<0)
 			{
 				JOptionPane.showMessageDialog(this,networkErrorMessage);
 				(new File("tempFolder/tempPatientReport.xml")).delete();
@@ -2032,13 +2069,15 @@ class Form extends JFrame //implements ActionListener
 
 	private boolean update_log()
 	{
-		try
+		int response=connection.receiveFromServer("Patient_"+KioskNumber+"_Log.xml","tempFolder/log.xml");
+		File file=new File("tempFolder/log.xml");
+		if(response>=0)
 		{
-			if(connection.receiveFromServer("Server/PatientInfo/Patient_"+KioskNumber+"_Log.xml","tempFolder/log.xml"))
+			try
 			{
 				JAXBContext jc=JAXBContext.newInstance(PatientLog.class);
 				Unmarshaller um=jc.createUnmarshaller();
-				PatientLog patientLog=(PatientLog)um.unmarshal(new File("tempFolder/log.xml"));
+				PatientLog patientLog=(PatientLog)um.unmarshal(file);
 
 				if(emergency_box.isSelected())
 					patientLog.Emergency.add(reg_no_field.getText());
@@ -2046,53 +2085,65 @@ class Form extends JFrame //implements ActionListener
 
 				Marshaller jm=jc.createMarshaller();
 				jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-				jm.marshal(patientLog,new File("tempFolder/log.xml"));
-				if(!connection.sendToServer("tempFolder/log.xml","Server/PatientInfo/Patient_"+KioskNumber+"_Log.xml"))
+				jm.marshal(patientLog,file);
+				if(connection.sendToServer("tempFolder/log.xml",Constants.finalDataPath+"Patient_"+KioskNumber+"_Log.xml")<0)
 				{
-					(new File("tempFolder/log.xml")).delete();
+					file.delete();
 					JOptionPane.showMessageDialog(this,networkErrorMessage);
 					return false;
 				}
-				(new File("tempFolder/log.xml")).delete();
+				file.delete();
 				return true;
 			}
-			else
+			catch(Exception e)
 			{
-				JOptionPane.showMessageDialog(this,networkErrorMessage);
+				e.printStackTrace();
 				return false;
 			}
+			
 		}
-		catch(JAXBException jaxbe)
+		else
 		{
-			if((new File("tempFolder/log.xml")).isFile())
-				(new File("tempFolder/log.xml")).delete();
-			JOptionPane.showMessageDialog(this,networkErrorMessage);
+			if(file.isFile())
+				file.delete();
+			if(response==-1)
+				JOptionPane.showMessageDialog(this,"File does not exist");
+			else if(response==-2)
+				JOptionPane.showMessageDialog(this,networkErrorMessage);
 			return false;
 		}
 	}
 
 	private void getPatientReport(String PatientId)
 	{
-		try
+		int response=connection.receiveFromServer(PatientId+".xml","tempFolder/tempPatientReport.xml");
+		File file=new File("tempFolder/tempPatientReport.xml");
+		if(response>=0)
 		{
-			// Thread.sleep(100);
-			if(connection.receiveFromServer("Server/PatientInfo/"+PatientId+".xml","tempFolder/tempPatientReport.xml"))
+			try
 			{
 				JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
 				Unmarshaller um=jc.createUnmarshaller();
-				patientReport=(PatientReport)um.unmarshal(new File("tempFolder/tempPatientReport.xml"));
-				(new File("tempFolder/tempPatientReport.xml")).delete();
+				patientReport=(PatientReport)um.unmarshal(file);
 			}
-			else
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			file.delete();
+		}
+		else
+		{
+			if(file.isFile())
+				file.delete();
+			if(response==-1)
+				JOptionPane.showMessageDialog(this,"File does not exist");
+			else if(response==-2)
 			{
 				JOptionPane.showMessageDialog(this,networkErrorMessage);
 				new PatientLogin(connection,employee);
 				dispose();
 			}
-		}
-		catch(JAXBException jaxbe)
-		{
-			jaxbe.printStackTrace();
 		}
 	}
 

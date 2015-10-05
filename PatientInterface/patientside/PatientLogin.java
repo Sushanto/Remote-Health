@@ -262,9 +262,10 @@ class PatientLoginApplet extends JFrame
 			{
 				String patientId=patientIdField.getText();
 				String filename="tempFolder/tempPatientReport.xml";
-				if(connection.receiveFromServer("Server/PatientInfo/"+patientId+".xml",filename))
+				int response=connection.receiveFromServer(patientId+".xml",filename);
+				File file=new File(filename);
+				if(response>=0)
 				{
-					File file=new File(filename);
 					try
 					{
 						JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
@@ -279,8 +280,23 @@ class PatientLoginApplet extends JFrame
 					nameValue.setText(patientReport.patientBasicData.getName()+"/ "+patientReport.patientBasicData.getAge()+" yrs");
 
 					setPatientBasicDataVisible(true);
+					warningLabel.setVisible(false);
 				}
-				else setPatientBasicDataVisible(false);
+				else
+				{
+					setPatientBasicDataVisible(false);
+					if(file.isFile())
+						file.delete();
+					if(response==-1)
+						warningLabel.setVisible(true);
+					else if(response==-2)
+					{
+						warningLabel.setVisible(false);
+						JOptionPane.showMessageDialog(jframe,networkErrorMessage);
+						new KioskLogin();
+						dispose();
+					}
+				}
 			}
 		});
 
@@ -317,6 +333,5 @@ class PatientLoginApplet extends JFrame
 		patientInformationPanel.setVisible(visible);
 		nameValue.setVisible(visible);
 		confirmButton.setVisible(visible);
-		warningLabel.setVisible(!visible);
 	}
 }

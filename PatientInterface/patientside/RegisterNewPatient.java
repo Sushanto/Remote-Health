@@ -234,12 +234,12 @@ class BasicInformation
 	{
 		try
 		{
-			File file=new File("tempFolder/PatientIdCount.abc");
+			File file=new File("tempFolder/PatientIdCount.txt");
 			file.createNewFile();
 			BufferedWriter bout=new BufferedWriter(new FileWriter(file));
 			bout.write(String.valueOf(countId));
 			bout.close();
-			if(!connection.sendToServer("tempFolder/PatientIdCount.abc","Server/PatientInfo/Patient_"+KioskNumber+"_IdCount.abc"))
+			if(connection.sendToServer("tempFolder/PatientIdCount.txt",Constants.finalDataPath+"Patient_"+KioskNumber+"_IdCount.txt")<0)
 			{
 				JOptionPane.showMessageDialog(frame,networkErrorMessage);
 				file.delete();
@@ -263,28 +263,34 @@ class BasicInformation
 		try
 		{
 			// Thread.sleep(100);
-			if(connection.receiveFromServer("Server/PatientInfo/Patient_"+KioskNumber+"_IdCount.abc","tempFolder/PatientIdCount.abc"))
+			int response=connection.receiveFromServer("Patient_"+KioskNumber+"_IdCount.txt","tempFolder/PatientIdCount.txt");
+			if(response>=0)
 			{
-				BufferedReader bin=new BufferedReader(new FileReader(this.fileDirectory+"PatientIdCount.abc"));
+				BufferedReader bin=new BufferedReader(new FileReader(this.fileDirectory+"PatientIdCount.txt"));
 				countId=Integer.parseInt(bin.readLine());
 				bin.close();
 				String temp="Patient_"+KioskNumber+"_"+String.format("%02d",(countId++));
 				patientId=temp;
-				if((new File("tempFolder/PatientIdCount.abc")).isFile())
-					(new File("tempFolder/PatientIdCount.abc")).delete();
+				if((new File("tempFolder/PatientIdCount.txt")).isFile())
+					(new File("tempFolder/PatientIdCount.txt")).delete();
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(frame,networkErrorMessage+"createId");
-				new PatientLogin(connection,emp);
-				frame.dispose();
+				if(response==-1)
+					JOptionPane.showMessageDialog(frame,"File does not exist");
+				else if(response==-2)
+				{
+					JOptionPane.showMessageDialog(frame,networkErrorMessage+"createId");
+					new KioskLogin();
+					frame.dispose();
+				}
 			}
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(frame,networkErrorMessage);
-			new PatientLogin(connection,emp);
+			new KioskLogin();
 			frame.dispose();
 		}	
 	}
@@ -923,7 +929,7 @@ class BasicInformation
 		    Marshaller m = context.createMarshaller();
 		    m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 		    m.marshal(patientReport, new File("tempFolder/tempPatient.xml"));
-		    if(!connection.sendToServer("tempFolder/tempPatient.xml","Server/PatientInfo/"+patientId+".xml"))
+		    if(connection.sendToServer("tempFolder/tempPatient.xml",Constants.tempDataPath+patientId+".xml")<0)
 		    {
 		    	JOptionPane.showMessageDialog(frame,networkErrorMessage);
 		    	new PatientLogin(connection,emp);

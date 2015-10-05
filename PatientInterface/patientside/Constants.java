@@ -21,6 +21,7 @@ public class Constants
 	public static Color HEADERCOLOR1,JPANELCOLOR2;
 	public static JLabel NAME_LABEL;
 	public static Font HEADERFONT,SMALLLABELFONT,SMALLBUTTONFONT,BENGALILABELFONT,BENGALIBUTTONFONT;
+	public static String tempDataPath="temp/",finalDataPath="final/";
 	// public static final String SERVER="192.168.250.58";
 	// public static final String SERVER="203.197.107.110";
 	// public static final String SERVER="192.168.137.240";

@@ -715,7 +715,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 					if(!file.isFile())
 					{
 						int response=connection.getRequest(fileName,"tempFolder/"+fileName);
-						if(response==0)
+						if(response>=0)
 						{
 							try
 							{
@@ -1428,7 +1428,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			String localFileName = "tempFolder/log.xml",serverFileName = "Patient_"+kioskNumber+"_Log.xml";
 			File localFile = new File(localFileName);
 			int receiveResponse = connection.getRequest(serverFileName,localFileName);
-			if(receiveResponse==0)
+			if(receiveResponse>=0)
 			{
 				try
 				{
@@ -1539,7 +1539,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			String fileName="tempFolder/tempPatientReport.xml";
 			File file = new File(fileName);
 			int response=connection.getRequest(PatientId+".xml",fileName);
-			if(response==0)
+			if(response>=0)
 			{
 				try
 				{
@@ -2120,7 +2120,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	// 	File file=new File(fileName);
 	// 	int response=connection.getRequest(patientId+".xml",fileName);
 	// 	PatientReport patientReport;
-	// 	if(response==0)
+	// 	if(response>=0)
 	// 	{
 	// 		try
 	// 		{
@@ -2166,7 +2166,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	// 	try
 	// 	{
 	// 		int response=connection.getRequest(username+".xml","tempFolder/tempDoctor.xml");
-	// 		if(response==0)
+	// 		if(response>=0)
 	// 		{
 	// 			File doctorFile=new File("tempFolder/tempDoctor.xml");
 	// 			JAXBContext jc=JAXBContext.newInstance(Doctor.class);

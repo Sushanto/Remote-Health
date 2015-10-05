@@ -93,38 +93,6 @@ class Connection extends Thread
 					case "RECEIVE_FILE":
 						receiveFromClient();
 						break;
-					case "LOGIN":
-						String username=receiveString();
-						String password=receiveString();
-						int response=handleCommand("login "+username+" "+password+" OP");
-						if(response>0)
-							sendString("LOGGED_IN");
-						else sendString(RHErrors.getErrorDescription(response));
-						break;
-					case "LOGOUT":
-						handleCommand("logout");
-						sendString("LOGGED_OUT");
-						break;
-					case "NEW_LOGIN":
-						String username=receiveString();
-						String password=receiveString();
-						int response=handleCommand("newlogin "+username+" "+password);
-						if(response>0)
-							sendString("NEW_USER_ADDED");
-						else sendString(RHErrors.getErrorDescription(response));
-						break;
-					case "CHANGE_PASSWORD":
-						String username=receiveString();
-						String oldPassword=receiveString();
-						String newPassword=receiveString()
-						int response=handleCommand("chpasswd "+username+" "+oldPassword+" "+newPassword);
-						if(response>0)
-							sendString("PASSWORD_CHANGED");
-						else sendString(RHErrors.getErrorDescription(response));
-						break;
-					case default:
-						throw new IOException();
-						break;
 				}
 			}
 		}
@@ -141,15 +109,18 @@ class Connection extends Thread
 		try
 		{
 			String localFileName=receiveString();
-			String type=receiveString();
 			sendString("CTS");
-			receiveFile(LocalServer.tempDataPath+localFileName);
-			if(type.equals("FINAL"))
-			{
-				int response=LocalServer.handleCommand("put "+localFileName);
-				System.out.println("Handle command response : "+response);
-			}
+			String[] folders=localFileName.split("/");
 			System.out.println("File received: "+localFileName);
+			receiveFile(localFileName);
+
+			if(folders[0].equals(LocalServer.finalDataPath))
+			{
+				File file=new File(LocalServer.tempDataPath+"/"+folders[1]);
+				if(file.isFile())
+					file.delete();
+				LocalServer.client.putRequest(localFileName,folders[1]);
+			}
 			return true;
 		}
 		catch(Exception e)
@@ -164,20 +135,21 @@ class Connection extends Thread
 		try
 		{
 			String localFileName=receiveString();
-			if(new File(LocalServer.tempDataPath+localFileName).isFile())
+			if(new File(LocalServer.tempDataPath+"/"+localFileName).isFile())
 			{
 				sendString("RTS");
-				sendFile(LocalServer.tempDataPath+localFileName);
+				sendFile(LocalServer.tempDataPath+"/"+localFileName);
 				System.out.println("File sent: "+localFileName);
 				return true;
 			}
-			else if(new File(LocalServer.finalDataPath+localFileName).isFile())
+			else
 			{
-				int response=LocalServer.handleCommand("get "+localFileName);
-				if(response>0 && response==(int)(new File(LocalServer.finalDataPath+localFileName).length()))
+				int response=LocalServer.client.getRequest(localFileName,LocalServer.finalDataPath+"/"+localFileName);
+				System.out.println("Response: "+response);
+				if(response>=0 && response==(int)(new File(LocalServer.finalDataPath+"/"+localFileName).length()))
 				{
 					sendString("RTS");
-					sendFile(LocalServer.tempDataPath+localFileName);
+					sendFile(LocalServer.finalDataPath+"/"+localFileName);
 					System.out.println("File sent: "+localFileName);
 					return true;
 				}
@@ -187,12 +159,8 @@ class Connection extends Thread
 					return false;
 				}
 			}
-			{
-				sendString("NACK");
-				return false;
-			}
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			e.printStackTrace();
 			return false;
@@ -212,7 +180,7 @@ class Connection extends Thread
 				byte[] byteArray=new byte[(int)inFile.length()];
 				biStream.read(byteArray,0,byteArray.length);
 
-				outStream.writeLong((long)inFile.length());
+				outStream.writeInt((int)inFile.length());
 
 				outStream.write(byteArray,0,byteArray.length);
 				outStream.flush();
@@ -243,7 +211,7 @@ class Connection extends Thread
 			FileOutputStream ofStream=new FileOutputStream(outFile);
 			BufferedOutputStream boStream=new BufferedOutputStream(ofStream);
 
-			long fileLength=inStream.readLong();
+			int fileLength=inStream.readInt();
 
 			byte[] byteArray=new byte[FILE_SIZE];
 			int byteRead=0;
@@ -283,5 +251,25 @@ class Connection extends Thread
 	protected void finalize()
 	{
 		System.out.println("Garbage Collected: Connection");
+	}
+
+	public boolean login()
+	{
+		try
+		{
+			if(receiveString().equals("LOGIN"))
+			{
+				String username=receiveString();
+				String password=receiveString();
+				sendString("LOGGED_IN");
+				return true;
+			}
+			else return false;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package DoctorSide;
+package ServerCode;
 
 import java.net.Socket;
 import java.net.UnknownHostException;

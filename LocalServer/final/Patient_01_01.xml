@@ -718,6 +718,104 @@ Description --&gt; Heart beat=51
                 <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
                 <prevDiagnosis>yes</prevDiagnosis>
             </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>05-10-2015</prescription_date>
+                <provisionalDiagnosis>pd</provisionalDiagnosis>
+                <finalDiagnosis>fd</finalDiagnosis>
+                <advice>ad</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>dt</diagnosis>
+                <referral>rf</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>sfsdf</complaint>
+                <complaint_date>05-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>dfdf</otherResults>
+                <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
+                <prevDiagnosis>dfdf</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>05-10-2015</prescription_date>
+                <provisionalDiagnosis>dfdf</provisionalDiagnosis>
+                <finalDiagnosis>dfdf</finalDiagnosis>
+                <advice>d</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>fdfd</diagnosis>
+                <referral>fdf</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>dfdf</complaint>
+                <complaint_date>05-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>dfdfAnemia
+Edema
+</otherResults>
+                <fileNames>sushanto.pdf
+</fileNames>
+                <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
+                <prevDiagnosis>dfdf</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>05-10-2015</prescription_date>
+                <provisionalDiagnosis>pd</provisionalDiagnosis>
+                <finalDiagnosis>fd</finalDiagnosis>
+                <advice>ad</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day(1.00AM) X 1 Day(s)</medication>
+                <diagnosis>dt</diagnosis>
+                <referral>rt</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>dfdfgSwelling
+Where --&gt; Head-Back
+Where --&gt; Teeth
+Where --&gt; Neck
+
+</complaint>
+                <complaint_date>05-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>dfdfdfAnemia
+Edema
+</otherResults>
+                <fileNames>Java_Printing.pdf
+sushanto.pdf
+</fileNames>
+                <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
+                <prevDiagnosis>dfdf</prevDiagnosis>
+            </patientComplaint>
             <doctorPrescription/>
         </Report>
     </Reports>

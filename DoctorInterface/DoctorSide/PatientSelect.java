@@ -276,7 +276,7 @@ public class PatientSelect extends JFrame
 					String fileName="tempFolder/tempLog.xml";
 					File file=new File(fileName);
 					int response=connection.getRequest("Patient_"+(String)group2KioskSelectComboBox.getSelectedItem()+"_Log.xml",fileName);
-					if(response==0)
+					if(response>=0)
 					{
 						PatientLog patientLog;
 						try
@@ -495,7 +495,7 @@ public class PatientSelect extends JFrame
 			String fileName="tempFolder/tempPatientReport.xml";
 			File file=new File(fileName);
 			int response=connection.getRequest(patientId+".xml",fileName);
-			if(response==0)
+			if(response>=0)
 			{
 				try
 				{
@@ -545,7 +545,7 @@ public class PatientSelect extends JFrame
 	// 	try
 	// 	{
 	// 		int response=connection.getRequest(username+".xml","tempFolder/tempDoctor.xml");
-	// 		if(response==0)
+	// 		if(response>=0)
 	// 		{
 	// 			File doctorFile=new File("tempFolder/tempDoctor.xml");
 	// 			JAXBContext jc=JAXBContext.newInstance(Doctor.class);

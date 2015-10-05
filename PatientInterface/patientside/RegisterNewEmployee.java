@@ -69,7 +69,7 @@ class Registration extends JFrame implements ActionListener
             BufferedWriter bout=new BufferedWriter(new FileWriter(file));
             bout.write(String.valueOf(countId));
             bout.close();
-            if(!connection.sendToServer("tempFolder/EmployeeIdCount.abc","Server/EmployeeInfo/Employee_"+KioskNumber+"_IdCount.abc"))
+            if(connection.sendToServer("tempFolder/EmployeeIdCount.abc","Employee_"+KioskNumber+"_IdCount.abc")<0)
             {
                 JOptionPane.showMessageDialog(jframe,"networkErrorMessage");
                 file.delete();
@@ -89,7 +89,7 @@ class Registration extends JFrame implements ActionListener
     {
         try
         {
-            if(connection.receiveFromServer("Server/EmployeeInfo/Employee_"+KioskNumber+"_IdCount.abc","tempFolder/EmployeeIdCount.abc"))
+            if(connection.receiveFromServer("Employee_"+KioskNumber+"_IdCount.abc","tempFolder/EmployeeIdCount.abc")>=0)
             {
                 BufferedReader bin=new BufferedReader(new FileReader("tempFolder/EmployeeIdCount.abc"));
                 countId=Integer.parseInt(bin.readLine());
@@ -291,7 +291,7 @@ class Registration extends JFrame implements ActionListener
     				Marshaller jm=jc.createMarshaller();
                     jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
     				jm.marshal(emp,file);
-    				if(connection.sendToServer("tempFolder/tempEmployee.xml","Server/EmployeeInfo/"+EmployeeId+".xml"))
+    				if(connection.sendToServer("tempFolder/tempEmployee.xml",EmployeeId+".xml")>=0)
     				{
     					JOptionPane.showMessageDialog(jframe, "Data Saved Successfully");
     					IncrementEmployeeIdCount();

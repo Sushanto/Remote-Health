@@ -91,7 +91,7 @@ public class ClientConnection
 			byte[] fileBuffer = new byte[(int)inFile.length()];
 			biStream.read(fileBuffer, 0, fileBuffer.length);
 
-			outStream.writeInt((int)inFile.length());
+			// outStream.writeLong((long)inFile.length());
 
 			outStream.write(fileBuffer, 0, fileBuffer.length);
 			outStream.flush();
@@ -108,10 +108,10 @@ public class ClientConnection
 	* @param outFileName The name of the file in the server (to save as)
 	* @return int The length of the received file, otherwise error number
 	*/
-	public int receiveFile(String outFileName)
+	public int receiveFile(String outFileName,int origFileLength)
 	{
 		try {
-			int origFileLength = inStream.readInt();
+			// int origFileLength = (int)inStream.readLong();
 
 			if (origFileLength < 0) {
 				/* handle errror here, there was some error */

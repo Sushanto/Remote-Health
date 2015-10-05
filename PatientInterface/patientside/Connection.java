@@ -77,7 +77,7 @@ public class Connection
 		}
 	}
 
-	public boolean receiveFromServer(String serverFileName,String localFileName)
+	public int receiveFromServer(String serverFileName,String localFileName)
 	{
 		try
 		{
@@ -86,18 +86,18 @@ public class Connection
 			if(receiveString().equals("RTS"))
 			{
 				receiveFile(localFileName);
-				return true;
+				return 0;
 			}
-			else return false;
+			else return -1;
 		}
 		catch(IOException ioe)
 		{
 			ioe.printStackTrace();
-			return false;
+			return -2;
 		}
 	}
 
-	public boolean sendToServer(String localFileName,String serverFileName)
+	public int sendToServer(String localFileName,String serverFileName)
 	{
 		try
 		{
@@ -106,14 +106,14 @@ public class Connection
 			if(receiveString().equals("CTS"))
 			{
 				sendFile(localFileName);
-				return true;
+				return 0;
 			}
-			else return false;
+			else return -1;
 		}
 		catch(IOException ioe)
 		{
 			ioe.printStackTrace();
-			return false;
+			return -2;
 		}
 	}
 
@@ -130,7 +130,7 @@ public class Connection
 				byte[] byteArray=new byte[(int)inFile.length()];
 				biStream.read(byteArray,0,byteArray.length);
 
-				outStream.writeLong((long)inFile.length());
+				outStream.writeInt((int)inFile.length());
 
 				outStream.write(byteArray,0,byteArray.length);
 				outStream.flush();
@@ -161,7 +161,7 @@ public class Connection
 			FileOutputStream ofStream=new FileOutputStream(outFile);
 			BufferedOutputStream boStream=new BufferedOutputStream(ofStream);
 
-			long fileLength=inStream.readLong();
+			int fileLength=inStream.readInt();
 
 			byte[] byteArray=new byte[FILE_SIZE];
 			int byteRead=0;
@@ -196,6 +196,24 @@ public class Connection
 		if(str==null)
 			throw new IOException();
 		return str;
+	}
+
+	public boolean login(String username,String password)
+	{
+		try
+		{
+			sendString("LOGIN");
+			sendString(username);
+			sendString(password);
+			if(receiveString().equals("LOGGED_IN"))
+				return true;
+			else return false;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	protected void finalize()

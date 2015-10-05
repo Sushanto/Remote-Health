@@ -265,7 +265,8 @@ class loginApplet extends JFrame
 				connection=createNewConnection();
 				String username=useridBox.getText();
 				String password=new String(passwordBox.getPassword());
-				if(connection!=null)
+
+				if(connection!=null && connection.login(username,password))
 				{
 					if(check(username,password))
 					{
@@ -413,45 +414,43 @@ class loginApplet extends JFrame
 	{
 		String username=user;
 		String password=pw;
-		String ServerFile="Server/EmployeeInfo/"+username+".xml";
+		String ServerFile=username+".xml";
 		String LocalFile="tempFolder/tempEmployee.xml";
-		if(connection.receiveFromServer(ServerFile,LocalFile))
+		File file=new File(LocalFile);
+		int response = connection.receiveFromServer(ServerFile,LocalFile);
+		if(response>=0)
 		{
 			try
 			{
-				File file=new File(LocalFile);
 				JAXBContext jc=JAXBContext.newInstance(Employee.class);
 				Unmarshaller jum=jc.createUnmarshaller();
 				emp=(Employee)jum.unmarshal(file);
 				file.delete();
-				file=new File("tempFolder/tempEmployee.abc");
-				file.createNewFile();
-				FileWriter fw=new FileWriter(file);
-				BufferedWriter bw=new BufferedWriter(fw);
-				bw.write(emp.getEmployeeId());
-				bw.close();
-				fw.close();
 				if(password.equals(emp.getPassword()))
 					return true;
 				else
-				{
-					file.delete();
 					return false;
-				}
 			}
 			catch(JAXBException jaxbe)
 			{
+				// file.delete();
 				jaxbe.printStackTrace();
 				JOptionPane.showMessageDialog(this, networkErrorMessage);
 				return false;
 			}
-			catch(IOException ioe)
-			{
-				ioe.printStackTrace();
-				JOptionPane.showMessageDialog(this, networkErrorMessage);
-				return false;
-			}
 		}
-		else return false;
+		else
+		{
+			if(file.isFile())
+				file.delete();
+			if(response==-1)
+				errorLabel.setVisible(true);
+			else if(response==-2)
+			{
+				JOptionPane.showMessageDialog(this,networkErrorMessage);
+				errorLabel.setVisible(false);
+			}
+			return false;
+		}
 	}
 }

@@ -268,7 +268,7 @@ class DoctorLoginApplet extends JFrame
 		try
 		{
 			int response=connection.getRequest(username+".xml","tempFolder/tempDoctor.xml");
-			if(response==0)
+			if(response>=0)
 			{
 				File doctorFile=new File("tempFolder/tempDoctor.xml");
 				JAXBContext jc=JAXBContext.newInstance(Doctor.class);
