@@ -7,10 +7,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.PrintWriter;
 import java.io.InputStreamReader;
-import java.io.File;
+import java.io.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.EOFException;
 import java.net.Socket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -83,17 +84,18 @@ public class Connection
 		{
 			sendString("SEND_FILE");
 			sendString(serverFileName);
-			if(receiveString().equals("RTS"))
+			int response=receiveInt();
+			if(response>=0)
 			{
-				receiveFile(localFileName);
+				receiveFile1(localFileName,response);
 				return 0;
 			}
-			else return -1;
+			else return response;
 		}
-		catch(IOException ioe)
+		catch(Exception ioe)
 		{
 			ioe.printStackTrace();
-			return -2;
+			return -1;
 		}
 	}
 
@@ -102,84 +104,131 @@ public class Connection
 		try
 		{
 			sendString("RECEIVE_FILE");
-			sendString(serverFileName);
-			if(receiveString().equals("CTS"))
-			{
-				sendFile(localFileName);
-				return 0;
-			}
-			else return -1;
+			File localFile=new File(localFileName);
+			sendString(serverFileName+" "+localFile.length());
+			sendFile1(localFile);
+
+			int response=receiveInt();
+			return response;
 		}
-		catch(IOException ioe)
+		catch(Exception ioe)
 		{
 			ioe.printStackTrace();
-			return -2;
+			return -1;
 		}
 	}
 
-	public void sendFile(String inFileName)
+	public int sendFile(File inFile)
+	{
+		try {
+			FileInputStream ifStream = new FileInputStream(inFile);
+			BufferedInputStream biStream = new BufferedInputStream(ifStream);
+
+			byte[] fileBuffer = new byte[(int)inFile.length()];
+			biStream.read(fileBuffer, 0, fileBuffer.length);
+			try {
+				int x = this.receiveInt();
+				System.out.println("x= " + x);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			outStream.write(fileBuffer, 0, fileBuffer.length);
+			outStream.flush();
+
+			return fileBuffer.length;
+		} catch(IOException e) {
+			e.printStackTrace();
+			return RHErrors.RHE_IOE;
+		}
+	}
+
+
+
+	public int sendFile1(File inFile)
 	{
 		try
 		{
-			File inFile=new File(inFileName);
-			if(inFile.isFile())
+			FileReader fReader = new FileReader(inFile);
+			BufferedReader bReader= new BufferedReader(fReader);
+
+			String line="";
+
+			sendString("FILE_START");
+			while((line=bReader.readLine())!=null)
 			{
-				FileInputStream ifStream=new FileInputStream(inFile);
-				BufferedInputStream biStream=new BufferedInputStream(ifStream);
-
-				byte[] byteArray=new byte[(int)inFile.length()];
-				biStream.read(byteArray,0,byteArray.length);
-
-				outStream.writeInt((int)inFile.length());
-
-				outStream.write(byteArray,0,byteArray.length);
-				outStream.flush();
+				sendString(line);
 			}
+			sendString("FILE_END");
+			bReader.close();
+			fReader.close();
+			return 0;
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			e.printStackTrace();
+			return -1;
 		}
 	}
 
-	public void receiveFile(String outFileName)
+	public int receiveFile(String outFileName, int fileLength)
+	{
+		try {
+			int origFileLength = fileLength;
+			File outFile = new File(outFileName);
+			outFile.getParentFile().mkdirs();
+			outFile.createNewFile();
+			FileOutputStream ofStream = new FileOutputStream(outFile);
+			BufferedOutputStream boStream = new BufferedOutputStream(ofStream);
+
+			byte[] fileBuffer = new byte[fileLength];
+			int byteRead = 0;
+
+			System.out.println("receive file, start");
+			while((fileLength > 0) && (byteRead = inStream.read(fileBuffer, 0, Math.min(fileBuffer.length, fileLength))) != -1)
+			{
+				boStream.write(fileBuffer, 0, byteRead);
+				fileLength -= byteRead;
+				System.out.println("fileLength : "+fileLength+" byteRead : "+byteRead);
+			}
+			System.out.println("receive file, done");
+			boStream.close();
+			ofStream.close();
+
+			return origFileLength;
+		} catch(IOException e) {
+			e.printStackTrace();
+			return RHErrors.RHE_IOE;
+		}
+	}
+
+
+
+	public int receiveFile1(String outFileName, int fileLength)
 	{
 		try
 		{
-			File outFile=new File(outFileName);
+			File outFile = new File(outFileName);
+			FileWriter fWriter = new FileWriter(outFile);
+			PrintWriter pWriter = new PrintWriter(outFile);
 
-			// String[] tokens=outFileName.split("/");
-			// String dirname="";
-			// for(int i=0;i<tokens.length-1;i++)
-			// 	dirname+=tokens[i]+"/";
-			// File dir=new File(dirname);
-			// if(!dir.exists())
-			// 	dir.mkdirs();
-			
-			outFile.createNewFile();
-
-			FileOutputStream ofStream=new FileOutputStream(outFile);
-			BufferedOutputStream boStream=new BufferedOutputStream(ofStream);
-
-			int fileLength=inStream.readInt();
-
-			byte[] byteArray=new byte[FILE_SIZE];
-			int byteRead=0;
-
-			while(fileLength>0 && (byteRead=inStream.read(byteArray,0,(int)Math.min(byteArray.length,fileLength)))!=-1)
+			String reply="";
+			reply= receiveString();
+			if(reply.equals("FILE_START"))
 			{
-				boStream.write(byteArray,0,byteRead);
-				fileLength-=byteRead;
+				reply=receiveString();
+				pWriter.print(reply);
+
+				while(!(reply=receiveString()).equals("FILE_END"))
+					pWriter.print("\n"+reply);
 			}
 
-			boStream.flush();
-
-			boStream.close();
-			ofStream.close();
+			pWriter.close();
+			return 0;
 		}
-		catch(IOException ioe)
+		catch(Exception e)
 		{
-			ioe.printStackTrace();
+			e.printStackTrace();
+			return -1;
 		}
 	}
 
@@ -214,6 +263,34 @@ public class Connection
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public int sendInt(int val)
+	{
+		sendString(Integer.toString(val));
+		return 0;
+	}
+
+	/*
+	* Receive an integer from the client
+	* @return the received int or error number
+	* @throws Exception if a null string was received
+	*/
+	public int receiveInt() throws Exception {
+		int val = RHErrors.RHE_GENERAL;
+		try {
+			String str = receiveString();
+			val = Integer.parseInt(str);
+		} catch (EOFException eofe) {
+			eofe.printStackTrace();
+			return RHErrors.RHE_IOE;
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			return RHErrors.RHE_IOE;
+		} catch (Exception e) {
+			throw new Exception("Received null string");
+		}
+		return val;
 	}
 
 	protected void finalize()

@@ -23,8 +23,8 @@ public class Constants
 	public static Font HEADERFONT,SMALLLABELFONT,SMALLBUTTONFONT,BENGALILABELFONT,BENGALIBUTTONFONT;
 	// public static final String SERVER="192.168.250.58";
 	// public static final String SERVER="203.197.107.110";
-	// public static final String SERVER="192.168.43.143";
-	public static final String SERVER="10.10.149.110";
+	public static final String SERVER="192.168.43.143";
+	// public static final String SERVER="10.10.149.108";
 	// public static final String SERVER="127.0.0.1";
 	public static final String USERNAME="user1";
 	public static final int PORT=36699;

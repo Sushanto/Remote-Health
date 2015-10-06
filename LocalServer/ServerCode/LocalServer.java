@@ -15,7 +15,7 @@ public class LocalServer
 	// }
 
 	private final static String SERVER="127.0.0.1";
-	private int PORT=5000;
+	private int PORT=50000;
 	private ServerSocket serverSocket;
 	public static DoctorClient client;
 
@@ -27,7 +27,7 @@ public class LocalServer
 		{
 			serverSocket=new ServerSocket(PORT,1,InetAddress.getByName(SERVER));
 			connections=new ArrayList<Connection>();
-			client=new DoctorClient("01","10.10.149.110",36699);
+			client=new DoctorClient("01","192.168.43.143",36699);
 			client.loginRequest("admin","admin");
 		}
 		catch(Exception e)

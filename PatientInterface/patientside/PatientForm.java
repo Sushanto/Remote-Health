@@ -1940,11 +1940,20 @@ class Form extends JFrame //implements ActionListener
 		boolean FileSendingComplete=true;
 		for(int i=0;i<selectedFiles.size();i++)
 		{
+			try
+			{
+				Thread.sleep(2000);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 			if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath+selectedFiles.get(i).getName())<0)
 			{
 				FileSendingComplete=false;
 				JOptionPane.showMessageDialog(this,"File upload failed : "+selectedFiles.get(i).getName());
 			}
+			else System.out.println("File sent: "+selectedFiles.get(i).getPath());
 		}
 		selectedFiles=null;
 		selectedFiles=new ArrayList<File>();
@@ -1964,6 +1973,8 @@ class Form extends JFrame //implements ActionListener
 			Marshaller jm=jc.createMarshaller();
 			jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
 			jm.marshal(patientReport,new File("tempFolder/tempPatientReport.xml"));
+			Thread.sleep(2000);
+
 			if(connection.sendToServer("tempFolder/tempPatientReport.xml",Constants.finalDataPath+reg_no_field.getText()+".xml")<0)
 			{
 				JOptionPane.showMessageDialog(this,networkErrorMessage);
@@ -1974,7 +1985,7 @@ class Form extends JFrame //implements ActionListener
 			else
 				(new File("tempFolder/tempPatientReport.xml")).delete();
 		}
-		catch(JAXBException jaxbe)
+		catch(Exception jaxbe)
 		{
 			jaxbe.printStackTrace();
 			(new File("tempFolder/tempPatientReport.xml")).delete();

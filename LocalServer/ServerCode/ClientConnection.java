@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+// import commons.RHErrors;
 
 import java.io.IOException;
 import java.io.EOFException;
@@ -89,9 +90,12 @@ public class ClientConnection
 
 			byte[] fileBuffer = new byte[(int)inFile.length()];
 			biStream.read(fileBuffer, 0, fileBuffer.length);
-
-			// outStream.writeLong((long)inFile.length());
-
+			try {
+				int x = this.receiveInt();
+				System.out.println("x= " + x);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			outStream.write(fileBuffer, 0, fileBuffer.length);
 			outStream.flush();
 
@@ -107,17 +111,10 @@ public class ClientConnection
 	* @param outFileName The name of the file in the server (to save as)
 	* @return int The length of the received file, otherwise error number
 	*/
-	public int receiveFile(String outFileName,int origFileLength)
+	public int receiveFile(String outFileName, int fileLength)
 	{
 		try {
-			// int origFileLength = (int)inStream.readLong();
-
-			if (origFileLength < 0) {
-				/* handle errror here, there was some error */
-				return origFileLength;
-			}
-			int fileLength = origFileLength;
-
+			int origFileLength = fileLength;
 			File outFile = new File(outFileName);
 			outFile.getParentFile().mkdirs();
 			outFile.createNewFile();
@@ -127,13 +124,15 @@ public class ClientConnection
 			byte[] fileBuffer = new byte[fileLength];
 			int byteRead = 0;
 
+			System.out.println("Start");
+
 			while((fileLength > 0) && (byteRead = inStream.read(fileBuffer, 0, Math.min(fileBuffer.length, fileLength))) != -1)
 			{
 				boStream.write(fileBuffer, 0, byteRead);
 				fileLength -= byteRead;
+				System.out.println("fileLength : "+fileLength+" byteRead : "+byteRead);
 			}
-
-			boStream.flush();
+			System.out.println("Done");
 			boStream.close();
 			ofStream.close();
 

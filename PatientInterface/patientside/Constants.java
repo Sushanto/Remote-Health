@@ -26,9 +26,9 @@ public class Constants
 	// public static final String SERVER="203.197.107.110";
 	// public static final String SERVER="192.168.137.240";
 	public static final String SERVER="127.0.0.1";
-	// public static final String SERVER="192.168.43.73";
+	// public static final String SERVER="192.168.43.91";
 	public static final String USERNAME="user1";
-	public static final int PORT=5000;
+	public static final int PORT=50000;
 
 	static
 	{

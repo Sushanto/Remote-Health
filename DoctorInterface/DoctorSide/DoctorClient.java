@@ -114,7 +114,7 @@ public class DoctorClient
 			con.sendString(command);
 			int resp = con.receiveInt();
 			if (resp > 0)
-				con.receiveFile(localFileName,resp);
+				con.receiveFile(localFileName, resp);
 			return resp;
 		} else {
 			return runGDScript(new String[]{"get", serverFileName, localFileName});
@@ -198,7 +198,29 @@ public class DoctorClient
 	public int chpasswdRequest(String userid, String oldpasswd, String newpasswd) throws Exception
 	{
 		if (this.mode.equals("DS")) {
-			String command = "chpasswd " + oldpasswd + " " + newpasswd;
+			String command = "chpasswd " + userid + " " + oldpasswd + " " + newpasswd;
+			con.sendString(command);
+			int resp = con.receiveInt();
+			return resp;
+		}
+		return 0;
+	}
+
+	public int lockRequest(String serverFileName) throws Exception
+	{
+		if (this.mode.equals("DS")) {
+			String command = "lock " + serverFileName;
+			con.sendString(command);
+			int resp = con.receiveInt();
+			return resp;
+		}
+		return 0;
+	}
+
+	public int unlockRequest(String serverFileName) throws Exception
+	{
+		if (this.mode.equals("DS")) {
+			String command = "unlock " + serverFileName;
 			con.sendString(command);
 			int resp = con.receiveInt();
 			return resp;
