@@ -1,7 +1,8 @@
-package ServerCode;
+package DoctorSide;
 
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.net.ConnectException;
 
 import java.util.Scanner;
 
@@ -31,8 +32,10 @@ public class DoctorClient
 		if (sock != null) {
 			this.con = new ClientConnection(sock, id);
 			this.mode = "DS";
+			System.out.println("Set DC mode to DS");
 		} else {
 			this.mode = "GD";
+			System.out.println("Set DC mode to GD");
 		}
 	}
 
@@ -46,6 +49,8 @@ public class DoctorClient
 		try {
 			Socket mysock = new Socket(serverHostName, port);
 			return mysock;
+		} catch (ConnectException ce) {
+			ce.printStackTrace();
 		} catch (UnknownHostException uhe) {
 			uhe.printStackTrace();
 		} catch (IOException ioe) {
@@ -114,9 +119,10 @@ public class DoctorClient
 			con.sendString(command);
 			int resp = con.receiveInt();
 			if (resp > 0)
-				con.receiveFile(localFileName, resp);
+				con.receiveFileln(localFileName, resp);
 			return resp;
 		} else {
+			System.out.println("get(): Falling back to GD script");
 			return runGDScript(new String[]{"get", serverFileName, localFileName});
 		}
 	}
@@ -138,11 +144,12 @@ public class DoctorClient
 			int resp = RHErrors.RHE_GENERAL;
 			if (localFile.exists()) {
 				con.sendString(command);
-				con.sendFile(localFile);
+				con.sendFileln(localFile);
 				resp = con.receiveInt();
 			}
 			return resp;
 		} else {
+			System.out.println("put(): Falling back to GD script");
 			return runGDScript(new String[]{"put", serverFileName, localFileName});
 		}
 	}

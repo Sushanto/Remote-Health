@@ -1,4 +1,4 @@
-package EncodeTest;
+package patientside;
 
 import java.io.*;
 import sun.misc.BASE64Encoder;

@@ -1,7 +1,7 @@
 package patientside;
 /**
-	Defines error numbers used throught the system
-	error numbers are all negative, starting from -1
+*	Defines error numbers used throught the system
+*	error numbers are all negative, starting from -1
 **/
 public class RHErrors {
 	/* Error number definitions */

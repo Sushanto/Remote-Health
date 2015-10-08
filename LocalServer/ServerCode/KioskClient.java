@@ -2,6 +2,7 @@ package ServerCode;
 
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.net.ConnectException;
 
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 import java.io.File;
+// import commons.RHErrors;
 
 import java.io.IOException;
 import java.nio.file.DirectoryNotEmptyException;
@@ -24,6 +26,41 @@ public class KioskClient
 	private String mode = null;	 		/* Either "DS"(directly connected to data server) or "GD" (connected via google drive) */
 	private String syncpath = null;			/* Where to put sync files */
 	private static String logintype = "KOP";	/* This will only run at the kiosk end */
+
+	protected String getMode()
+	{
+		return mode;
+	}
+
+	private int runSync()
+	{
+		try {
+			File syncFolder = new File(syncpath);
+
+			Runtime r = Runtime.getRuntime();
+			Process grive = r.exec(new String[]{"grive"},null,syncFolder.getParentFile());
+			int resp = grive.waitFor();
+			if (resp > 0)
+				return RHErrors.RHE_SUBPROC;
+			else
+				return 0;
+		} catch (SecurityException se) {
+			se.printStackTrace();
+			return RHErrors.RHE_GENERAL;
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			return RHErrors.RHE_IOE;
+		} catch (NullPointerException npe) {
+			npe.printStackTrace();
+			return RHErrors.RHE_NULL;
+		} catch (IndexOutOfBoundsException ioobe) {
+			ioobe.printStackTrace();
+			return RHErrors.RHE_GENERAL;
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
+			return RHErrors.RHE_SUBPROC;
+		}
+	}
 
 	/**
 	* Initiate a kiosk object with an ID(specific to machine), server name, port and syncfolder location
@@ -48,11 +85,13 @@ public class KioskClient
 	* @param serverHostName The host name of the server
 	* @param port The remote health port number
 	*/
-	private Socket connectToServer(String serverHostName, int port)
+	protected Socket connectToServer(String serverHostName, int port)
 	{
 		try {
 			Socket mysock = new Socket(serverHostName, port);
 			return mysock;
+		} catch(ConnectException ce) {
+			ce.printStackTrace();
 		} catch (UnknownHostException uhe) {
 			uhe.printStackTrace();
 		} catch (IOException ioe) {
@@ -138,15 +177,9 @@ public class KioskClient
 			String command = "get " + serverFileName;
 			con.sendString(command);
 			int resp = con.receiveInt();
-                        if (resp > 0) {
-				File toget = new File(this.syncpath + serverFileName);
-				int k = 0;
-				while (!toget.exists() || toget.length() != resp) {
-					Thread.sleep(1000);
-					k++;
-					if (k > 900)
-						break;
-				}
+			runSync();
+			int sync = runSync();
+                        if (resp > 0 && sync == 0) {
 				copyFile(this.syncpath + serverFileName, localFileName);
                         }
 			return resp;
@@ -173,6 +206,8 @@ public class KioskClient
 			if (localFile.exists()) {
 				con.sendString(command);
 				File sent = copyFile(localFileName, this.syncpath + serverFileName);
+				runSync();
+				int sync = runSync();
 				resp = con.receiveInt();
 			}
 			return resp;
@@ -232,7 +267,29 @@ public class KioskClient
 	public int chpasswdRequest(String userid, String oldpasswd, String newpasswd) throws Exception
 	{
 		if (this.mode.equals("DS")) {
-			String command = "chpasswd " + oldpasswd + " " + newpasswd;
+			String command = "chpasswd " + userid + " "+ oldpasswd + " " + newpasswd;
+			con.sendString(command);
+			int resp = con.receiveInt();
+			return resp;
+		}
+		return 0;
+	}
+
+	public int lockRequest(String serverFileName) throws Exception
+	{
+		if (this.mode.equals("DS")) {
+			String command = "lock " + serverFileName;
+			con.sendString(command);
+			int resp = con.receiveInt();
+			return resp;
+		}
+		return 0;
+	}
+
+	public int unlockRequest(String serverFileName) throws Exception
+	{
+		if (this.mode.equals("DS")) {
+			String command = "unlock " + serverFileName;
 			con.sendString(command);
 			int resp = con.receiveInt();
 			return resp;

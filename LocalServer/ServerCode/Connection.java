@@ -86,6 +86,26 @@ class Connection extends Thread
 			while(true)
 			{
 				String request=receiveString();
+				System.out.println(request);
+				try
+				{
+					System.out.println("Setting mode....");
+					if(LocalServer.client.getMode().equals("GD"))
+					{
+						System.out.println("Trying to connect to DS...");
+						if(LocalServer.client.connectToServer(LocalServer.serverHostName,LocalServer.serverPort)!=null)
+						{
+							System.out.println("Connected to DS...");
+							LocalServer.client = new KioskClient(LocalServer.kioskId,LocalServer.serverHostName,LocalServer.serverPort,LocalServer.syncFolder);
+							LocalServer.client.loginRequest(LocalServer.loginUsername,LocalServer.loginPassword);
+						}
+						else System.out.println("Connected to GD....");
+					}
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				switch(request)
 				{
 					case "SEND_FILE":
@@ -112,15 +132,19 @@ class Connection extends Thread
 			String localFileName=receiveString();
 			String[] fileInfo=localFileName.split(" ");
 			String[] folders=fileInfo[0].split("/");
-			System.out.println("File received: "+localFileName);
+			System.out.println("Requested file: "+localFileName);
 			receiveFile1(fileInfo[0],Integer.parseInt(fileInfo[1]));
+			System.out.println("File received: "+localFileName);
 			sendInt(0);
-			if(folders[0].equals(LocalServer.finalDataPath))
+			if((folders[0]+"/"+folders[1]).equals(LocalServer.finalDataPath))
 			{
-				File file=new File(LocalServer.tempDataPath+"/"+folders[1]);
+				File file=new File(LocalServer.tempDataPath+"/"+folders[2]);
 				if(file.isFile())
 					file.delete();
-				LocalServer.client.putRequest(fileInfo[0],folders[1]);
+				Thread.sleep(3000);
+				System.out.println("Syncing...");
+				LocalServer.client.putRequest(fileInfo[0],folders[2]);
+				System.out.println("Sync complete...");
 			}
 			return true;
 		}
@@ -136,6 +160,7 @@ class Connection extends Thread
 		try
 		{
 			String localFileName=receiveString();
+			System.out.println("Requested file: "+localFileName);
 			File tempFile = new File(LocalServer.tempDataPath+"/"+localFileName);
 			if(tempFile.isFile())
 			{
@@ -146,7 +171,9 @@ class Connection extends Thread
 			}
 			else
 			{
+				System.out.println("Syncing....");
 				int response=LocalServer.client.getRequest(localFileName,LocalServer.finalDataPath+"/"+localFileName);
+				System.out.println("Sync complete....");
 				System.out.println("Response: "+response);
 				File finalFile= new File(LocalServer.finalDataPath+"/"+localFileName);
 				if(response>=0 && response==(int)finalFile.length())

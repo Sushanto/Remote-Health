@@ -14,21 +14,33 @@ public class LocalServer
 
 	// }
 
-	private final static String SERVER="127.0.0.1";
-	private int PORT=50000;
+	private String clientHostName;
+	private int clientPort;
+
+	public static String kioskId;
+	public static String serverHostName;
+	public static int serverPort;
+	public static String syncFolder;
+
+	public static String loginUsername;
+	public static String loginPassword;
+
 	private ServerSocket serverSocket;
-	public static DoctorClient client;
+	public static KioskClient client;
+
 
 	private static ArrayList<Connection> connections;
 
 	public LocalServer()
 	{
+		readInfo();
 		try
 		{
-			serverSocket=new ServerSocket(PORT,1,InetAddress.getByName(SERVER));
+			serverSocket=new ServerSocket(clientPort,1,InetAddress.getByName(clientHostName));
 			connections=new ArrayList<Connection>();
-			client=new DoctorClient("01","192.168.43.143",36699);
-			client.loginRequest("admin","admin");
+			client=new KioskClient(kioskId,serverHostName,serverPort,syncFolder);
+			client.loginRequest(loginUsername,loginPassword);
+			System.out.println("Local server is running....");
 		}
 		catch(Exception e)
 		{
@@ -36,10 +48,63 @@ public class LocalServer
 		}
 	}
 
+	private void readInfo()
+	{
+		try
+		{
+			FileReader fReader = new FileReader(new File("ServerCode/KioskInfo.gpg"));
+			BufferedReader bReader = new BufferedReader(fReader);
+			System.out.println("Kiosk Information reading....");
+
+			String line;
+			while((line=bReader.readLine())!=null)
+			{
+				String[] tokens = line.split("=");
+				switch(tokens[0])
+				{
+					case "CLIENT_HOST_NAME":
+						clientHostName = tokens[1];
+						break;
+					case "CLIENT_PORT":
+						clientPort = Integer.parseInt(tokens[1]);
+						break;
+					case "KIOSK_ID":
+						kioskId = tokens[1];
+						break;
+					case "SERVER_HOST_NAME":
+						serverHostName = tokens[1];
+						break;
+					case "SERVER_PORT":
+						serverPort = Integer.parseInt(tokens[1]);
+						break;
+					case "SYNC_FOLDER":
+						syncFolder = tokens[1];
+						break;
+					case "LOGIN_ID":
+						loginUsername = tokens[1];
+						break;
+					case "LOGIN_PASSWORD":
+						loginPassword = tokens[1];
+						break;
+					default:
+						break;
+				}
+			}
+			bReader.close();
+			fReader.close();
+		}
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+	}
+
 	public Connection listen()
 	{
 		try
 		{
+			System.out.println("Listening.....");
+
 			Socket clientSocket=serverSocket.accept();
 			Connection newCon=new Connection(clientSocket);
 			connections.add(newCon);
@@ -75,7 +140,7 @@ public class LocalServer
 
 /***********************************************************************************************************************************/
 	public static String tempDataPath = "temp";
-	public static String finalDataPath = "final";
+	public static String finalDataPath = "final/Kiosk_01";
 	public static String logintype = null;
 
 

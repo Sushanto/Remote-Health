@@ -20,7 +20,7 @@ import java.io.EOFException;
 
 
 /**
-	ClientConnection, a Connection object in the client for maintainig a connection to the server
+*	ClientConnection, a Connection object in the client for maintainig a connection to the server
 */
 public class ClientConnection
 {
