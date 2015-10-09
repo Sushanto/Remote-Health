@@ -1,6 +1,5 @@
 package DoctorSide;
 
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.BorderFactory;
@@ -12,75 +11,99 @@ import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 public class Constants
 {
-	public static final int SIZE_X=900,SIZE_Y=700,PANEL2_HEIGHT=100;
-	public static JPanel JPANEL1,JPANEL2;
-	public static Color LABELCOLOR1,LABELCOLOR2,LABELCOLOR3,LABELCOLOR4,WARNINGCOLOR,MOUSEENTER,JPANELCOLOR1;
-	public static Color HEADERCOLOR1,JPANELCOLOR2;
-	public static JLabel NAME_LABEL;
-	public static Font HEADERFONT,SMALLLABELFONT,SMALLBUTTONFONT,BENGALILABELFONT,BENGALIBUTTONFONT;
-	// public static final String SERVER="192.168.250.58";
-	// public static final String SERVER="203.197.107.110";
-	public static final String SERVER="192.168.43.143";
-	// public static final String SERVER="10.10.149.108";
-	// public static final String SERVER="127.0.0.1";
-	public static final String USERNAME="user1";
-	public static final int PORT=36699;
+	protected static final int SIZE_X = 900,SIZE_Y = 700,PANEL2_HEIGHT = 100;
+	protected static JPanel JPANEL1,JPANEL2;
+	protected static Color LABELCOLOR1,LABELCOLOR2,LABELCOLOR3,LABELCOLOR4,WARNINGCOLOR,MOUSEENTER,JPANELCOLOR1;
+	protected static Color HEADERCOLOR1,JPANELCOLOR2;
+	protected static JLabel NAME_LABEL;
+	protected static Font HEADERFONT,SMALLLABELFONT,SMALLBUTTONFONT,BENGALILABELFONT,BENGALIBUTTONFONT;
+	protected static String serverHostName;
+	protected static String doctorId;
+	protected static String dataFolder;
+	protected static int serverPort;
 
 	static
 	{
-		JPANELCOLOR1=UIManager.getColor("Button.click");
-		// JPANELCOLOR1=Color.WHITE;
-		JPANELCOLOR2=Color.YELLOW.darker()/*.darker()*/;
-		LABELCOLOR1=Color.BLACK;
-		LABELCOLOR2=Color.GREEN.darker().darker();
-		LABELCOLOR3=Color.GREEN.darker().darker();
-		LABELCOLOR4=Color.BLACK;
+		JPANELCOLOR1 = UIManager.getColor("Button.click");
+		JPANELCOLOR2 = Color.YELLOW.darker();
+		LABELCOLOR1 = Color.BLACK;
+		LABELCOLOR2 = Color.GREEN.darker().darker();
+		LABELCOLOR3 = Color.GREEN.darker().darker();
+		LABELCOLOR4 = Color.BLACK;
 		
-		WARNINGCOLOR=Color.RED;
-		MOUSEENTER=Color.BLUE;
-		HEADERCOLOR1=Color.WHITE;
+		WARNINGCOLOR = Color.RED;
+		MOUSEENTER = Color.BLUE;
+		HEADERCOLOR1 = Color.WHITE;
 
-		HEADERFONT=new Font("Serif",Font.BOLD,34);
-		SMALLLABELFONT=new Font("Serif",Font.BOLD,12);
-		SMALLBUTTONFONT=new Font("Serif",Font.BOLD,12);
-		BENGALILABELFONT=new Font("Arial black",Font.BOLD,14);
-		BENGALIBUTTONFONT=new Font("Serif",Font.BOLD,14);
+		HEADERFONT = new Font("Serif",Font.BOLD,34);
+		SMALLLABELFONT = new Font("Serif",Font.BOLD,12);
+		SMALLBUTTONFONT = new Font("Serif",Font.BOLD,12);
+		BENGALILABELFONT = new Font("Arial black",Font.BOLD,14);
+		BENGALIBUTTONFONT = new Font("Serif",Font.BOLD,14);
 
 
-		JPANEL1=new JPanel();
+		JPANEL1 = new JPanel();
 		JPANEL1.setBounds(0,0,1300,SIZE_Y);
 		JPANEL1.setBackground(JPANELCOLOR1);
 		JPANEL1.setBorder(BorderFactory.createRaisedBevelBorder());
 
 
-		JPANEL2=new JPanel();
+		JPANEL2 = new JPanel();
 		JPANEL2.setBounds(0,0,1300,PANEL2_HEIGHT);
 		JPANEL2.setBackground(JPANELCOLOR2);
 		JPANEL2.setBorder(BorderFactory.createRaisedBevelBorder());
 
-		NAME_LABEL=new JLabel();
+		NAME_LABEL = new JLabel();
 		NAME_LABEL.setBounds(20,20,150,50);
 		NAME_LABEL.setForeground(LABELCOLOR4);
 		NAME_LABEL.setFont(new Font(NAME_LABEL.getFont().getName(),Font.BOLD,14));
 
+		doctorId = System.getProperty("user.name");
+		dataFolder = "tempFolder/";
+		readInfo();
+
 	}
 
-	public static String getKioskNumber()
+	private static void readInfo()
 	{
 		try
 		{
-			BufferedReader bin=new BufferedReader(new FileReader("tempFolder/KioskNumber.abc"));
-			String KioskNumber=bin.readLine();
-			bin.close();
-			return KioskNumber;
+			FileReader fReader = new FileReader(new File("DoctorInfo.cfg"));
+			BufferedReader bReader = new BufferedReader(fReader);
+			System.out.println("Doctor Information reading....");
+
+			String line;
+			while((line = bReader.readLine()) != null)
+			{
+				String[] tokens = line.split("=");
+				switch(tokens[0])
+				{
+					case "DOCTOR_ID":
+						doctorId = tokens[1];
+						break;
+					case "SERVER_HOST_NAME":
+						serverHostName = tokens[1];
+						break;
+					case "SERVER_PORT":
+						serverPort = Integer.parseInt(tokens[1]);
+						break;
+					case "DATA_FOLDER":
+						dataFolder = tokens[1];
+						break;
+					default:
+						break;
+				}
+			}
+			bReader.close();
+			fReader.close();
 		}
-		catch(Exception e)
+		catch(IOException ioe)
 		{
-			e.printStackTrace();
-			return null;
+			ioe.printStackTrace();
 		}
 	}
 }

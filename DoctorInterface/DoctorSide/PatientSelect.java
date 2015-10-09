@@ -1,11 +1,32 @@
 package DoctorSide;
 
-import java.io.*;
-import java.net.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.xml.bind.*;
+import java.io.File;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JRadioButton;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.JAXBException;
 import java.util.Collections;
 import java.util.ArrayList;
 
@@ -24,7 +45,7 @@ public class PatientSelect extends JFrame
 	private String confirmMessage,networkErrorMessage,textFieldInfoMessage;
 	private final DoctorClient connection;
 	private final Doctor doctor;
-	private boolean isGroup2ListFilled=false;
+	private boolean isGroup2ListFilled = false;
 	
 	private void setLanguage()
 	{
@@ -67,21 +88,21 @@ public class PatientSelect extends JFrame
 		group3PatientSelectLabel.setFont(Constants.SMALLLABELFONT);
 		group3PatientSelectButton.setFont(Constants.SMALLBUTTONFONT);
 
-		confirmMessage="Are you sure?";
-		networkErrorMessage="DoctorClient error! Try again later!";
-		textFieldInfoMessage="Enter registration no.";
+		confirmMessage = "Are you sure?";
+		networkErrorMessage = "DoctorClient error! Try again later!";
+		textFieldInfoMessage = "Enter registration no.";
 	}
 
 
 
 
-	public PatientSelect(DoctorClient myCon,Doctor doc)
+	protected PatientSelect(DoctorClient myCon,Doctor doc)
 	{
-		connection=myCon;
-		doctor=doc;
-		final JFrame jframe=this;
+		connection = myCon;
+		doctor = doc;
+		final JFrame jframe = this;
 		
-		font=new Font("Monotype Corsiva",Font.BOLD,15);
+		font = new Font("Monotype Corsiva",Font.BOLD,15);
 		setSize(Constants.SIZE_X,Constants.SIZE_Y);
 		setResizable(false);
 		setTitle("PATIENT SELECT");
@@ -92,7 +113,7 @@ public class PatientSelect extends JFrame
 			@Override
 			public void windowClosing(WindowEvent we)
 			{
-				if(JOptionPane.showConfirmDialog(jframe,confirmMessage)==JOptionPane.OK_OPTION)
+				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
                     System.exit(0);
 					dispose();
@@ -100,54 +121,54 @@ public class PatientSelect extends JFrame
 			}
 		});
 
-		patientInformationPanel=new JPanel();
-		group2Panel=new JPanel();
-		group1Panel=new JPanel();
-		group3Panel=new JPanel();
+		patientInformationPanel = new JPanel();
+		group2Panel = new JPanel();
+		group1Panel = new JPanel();
+		group3Panel = new JPanel();
 
-		frameLabel=new JLabel();
-		group3WarningLabel=new JLabel();
-		group2KioskSelectLabel=new JLabel();
-		group2PatientSelectLabel=new JLabel();
-		group1PatientSelectLabel=new JLabel();
-		group3PatientSelectLabel=new JLabel();
+		frameLabel = new JLabel();
+		group3WarningLabel = new JLabel();
+		group2KioskSelectLabel = new JLabel();
+		group2PatientSelectLabel = new JLabel();
+		group1PatientSelectLabel = new JLabel();
+		group3PatientSelectLabel = new JLabel();
 
-		group1PatientNameField=new JTextField();
-		group3PatientIdField= new JTextField();
+		group1PatientNameField = new JTextField();
+		group3PatientIdField =  new JTextField();
 
-		backButton=new JButton();
-		confirmButton=new JButton();
-		group2KioskSelectButton=new JButton();
-		group2PatientSelectButton=new JButton();
-		group1PatientSelectButton=new JButton();
-		group3PatientSelectButton=new JButton();
+		backButton = new JButton();
+		confirmButton = new JButton();
+		group2KioskSelectButton = new JButton();
+		group2PatientSelectButton = new JButton();
+		group1PatientSelectButton = new JButton();
+		group3PatientSelectButton = new JButton();
 
-		String[] kioskList={"01","02","03"};
-		group2KioskSelectComboBox=new JComboBox<String>(kioskList);
-		group2PatientSelectComboBox=new JComboBox<String>();
-		group1PatientSelectComboBox=new JComboBox<String>();
+		String[] kioskList = {"01","02","03"};
+		group2KioskSelectComboBox = new JComboBox<String>(kioskList);
+		group2PatientSelectComboBox = new JComboBox<String>();
+		group1PatientSelectComboBox = new JComboBox<String>();
 
-		group2RadioButton=new JRadioButton();
-		group1RadioButton=new JRadioButton();
-		group3RadioButton=new JRadioButton();
+		group2RadioButton = new JRadioButton();
+		group1RadioButton = new JRadioButton();
+		group3RadioButton = new JRadioButton();
 
-		groupSelect=new ButtonGroup();
+		groupSelect = new ButtonGroup();
 
 		Collections.reverse(doctor.patientIdList);
 		group1PatientSelectComboBox.setModel(getDefaultComboBoxModel(doctor.patientIdList));
 		Collections.reverse(doctor.patientIdList);
 
-		// nameLabel=new JLabel("Name :");
-		// dob_label=new JLabel("Date of Birth : ");
-		// phone_label=new JLabel("Phone no. : ");
-		// address_label=new JLabel("Address : ");
-		// gender_label=new JLabel("Gender : ");
+		// nameLabel = new JLabel("Name :");
+		// dob_label = new JLabel("Date of Birth : ");
+		// phone_label = new JLabel("Phone no. : ");
+		// address_label = new JLabel("Address : ");
+		// gender_label = new JLabel("Gender : ");
 
-		nameValue=new JLabel("");
-		// dob_value=new JLabel("");
-		// phone_value=new JLabel("");
-		// address_value=new JLabel("");
-		// gender_value=new JLabel("");
+		nameValue = new JLabel("");
+		// dob_value = new JLabel("");
+		// phone_value = new JLabel("");
+		// address_value = new JLabel("");
+		// gender_value = new JLabel("");
 		setLanguage();
 
 		patientInformationPanel.setBounds(0,500,900,200);
@@ -208,13 +229,13 @@ public class PatientSelect extends JFrame
 				try
 				{
 					connection.logoutRequest();
-					new DoctorLogin();
-					dispose();
 				}
 				catch(Exception e)
 				{
 					e.printStackTrace();
 				}
+				new DoctorLogin();
+				dispose();
 			}
 		});
 
@@ -252,8 +273,8 @@ public class PatientSelect extends JFrame
 		{
 			public void itemStateChanged(ItemEvent ie)
 			{
-				int reverseIdIndex=group1PatientSelectComboBox.getSelectedIndex();
-				int nameIndex=doctor.patientNameList.size()-reverseIdIndex-1;
+				int reverseIdIndex = group1PatientSelectComboBox.getSelectedIndex();
+				int nameIndex = doctor.patientNameList.size()-reverseIdIndex-1;
 				group1PatientNameField.setText(doctor.patientNameList.get(nameIndex));
 			}
 		});
@@ -262,7 +283,7 @@ public class PatientSelect extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String patientId=(String)group1PatientSelectComboBox.getSelectedItem();
+				String patientId = (String)group1PatientSelectComboBox.getSelectedItem();
 				selectButtonAction(patientId);
 			}
 		});
@@ -271,64 +292,74 @@ public class PatientSelect extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				String fileName = Constants.dataFolder+"tempLog.xml";
+				File file = new File(fileName);
+				int response=0;
 				try
 				{
-					String fileName="tempFolder/tempLog.xml";
-					File file=new File(fileName);
-					int response=connection.getRequest("Patient_"+(String)group2KioskSelectComboBox.getSelectedItem()+"_Log.xml",fileName);
-					if(response>=0)
+					response = connection.getRequest("Patient_"+(String)group2KioskSelectComboBox.getSelectedItem()+"_Log.xml",fileName);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				if(response >= 0)
+				{
+					PatientLog patientLog;
+					try
 					{
-						PatientLog patientLog;
+						JAXBContext jc = JAXBContext.newInstance(PatientLog.class);
+						Unmarshaller jum = jc.createUnmarshaller();
+						patientLog = (PatientLog)jum.unmarshal(file);
+
+
+						if(patientLog != null)
+						{
+							group2PatientSelectLabel.setEnabled(true);
+							group2PatientSelectComboBox.setEnabled(true);
+							group2PatientSelectButton.setEnabled(true);
+							isGroup2ListFilled = true;
+
+							group2PatientSelectComboBox.removeAllItems();
+							for(int i = 0;i < patientLog.Emergency.size();i++)
+								group2PatientSelectComboBox.addItem("E-"+patientLog.Emergency.get(i));
+							for(int i = 0;i < patientLog.Normal.size();i++)
+								group2PatientSelectComboBox.addItem("N-"+patientLog.Normal.get(i));
+						}
+						else
+						{
+							group2PatientSelectLabel.setEnabled(false);
+							group2PatientSelectComboBox.setEnabled(false);
+							group2PatientSelectButton.setEnabled(false);
+							isGroup2ListFilled = false;
+						}
+						file.delete();
+					}
+					catch(JAXBException jaxbe)
+					{
+						jaxbe.printStackTrace();
+					}
+				}
+				else
+				{
+					if(file.isFile())
+						file.delete();
+					if(response == -2)
+						JOptionPane.showMessageDialog(jframe,"No log file found!!");
+					else
+					{
+						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
 						try
 						{
-							JAXBContext jc=JAXBContext.newInstance(PatientLog.class);
-							Unmarshaller jum=jc.createUnmarshaller();
-							patientLog=(PatientLog)jum.unmarshal(file);
-							if(patientLog!=null)
-							{
-								group2PatientSelectLabel.setEnabled(true);
-								group2PatientSelectComboBox.setEnabled(true);
-								group2PatientSelectButton.setEnabled(true);
-								isGroup2ListFilled=true;
-
-								group2PatientSelectComboBox.removeAllItems();
-								for(int i=0;i<patientLog.Emergency.size();i++)
-									group2PatientSelectComboBox.addItem("E-"+patientLog.Emergency.get(i));
-								for(int i=0;i<patientLog.Normal.size();i++)
-									group2PatientSelectComboBox.addItem("N-"+patientLog.Normal.get(i));
-							}
-							else
-							{
-								group2PatientSelectLabel.setEnabled(false);
-								group2PatientSelectComboBox.setEnabled(false);
-								group2PatientSelectButton.setEnabled(false);
-								isGroup2ListFilled=false;
-							}
+							connection.logoutRequest();
 						}
 						catch(Exception e)
 						{
 							e.printStackTrace();
 						}
-						file.delete();
+						new DoctorLogin();
+						dispose();
 					}
-					else
-					{
-						if(file.isFile())
-							file.delete();
-						if(response==-1)
-							JOptionPane.showMessageDialog(jframe,"No log file found!!");
-						else if(response==-2)
-						{
-							JOptionPane.showMessageDialog(jframe,networkErrorMessage);
-							connection.logoutRequest();
-							new DoctorLogin();
-							dispose();
-						}
-					}
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
 				}
 			}
 		});
@@ -337,8 +368,8 @@ public class PatientSelect extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String str=(String)group2PatientSelectComboBox.getSelectedItem();
-				String[] patientId=str.split("-");
+				String str = (String)group2PatientSelectComboBox.getSelectedItem();
+				String[] patientId = str.split("-");
 				selectButtonAction(patientId[1]);
 			}
 		});
@@ -380,7 +411,7 @@ public class PatientSelect extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String patientId=group3PatientIdField.getText();
+				String patientId = group3PatientIdField.getText();
 				selectButtonAction(patientId);
 			}
 		});
@@ -389,8 +420,8 @@ public class PatientSelect extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String[] tempArray=patientReport.patientBasicData.getId().split("_");
-				String kioskNumber=tempArray[1];
+				String[] tempArray = patientReport.patientBasicData.getId().split("_");
+				String kioskNumber = tempArray[1];
 				new PatientPrescriptionForm(connection,doctor,patientReport,kioskNumber);
 				dispose();
 			}
@@ -483,164 +514,66 @@ public class PatientSelect extends JFrame
 
 	private DefaultComboBoxModel<String> getDefaultComboBoxModel(ArrayList<String> list)
 	{
-		String []array=new String[list.size()];
+		String []array = new String[list.size()];
 		list.toArray(array);
 		return new DefaultComboBoxModel<String>(array);
 	}
 
 	private void selectButtonAction(String patientId)
 	{
+		String fileName = Constants.dataFolder+"tempPatientReport.xml";
+		File file = new File(fileName);
+		int response=0;
 		try
 		{
-			String fileName="tempFolder/tempPatientReport.xml";
-			File file=new File(fileName);
-			int response=connection.getRequest(patientId+".xml",fileName);
-			if(response>=0)
-			{
-				try
-				{
-					JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
-					Unmarshaller jum=jc.createUnmarshaller();
-					patientReport=(PatientReport)jum.unmarshal(file);
-					nameValue.setVisible(true);
-					nameValue.setText(patientReport.patientBasicData.getName()+"/ "+patientReport.patientBasicData.getAge()+" yrs");
-					confirmButton.setVisible(true);
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-				file.delete();
-				group3WarningLabel.setVisible(false);
-			}
-			else
-			{
-				if(file.isFile())
-					file.delete();
-				if(response==-1)
-				{
-					group3WarningLabel.setVisible(true);
-					nameValue.setVisible(false);
-					confirmButton.setVisible(false);
-				}
-				else if(response==-2)
-				{
-					JOptionPane.showMessageDialog(this,networkErrorMessage);
-					connection.logoutRequest();
-					new DoctorLogin();
-					dispose();
-				}
-			}
+			response = connection.getRequest(patientId+".xml",fileName);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
+		if(response >= 0)
+		{
+			try
+			{
+				JAXBContext jc = JAXBContext.newInstance(PatientReport.class);
+				Unmarshaller jum = jc.createUnmarshaller();
+				patientReport = (PatientReport)jum.unmarshal(file);
+				nameValue.setVisible(true);
+				nameValue.setText(patientReport.patientBasicData.getName()+"/ "+patientReport.patientBasicData.getAge()+" yrs");
+				confirmButton.setVisible(true);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			file.delete();
+			group3WarningLabel.setVisible(false);
+		}
+		else
+		{
+			if(file.isFile())
+				file.delete();
+			if(response == -2)
+			{
+				group3WarningLabel.setVisible(true);
+				nameValue.setVisible(false);
+				confirmButton.setVisible(false);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+				try
+				{
+					connection.logoutRequest();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				new DoctorLogin();
+				dispose();
+			}
+		}
 	}
-
-
-/****************************************************************************************************************/
-	// private static Doctor getDoctor(DoctorClient connection,String username)
-	// {
-	// 	try
-	// 	{
-	// 		int response=connection.getRequest(username+".xml","tempFolder/tempDoctor.xml");
-	// 		if(response>=0)
-	// 		{
-	// 			File doctorFile=new File("tempFolder/tempDoctor.xml");
-	// 			JAXBContext jc=JAXBContext.newInstance(Doctor.class);
-	// 			Unmarshaller jum=jc.createUnmarshaller();
-	// 			// jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-	// 			Doctor doctor=(Doctor)jum.unmarshal(doctorFile);
-	// 			doctorFile.delete();
-	// 			// errorLabel.setVisible(false);
-	// 			return doctor;
-	// 		}
-	// 		else
-	// 		{
-	// 			File doctorFile=new File("tempFolder/tempDoctor.xml");
-	// 			if(doctorFile.isFile())
-	// 				doctorFile.delete();
-	// 			connection.logoutRequest();
-	// 			connection=null;
-	// 			if(response==-1)
-	// 				// errorLabel.setVisible(true);
-	// 				System.err.println("File not present");
-	// 			else if(response==-2)
-	// 			{
-	// 				// errorLabel.setVisible(false);
-	// 				// JOptionPane.showMessageDialog(this,networkErrorMessage);
-	// 				System.err.println("networkErrorMessage");
-	// 			}
-	// 			return null;
-	// 		}
-	// 	}
-	// 	catch(JAXBException jaxbe)
-	// 	{
-	// 		File doctorFile=new File("tempFolder/tempDoctor.xml");
-	// 		if(doctorFile.isFile())
-	// 			doctorFile.delete();
-	// 		jaxbe.printStackTrace();
-	// 		return null;
-	// 	}
-	// }
-
-	// private static DoctorClient createNewConnection()
-	// {
-	// 	try
-	// 	{
-	// 		Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
-	// 		DoctorClient myCon=new DoctorClient(mySocket);
-			
-	// 		return myCon;
-	// 	}
-	// 	catch(UnknownHostException uhe)
-	// 	{
-	// 		return null;
-	// 	}
-	// 	catch(IOException ioe)
-	// 	{
-	// 		return null;
-	// 	}
-	// }
-
-	// public static void main(String args[])
-	// {
-	// 	final DoctorClient connection=createNewConnection();
-	// 	final Doctor doctor=getDoctor(connection,"Doctor_01");
-	// 	SwingUtilities.invokeLater(new Runnable()
-	// 	{
-	// 		public void run()
-	// 		{
-	// 			try
-	// 			{
- //            		for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
- //            		{
- //                		if ("Nimbus".equals(info.getName()))
- //                		{
-	// 						javax.swing.UIManager.setLookAndFeel(info.getClassName());
- //                    		break;
- //                		}
- //            		}
- //        		}
- //        		catch (ClassNotFoundException ex)
- //        		{
- //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
- //        		}
- //        		catch (InstantiationException ex)
- //        		{
- //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
- //        		}
- //        		catch (IllegalAccessException ex)
- //        		{
- //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
- //        		}
- //        		catch (javax.swing.UnsupportedLookAndFeelException ex)
- //        		{
- //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
- //        		}
-	// 			new PatientSelect(connection,doctor);
-	// 		}
-	// 	});
-	// }
 }

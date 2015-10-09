@@ -2,6 +2,13 @@ package DoctorSide;
 
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.net.ConnectException;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.DirectoryNotEmptyException;
 
 import java.util.Scanner;
 
@@ -31,8 +38,10 @@ public class DoctorClient
 		if (sock != null) {
 			this.con = new ClientConnection(sock, id);
 			this.mode = "DS";
+			System.out.println("Set DC mode to DS");
 		} else {
 			this.mode = "GD";
+			System.out.println("Set DC mode to GD");
 		}
 	}
 
@@ -46,6 +55,8 @@ public class DoctorClient
 		try {
 			Socket mysock = new Socket(serverHostName, port);
 			return mysock;
+		} catch (ConnectException ce) {
+			ce.printStackTrace();
 		} catch (UnknownHostException uhe) {
 			uhe.printStackTrace();
 		} catch (IOException ioe) {
@@ -70,7 +81,7 @@ public class DoctorClient
 		Process gdproc = null;
 		String[] command = new String[commandArguments.length + 2];
 		command[0] = "python";
-		command[1] = "rh_gdrive.py";
+		command[1] = "gdrive_simple.py";
 		for (int i = 2, j = 0; j < commandArguments.length; i++, j++) {
 			command[i] = commandArguments[j];
 		}
@@ -100,6 +111,38 @@ public class DoctorClient
 	}
 
 	/**
+	* Utility function for moving a file from one location to another
+	* @param source source path (including filename)
+	* @param destination destination path (including filename)
+	* @return File a File object of the moved file
+	* @throws DirectoryNotEmptyException see java.nio.files.Files.move()
+	* @throws IOException see java.nio.files.Files.move()
+	* @throws SecurityException see java.nio.files.Files.move()
+	**/
+	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	{
+		Path src = Paths.get(source);
+		Path dst = Paths.get(destination);
+		Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING);
+		File copied = dst.toFile();
+		return copied;
+	}
+
+	/**
+	* Check if a file is an xml or txt file. If not, then encode it as such.
+	* @param inFileName Name of input file
+	*/
+	private void checkAndDecode(String inFileName)
+	{
+		FileConverter.decodeFile(inFileName, inFileName + ".temp");
+		try {
+			moveFile(inFileName + ".temp",inFileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	* Do a get request to the data server.
 	* @param serverFileName File name to get at server
 	* @param localFileName File name to store as locally
@@ -114,9 +157,11 @@ public class DoctorClient
 			con.sendString(command);
 			int resp = con.receiveInt();
 			if (resp > 0)
-				con.receiveFile(localFileName, resp);
+				con.receiveFileln(localFileName, resp);
+			checkAndDecode(localFileName);
 			return resp;
 		} else {
+			System.out.println("get(): Falling back to GD script");
 			return runGDScript(new String[]{"get", serverFileName, localFileName});
 		}
 	}
@@ -138,11 +183,12 @@ public class DoctorClient
 			int resp = RHErrors.RHE_GENERAL;
 			if (localFile.exists()) {
 				con.sendString(command);
-				con.sendFile(localFile);
+				con.sendFileln(localFile);
 				resp = con.receiveInt();
 			}
 			return resp;
 		} else {
+			System.out.println("put(): Falling back to GD script");
 			return runGDScript(new String[]{"put", serverFileName, localFileName});
 		}
 	}

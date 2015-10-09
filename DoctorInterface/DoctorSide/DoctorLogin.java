@@ -10,8 +10,8 @@ public class DoctorLogin
 {
 	public static void main(String args[])
 	{
-		if(!(new File("tempFolder")).exists())
-			(new File("tempFolder")).mkdir();
+		if(!(new File(Constants.dataFolder)).exists())
+			(new File(Constants.dataFolder)).mkdir();
 		new DoctorLogin();
 	}
 
@@ -86,8 +86,8 @@ class DoctorLoginApplet extends JFrame
 		signupLabel.setFont(Constants.SMALLLABELFONT);
 		signinButton.setFont(Constants.SMALLBUTTONFONT);
 
-		confirmMessage="Are you sure?";
-		networkErrorMessage="connection error! Try again later!";
+		confirmMessage = "Are you sure?";
+		networkErrorMessage = "connection error! Try again later!";
 	}
 
 	/**
@@ -95,10 +95,10 @@ class DoctorLoginApplet extends JFrame
 	*/
 
 	@SuppressWarnings("unchecked")
-	public DoctorLoginApplet()
+	protected DoctorLoginApplet()
 	{
 		/*set frame*/
-		final JFrame jframe=this;
+		final JFrame jframe = this;
 		setTitle("DOCTOR LOGIN");
 		setSize(Constants.SIZE_X,Constants.SIZE_Y);
 		setResizable(false);
@@ -109,7 +109,7 @@ class DoctorLoginApplet extends JFrame
 			@Override
 			public void windowClosing(WindowEvent we)
 			{
-				if(JOptionPane.showConfirmDialog(jframe,confirmMessage)==JOptionPane.OK_OPTION)
+				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
                     System.exit(0);
 					dispose();
@@ -117,16 +117,16 @@ class DoctorLoginApplet extends JFrame
 			}
 		});
 
-		frameLabel=new JLabel();
-		useridBox=new JTextField();
-		passwordBox=new JPasswordField();
-		useridLabel=new JLabel();
-		passwordLabel=new JLabel();
-		showPassword=new JCheckBox();
-		showPasswordLabel=new JLabel();
-		errorLabel=new JLabel();
-		signinButton=new JButton();
-		signupLabel=new JLabel();
+		frameLabel = new JLabel();
+		useridBox = new JTextField();
+		passwordBox = new JPasswordField();
+		useridLabel = new JLabel();
+		passwordLabel = new JLabel();
+		showPassword = new JCheckBox();
+		showPasswordLabel = new JLabel();
+		errorLabel = new JLabel();
+		signinButton = new JButton();
+		signupLabel = new JLabel();
 
 
 		setLanguage();
@@ -167,7 +167,7 @@ class DoctorLoginApplet extends JFrame
 		{
 			public void itemStateChanged(ItemEvent ie)
 			{
-				if(ie.getStateChange()==ItemEvent.SELECTED)
+				if(ie.getStateChange() == ItemEvent.SELECTED)
 					passwordBox.setEchoChar((char)0);
 				else passwordBox.setEchoChar('*');
 			}
@@ -177,17 +177,17 @@ class DoctorLoginApplet extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				connection=createNewDoctorClient();
-				String username=useridBox.getText();
-				String password=new String(passwordBox.getPassword());
-				if(connection!=null)
+				connection = createNewDoctorClient();
+				String username = useridBox.getText();
+				String password = new String(passwordBox.getPassword());
+				if(connection != null)
 				{
 					if(check(username,password))
 					{
-						String filename="tempFolder/tempEmployee.xml";
+						String filename = Constants.dataFolder+"tempEmployee.xml";
 						errorLabel.setVisible(false);
-						Doctor doctor=getDoctor(username);
-						if(doctor!=null)
+						Doctor doctor = getDoctor(username);
+						if(doctor != null)
 						{
 							SwingUtilities.invokeLater(new Runnable()
 							{
@@ -265,50 +265,55 @@ class DoctorLoginApplet extends JFrame
 
 	private Doctor getDoctor(String username)
 	{
+		String doctorFileName = Constants.dataFolder+"tempDoctor.xml";
+		File doctorFile = new File(doctorFileName);
+		int response;
 		try
 		{
-			int response=connection.getRequest(username+".xml","tempFolder/tempDoctor.xml");
-			if(response>=0)
+			response = connection.getRequest(username+".xml",doctorFileName);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		if(response >= 0)
+		{
+			try
 			{
-				File doctorFile=new File("tempFolder/tempDoctor.xml");
-				JAXBContext jc=JAXBContext.newInstance(Doctor.class);
-				Unmarshaller jum=jc.createUnmarshaller();
-				// jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-				Doctor doctor=(Doctor)jum.unmarshal(doctorFile);
+				JAXBContext jc = JAXBContext.newInstance(Doctor.class);
+				Unmarshaller jum = jc.createUnmarshaller();
+				Doctor doctor = (Doctor)jum.unmarshal(doctorFile);
 				doctorFile.delete();
 				errorLabel.setVisible(false);
 				return doctor;
 			}
-			else
+			catch(JAXBException jaxbe)
 			{
-				File doctorFile=new File("tempFolder/tempDoctor.xml");
-				if(doctorFile.isFile())
-					doctorFile.delete();
-				try
-				{
-					connection.logoutRequest();
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-				connection=null;
-				if(response==-1)
-					errorLabel.setVisible(true);
-				else if(response==-2)
-				{
-					errorLabel.setVisible(false);
-					JOptionPane.showMessageDialog(this,networkErrorMessage);
-				}
+				jaxbe.printStackTrace();
 				return null;
 			}
 		}
-		catch(Exception jaxbe)
+		else
 		{
-			File doctorFile=new File("tempFolder/tempDoctor.xml");
 			if(doctorFile.isFile())
 				doctorFile.delete();
-			jaxbe.printStackTrace();
+			try
+			{
+				connection.logoutRequest();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			connection = null;
+			if(response == -2)
+				errorLabel.setVisible(true);
+			else
+			{
+				errorLabel.setVisible(false);
+				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+			}
 			return null;
 		}
 	}
@@ -317,18 +322,12 @@ class DoctorLoginApplet extends JFrame
 	{
 		try
 		{
-			// Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
-			// DoctorClient myCon=new DoctorClient(mySocket);
-			DoctorClient myCon=new DoctorClient(System.getProperty("user.name"),Constants.SERVER,Constants.PORT);
-			
+			DoctorClient myCon = new DoctorClient(Constants.doctorId,Constants.serverHostName,Constants.serverPort);
 			return myCon;
 		}
-		// catch(UnknownHostException uhe)
-		// {
-		// 	return null;
-		// }
-		catch(Exception ioe)
+		catch(Exception e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -344,10 +343,11 @@ class DoctorLoginApplet extends JFrame
 	{
 		try
 		{
-			int response=connection.loginRequest(user,pw);
-			if(response>=0)
+			int response = connection.loginRequest(user,pw);
+			if(response >= 0)
 				return true;
-			else return false;
+			else JOptionPane.showMessageDialog(this, RHErrors.getErrorDescription(response));
+			return false;
 		}
 		catch(Exception e)
 		{

@@ -92,12 +92,12 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	private PatientReport patientReport;
 	private Doctor doctor;
 	private Font font;
-	private int current_report_count=-1;
-	private boolean PatientBasicDataEditMode=false;
-	private int imageSet=0;
+	private int current_report_count = -1;
+	private boolean PatientBasicDataEditMode = false;
+	private int imageSet = 0;
 	private String imgstr,kioskNumber;
-	private String confirmMessage,networkErrorMessage,newComplaintErrorMessage,imageString=null;
-	private ArrayList<File> selectedFiles=new ArrayList<File>();
+	private String confirmMessage,networkErrorMessage,newComplaintErrorMessage,imageString = null;
+	private ArrayList<File> selectedFiles = new ArrayList<File>();
 	private final DoctorClient connection;
 
     // Webcam webcam;
@@ -251,33 +251,24 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
         additionalReportsButton.setFont(Constants.SMALLBUTTONFONT);
 
 
-		confirmMessage="Are you sure?";
-		networkErrorMessage="DoctorClient error! Try again later!";
-		newComplaintErrorMessage="Previous Complaint has not solved yet!";
+		confirmMessage = "Are you sure?";
+		networkErrorMessage = "DoctorClient error! Try again later!";
+		newComplaintErrorMessage = "Previous Complaint has not solved yet!";
 	}
 
-	public PatientPrescriptionForm(DoctorClient myCon,Doctor doc,PatientReport pr,String kioskNum)
+	protected PatientPrescriptionForm(DoctorClient myCon,Doctor doc,PatientReport pr,String kioskNum)
 	{
 	//initialize Form
-		connection=myCon;
-		patientReport=pr;
-		doctor=doc;
-		final JFrame jframe=this;
-		// final String PatientId=temp;
-		kioskNumber=kioskNum;
-		font=new Font("Century Schoolbook L", Font.BOLD, 14);
+		connection = myCon;
+		patientReport = pr;
+		doctor = doc;
+		final JFrame jframe = this;
 
-		
-	
-		//horizontalLine = new Line2D.Float(490, 40, 1000, 40);
-       	        //verticalLine = new Line2D.Float(810,0,810,490);
-                             
+		kioskNumber = kioskNum;
+		font = new Font("Century Schoolbook L", Font.BOLD, 14);
+
         setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		
 		setVisible(true);
-		
-		//setUndecorated(true);
-		
 		setLayout(null);
 		
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -286,9 +277,9 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			@Override
 			public void windowClosing(WindowEvent we)
 			{
-				if(JOptionPane.showConfirmDialog(jframe,confirmMessage)==JOptionPane.OK_OPTION)
+				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
-					for(File tempFile: new File("tempFolder/").listFiles())
+					for(File tempFile: new File(Constants.dataFolder).listFiles())
 						tempFile.delete();
 					dispose();
 				}
@@ -299,137 +290,131 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		getContentPane().setBackground(UIManager.getColor("Button.focus"));
 		
 		
-		form_label=new JLabel("PATIENT PRESCRIPTION FORM");
+		form_label = new JLabel("PATIENT PRESCRIPTION FORM");
 		form_label.setFont(Constants.HEADERFONT);
 		form_label.setForeground(Constants.HEADERCOLOR1);
-		// form_label.setForeground(Color.blue);
-		// form_label.setBackground(Color.blue);
 
-  //initialize JLabels
-        picture=new JLabel();
-        reg_no=new JLabel();
-        status=new JLabel();
-        date=new JLabel();
-        name=new JLabel();
-        sdw_of=new JLabel();
-        occupation=new JLabel();
-        ph_no=new JLabel();
-        address=new JLabel();
-        age=new JLabel();
-        year=new JLabel();
-        gender=new JLabel();
-        height=new JLabel();
-        cm=new JLabel();
-        bmi=new JLabel();
-        bp=new JLabel();
-        weight=new JLabel();
-        kg=new JLabel();
-        pulse=new JLabel();
-        spO2=new JLabel();
-        percent=new JLabel();
-        temperature=new JLabel();
-        celcius=new JLabel();
+        picture = new JLabel();
+        reg_no = new JLabel();
+        status = new JLabel();
+        date = new JLabel();
+        name = new JLabel();
+        sdw_of = new JLabel();
+        occupation = new JLabel();
+        ph_no = new JLabel();
+        address = new JLabel();
+        age = new JLabel();
+        year = new JLabel();
+        gender = new JLabel();
+        height = new JLabel();
+        cm = new JLabel();
+        bmi = new JLabel();
+        bp = new JLabel();
+        weight = new JLabel();
+        kg = new JLabel();
+        pulse = new JLabel();
+        spO2 = new JLabel();
+        percent = new JLabel();
+        temperature = new JLabel();
+        celcius = new JLabel();
 
-        family_history=new JLabel();
-        medical_history=new JLabel();
-        prev_diagnosis=new JLabel();
-        complaint_of=new JLabel();
-        on_examination=new JLabel();
-        additionalReportsLabel= new JLabel();
-        advice=new JLabel();
-        medication=new JLabel();
-        diagnostic_test=new JLabel();
-        provisional_diagnosis=new JLabel();
-        referral=new JLabel();
-        final_diagnosis=new JLabel();
-        kiosk_coordinator=new JLabel();
-        kiosk_coordinator_name=new JLabel();
-        kiosk_coordinator_date=new JLabel();
-        doctorLabel=new JLabel();
-        doctor_name=new JLabel();
-        doctor_date=new JLabel();
+        family_history = new JLabel();
+        medical_history = new JLabel();
+        prev_diagnosis = new JLabel();
+        complaint_of = new JLabel();
+        on_examination = new JLabel();
+        additionalReportsLabel =  new JLabel();
+        advice = new JLabel();
+        medication = new JLabel();
+        diagnostic_test = new JLabel();
+        provisional_diagnosis = new JLabel();
+        referral = new JLabel();
+        final_diagnosis = new JLabel();
+        kiosk_coordinator = new JLabel();
+        kiosk_coordinator_name = new JLabel();
+        kiosk_coordinator_date = new JLabel();
+        doctorLabel = new JLabel();
+        doctor_name = new JLabel();
+        doctor_date = new JLabel();
 
     //initialize text fields
-		reg_no_field=new JTextField();
-		status_field=new JTextField();
-		date_field=new JTextField();
-		name_field=new JTextField();
-		sdw_of_field=new JTextField();
-		occupation_field=new JTextField();
-		ph_no_field=new JTextField();
-		age_field=new JTextField();
-		gender_field=new JTextField();
-		height_field=new JTextField();
-		bmi_field=new JTextField();
-		bp_field=new JTextField();
-		weight_field=new JTextField();
-		pulse_field=new JTextField();
-		spO2_field=new JTextField();
-		temperature_field=new JTextField();
-		prev_diagnosis_field=new JTextField();
-		final_diagnosis_field=new JTextField();
-        kiosk_coordinator_name_field=new JTextField();
-        kiosk_coordinator_date_field=new JTextField();
-        doctor_name_field=new JTextField();
-        doctor_date_field=new JTextField();
+		reg_no_field = new JTextField();
+		status_field = new JTextField();
+		date_field = new JTextField();
+		name_field = new JTextField();
+		sdw_of_field = new JTextField();
+		occupation_field = new JTextField();
+		ph_no_field = new JTextField();
+		age_field = new JTextField();
+		gender_field = new JTextField();
+		height_field = new JTextField();
+		bmi_field = new JTextField();
+		bp_field = new JTextField();
+		weight_field = new JTextField();
+		pulse_field = new JTextField();
+		spO2_field = new JTextField();
+		temperature_field = new JTextField();
+		prev_diagnosis_field = new JTextField();
+		final_diagnosis_field = new JTextField();
+        kiosk_coordinator_name_field = new JTextField();
+        kiosk_coordinator_date_field = new JTextField();
+        doctor_name_field = new JTextField();
+        doctor_date_field = new JTextField();
 
     //initialize JButtons
-        back_button=new JButton();
-        refresh_button=new JButton();
-        back2_button=new JButton();
-        submit_button=new JButton();
-        next_button=new JButton();
-        prev_button=new JButton();
-        prescribeButton=new JButton();
-        prescriptionButton=new JButton();
-        additionalReportsButton=new JButton();
+        back_button = new JButton();
+        refresh_button = new JButton();
+        back2_button = new JButton();
+        submit_button = new JButton();
+        next_button = new JButton();
+        prev_button = new JButton();
+        prescribeButton = new JButton();
+        prescriptionButton = new JButton();
+        additionalReportsButton = new JButton();
 
-        medicationTypeLabel = new JLabel();
-	    medicationNameLabel = new JLabel();
-	    medicationDoseLabel = new JLabel();
-	    medicationDurationLabel = new JLabel();
+        medicationTypeLabel  =  new JLabel();
+	    medicationNameLabel  =  new JLabel();
+	    medicationDoseLabel  =  new JLabel();
+	    medicationDurationLabel  =  new JLabel();
 
-	    medicationTimeRadioButton = new JRadioButton();
-	    medicationInstructionRadioButton = new JRadioButton();
+	    medicationTimeRadioButton  =  new JRadioButton();
+	    medicationInstructionRadioButton  =  new JRadioButton();
 
-	    medicationTimeButton = new JButton();
-	    medicationInstructionButton = new JButton();
-	    medicationSelectButton = new JButton();
-	    medicationResetButton = new JButton();
+	    medicationTimeButton  =  new JButton();
+	    medicationInstructionButton  =  new JButton();
+	    medicationSelectButton  =  new JButton();
+	    medicationResetButton  =  new JButton();
 
-	    medicationTimeField = new JTextField();
-	    medicationInstructionField = new JTextField();
+	    medicationTimeField  =  new JTextField();
+	    medicationInstructionField  =  new JTextField();
 
-	    medicationButtonGroup = new ButtonGroup();
+	    medicationButtonGroup  =  new ButtonGroup();
 
-	    String []medicationTypeList={"Tablet","Syrup","Injection","Capsule"};
-	    String []medicationNameList=getMedicineNameList();
-	    String []medicationTimeList1={"1.00","2.00","3.00","4.00","5.00","6.00","7.00","8.00","9.00","10.00","11.00","12.00"};
-	    String []medicationTimeList2={"AM","PM"};
-	    String []medicationInstructionList1={"After","Before"};
-	    String []medicationInstructionList2={"Food","Breakfast","Lunch","Dinner"};
-	    String []medicationDoseList={"1","2","3","4","5"};
-	    String []medicationDurationList1={"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
-	    String []medicationDurationList2={"Day(s)","Week(s)","Month(s)"};
-	    medicationTypeComboBox=new JComboBox<String>(medicationTypeList);
-	    medicationNameComboBox=new JComboBox<String>(medicationNameList);
-	    medicationTimeComboBox1=new JComboBox<String>(medicationTimeList1);
-	    medicationTimeComboBox2=new JComboBox<String>(medicationTimeList2);
-	    medicationInstructionComboBox1=new JComboBox<String>(medicationInstructionList1);
-	    medicationInstructionComboBox2=new JComboBox<String>(medicationInstructionList2);
-	    medicationDoseComboBox=new JComboBox<String>(medicationDoseList);
-	    medicationDurationComboBox1=new JComboBox<String>(medicationDurationList1);
-	    medicationDurationComboBox2=new JComboBox<String>(medicationDurationList2);
-	    additionalReportsComboBox=new JComboBox<String>();
+	    String []medicationTypeList = {"Tablet","Syrup","Injection","Capsule"};
+	    String []medicationNameList = getMedicineNameList();
+	    String []medicationTimeList1 = {"1.00","2.00","3.00","4.00","5.00","6.00","7.00","8.00","9.00","10.00","11.00","12.00"};
+	    String []medicationTimeList2 = {"AM","PM"};
+	    String []medicationInstructionList1 = {"After","Before"};
+	    String []medicationInstructionList2 = {"Food","Breakfast","Lunch","Dinner"};
+	    String []medicationDoseList = {"1","2","3","4","5"};
+	    String []medicationDurationList1 = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
+	    String []medicationDurationList2 = {"Day(s)","Week(s)","Month(s)"};
+	    medicationTypeComboBox = new JComboBox<String>(medicationTypeList);
+	    medicationNameComboBox = new JComboBox<String>(medicationNameList);
+	    medicationTimeComboBox1 = new JComboBox<String>(medicationTimeList1);
+	    medicationTimeComboBox2 = new JComboBox<String>(medicationTimeList2);
+	    medicationInstructionComboBox1 = new JComboBox<String>(medicationInstructionList1);
+	    medicationInstructionComboBox2 = new JComboBox<String>(medicationInstructionList2);
+	    medicationDoseComboBox = new JComboBox<String>(medicationDoseList);
+	    medicationDurationComboBox1 = new JComboBox<String>(medicationDurationList1);
+	    medicationDurationComboBox2 = new JComboBox<String>(medicationDurationList2);
+	    additionalReportsComboBox = new JComboBox<String>();
 
-	    // medicationNameComboBox.setEditable(true);
         AutoCompleteDecorator.decorate(medicationNameComboBox);
 
 
         setLanguage();
 
-
-    //set Editable
 		reg_no_field.setEditable(false);
 		status_field.setEditable(false); 
 		date_field.setEditable(false);
@@ -454,28 +439,28 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
         doctor_name_field.setEditable(false);
 		doctor_date_field.setEditable(false);
 
-	//set visible
+
 		back2_button.setVisible(false);
 		submit_button.setVisible(false);
 		prescriptionButton.setVisible(false);
 
-	//initialize JTextArea
-		address_area=new JTextArea();
-		family_history_area=new JTextArea();
-		medical_history_area=new JTextArea();
-		complaint_of_area=new JTextArea();
-		on_examination_area=new JTextArea();
-		advice_area=new JTextArea();
-		medication_area=new JTextArea();
-		diagnostic_test_area=new JTextArea();
-		provisional_diagnosis_area=new JTextArea();
-		final_diagnosis_area=new JTextArea();
-		referral_area=new JTextArea();
-		kiosk_coordinator_area=new JTextArea();
-		doctor_area=new JTextArea();
+
+		address_area = new JTextArea();
+		family_history_area = new JTextArea();
+		medical_history_area = new JTextArea();
+		complaint_of_area = new JTextArea();
+		on_examination_area = new JTextArea();
+		advice_area = new JTextArea();
+		medication_area = new JTextArea();
+		diagnostic_test_area = new JTextArea();
+		provisional_diagnosis_area = new JTextArea();
+		final_diagnosis_area = new JTextArea();
+		referral_area = new JTextArea();
+		kiosk_coordinator_area = new JTextArea();
+		doctor_area = new JTextArea();
 
 
-	//set Border
+
 		bmi_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		bp_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		pulse_field.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -483,42 +468,21 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		spO2_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		prev_diagnosis_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		weight_field.setBorder(BorderFactory.createLineBorder(Color.black));
-		// family_history_area.setBorder(BorderFactory.createLineBorder(Color.black));
-		// medical_history_area.setBorder(BorderFactory.createLineBorder(Color.black));
+
 		complaint_of_area.setBorder(BorderFactory.createLineBorder(Color.black));
 		on_examination_area.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		picture.setBorder(BorderFactory.createLineBorder(Color.black));
-		// advice_area.setBorder(BorderFactory.createLineBorder(Color.black));
-		// medication_area.setBorder(BorderFactory.createLineBorder(Color.black));
-		// diagnostic_test_area.setBorder(BorderFactory.createLineBorder(Color.black));
-		// provisional_diagnosis_area.setBorder(BorderFactory.createLineBorder(Color.black));
-		// final_diagnosis_area.setBorder(BorderFactory.createLineBorder(Color.black));
-		// referral_area.setBorder(BorderFactory.createLineBorder(Color.black));
-		// kiosk_coordinator_area.setBorder(BorderFactory.createLineBorder(Color.black));
-		// doctor_area.setBorder(BorderFactory.createLineBorder(Color.black));
-		// address_area.setBorder(BorderFactory.createLineBorder(Color.black));
 
-		// address_area.setBackground(UIManager.getColor("Button.focus"));
-
-	//Text area set Editable
 		address_area.setEditable(false);
 		family_history_area.setEditable(false);
 		medical_history_area.setEditable(false);
 		complaint_of_area.setEditable(false);
 		on_examination_area.setEditable(false);
-		// advice_area.setEditable(false);
-		// medication_area.setEditable(false);
-		// diagnostic_test_area.setEditable(false);
-		// provisional_diagnosis_area.setEditable(false);
-		// final_diagnosis_area.setEditable(false);
-		// referral_area.setEditable(false);
 		kiosk_coordinator_area.setEditable(false);
 		doctor_area.setEditable(false);
 
-	//set Linewrap
 		address_area.setLineWrap(true);
-		// medication_area.setLineWrap(true);
 		provisional_diagnosis_area.setLineWrap(true);
 		final_diagnosis_area.setLineWrap(true);
 		advice_area.setLineWrap(true);
@@ -532,8 +496,6 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		
 		
 		
-		
-	// SETBOUNDS
 		form_label.setBounds(300, 10, 1000, 40);
 		picture.setBounds(10,60,140,140);
 		reg_no.setBounds(160,60,65,20);
@@ -627,16 +589,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	    medicationSelectButton.setBounds(1150,620,100,25);
 	    medicationResetButton.setBounds(1255,620,95,25);
 
-	    // medicationDoseLabel.setBounds();
-	    // medicationDurationLabel.setBounds();
 
-	    // medicationTimeRadioButton.setBounds();
-	    // medicationTimeRadioButton.setBounds();
-
-	    // medicationTimeButton.setBounds();
-	    // medicationInstructionButton.setBounds();
-
-		/*kiosk_coordinator, doctor;*/
 		kiosk_coordinator.setBounds(10,550,360,20);
 		kiosk_coordinator_name.setBounds(10,570,50,20);
 		kiosk_coordinator_name_field.setBounds(60,570,200,23);
@@ -665,13 +618,11 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		medicationDurationLabel.setForeground(Color.WHITE);
 
 
-	//set actionListener
 		back_button.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				// (new File("tempFolder/tempPatientReport.xml")).delete();
-				for(File tempFile: new File("tempFolder/").listFiles())
+				for(File tempFile: new File(Constants.dataFolder).listFiles())
 					tempFile.delete();
 				new PatientSelect(connection,doctor);
 				dispose();
@@ -708,37 +659,20 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				try
+				String fileName = (String)additionalReportsComboBox.getSelectedItem();
+				File file = new File(Constants.dataFolder + fileName);
+				if(!file.isFile())
 				{
-					String fileName=(String)additionalReportsComboBox.getSelectedItem();
-					File file=new File("tempFolder/"+fileName);
-					if(!file.isFile())
+					int response = 0;
+					try
 					{
-						int response=connection.getRequest(fileName,"tempFolder/"+fileName);
-						if(response>=0)
-						{
-							try
-							{
-								Desktop.getDesktop().open(file);
-							}
-							catch(IOException ioe)
-							{
-								ioe.printStackTrace();
-							}
-						}
-						else if(response==-1)
-							JOptionPane.showMessageDialog(jframe,"File does not exist");
-						else if(response==-2)
-						{
-							JOptionPane.showMessageDialog(jframe,networkErrorMessage);
-							connection.logoutRequest();
-							for(File tempFile: new File("tempFolder/").listFiles())
-								tempFile.delete();
-							new DoctorLogin();
-							dispose();
-						}
+						response = connection.getRequest(fileName,Constants.dataFolder + fileName);
 					}
-					else
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+					if(response >= 0)
 					{
 						try
 						{
@@ -749,10 +683,35 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 							ioe.printStackTrace();
 						}
 					}
+					else if(response == -2)
+						JOptionPane.showMessageDialog(jframe,"File does not exist");
+					else
+					{
+						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						for(File tempFile: new File(Constants.dataFolder).listFiles())
+							tempFile.delete();
+						new DoctorLogin();
+						dispose();
+					}
 				}
-				catch(Exception e)
+				else
 				{
-					e.printStackTrace();
+					try
+					{
+						Desktop.getDesktop().open(file);
+					}
+					catch(IOException ioe)
+					{
+						ioe.printStackTrace();
+					}
 				}
 			}
 		});
@@ -761,11 +720,11 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				if(patientReport.Reports.get(patientReport.Reports.size()-1).doctorPrescription.doctorName==null)
+				if(patientReport.Reports.get(patientReport.Reports.size()-1).doctorPrescription.doctorName == null)
 				{
-					current_report_count=patientReport.Reports.size()-1;
+					current_report_count = patientReport.Reports.size()-1;
 					next_button.setEnabled(false);
-					if(current_report_count==0)
+					if(current_report_count == 0)
 					{
 						prev_button.setEnabled(false);
 					}
@@ -780,7 +739,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 					referral_area.setText("");
 
 					doctor_name_field.setText(doctor.getDoctorName());
-					SimpleDateFormat date=new SimpleDateFormat("dd-MM-yyyy");
+					SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");
 					doctor_date_field.setText(date.format(new Date()));
 
 					back_button.setVisible(false);
@@ -805,7 +764,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 				if(current_report_count<patientReport.Reports.size()-1)
 				{
 					setReport(++current_report_count);
-					if(current_report_count==patientReport.Reports.size()-1)
+					if(current_report_count == patientReport.Reports.size()-1)
 						next_button.setEnabled(false);
 					if(current_report_count>0)
 						prev_button.setEnabled(true);
@@ -820,7 +779,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 				if(current_report_count>0)
 				{
 					setReport(--current_report_count);
-					if(current_report_count==0)
+					if(current_report_count == 0)
 						prev_button.setEnabled(false);
 					if(current_report_count<patientReport.Reports.size()-1)
 						next_button.setEnabled(true);
@@ -832,27 +791,27 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				Information info=new Information();
-				info.date=doctor_date_field.getText();
-				info.doctor_name=doctor_name_field.getText();
-				info.patient_image=((ImageIcon)picture.getIcon()).getImage();
-				// info.doctor_degree=
-				// info.doctor_hospital=
-				info.patient_regno=reg_no_field.getText();
-				info.patient_name=name_field.getText();
-				info.patient_sdw=sdw_of_field.getText();
-				info.patient_age=age_field.getText();
-				info.patient_gender=gender_field.getText();
-				info.patient_address=address_area.getText();
-				info.patient_phone=ph_no_field.getText();
-				info.complaint=complaint_of_area.getText();
-				info.provisional_diagnosis=provisional_diagnosis_area.getText();
-				info.final_diagnosis=final_diagnosis_area.getText();
-				info.doctor_advice=advice_area.getText();
-				info.doctor_medication=medication_area.getText();
-				info.doctor_referal=referral_area.getText();
-				info.doctor_diagnostic=diagnostic_test_area.getText();
-				info.kiosk_coordinator_name=kiosk_coordinator_name_field.getText();
+				Information info = new Information();
+				info.date = doctor_date_field.getText();
+				info.doctor_name = doctor_name_field.getText();
+				info.patient_image = ((ImageIcon)picture.getIcon()).getImage();
+				// info.doctor_degree = 
+				// info.doctor_hospital = 
+				info.patient_regno = reg_no_field.getText();
+				info.patient_name = name_field.getText();
+				info.patient_sdw = sdw_of_field.getText();
+				info.patient_age = age_field.getText();
+				info.patient_gender = gender_field.getText();
+				info.patient_address = address_area.getText();
+				info.patient_phone = ph_no_field.getText();
+				info.complaint = complaint_of_area.getText();
+				info.provisional_diagnosis = provisional_diagnosis_area.getText();
+				info.final_diagnosis = final_diagnosis_area.getText();
+				info.doctor_advice = advice_area.getText();
+				info.doctor_medication = medication_area.getText();
+				info.doctor_referal = referral_area.getText();
+				info.doctor_diagnostic = diagnostic_test_area.getText();
+				info.kiosk_coordinator_name = kiosk_coordinator_name_field.getText();
 				new Prescription_applet(info);
 			}
 		});
@@ -864,14 +823,14 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 				if(provisional_diagnosis_area.getText().equals("") && final_diagnosis_area.getText().equals("") && advice_area.getText().equals("")
 					&& diagnostic_test_area.getText().equals("") && referral_area.getText().equals("") && medication_area.getText().equals(""))
 					JOptionPane.showMessageDialog(jframe,"Patient is not prescribed");
-				else if(JOptionPane.showConfirmDialog(jframe,"Are you sure to submit?")==JOptionPane.OK_OPTION)
+				else if(JOptionPane.showConfirmDialog(jframe,"Are you sure to submit?") == JOptionPane.OK_OPTION)
 				{
 					if(updatePatientLog() && updateDoctorLog())
 					{
 						addPrescriptionToReport();
-						current_report_count=patientReport.Reports.size()-1;
+						current_report_count = patientReport.Reports.size()-1;
 						next_button.setEnabled(false);
-						if(current_report_count==0)
+						if(current_report_count == 0)
 							prev_button.setEnabled(false);
 						else prev_button.setEnabled(true);
 						setReport(current_report_count);
@@ -933,10 +892,10 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			{
 				String instruct;
 				if(medicationTimeRadioButton.isSelected())
-					instruct=medicationTimeField.getText();
-				else instruct=medicationInstructionField.getText();
+					instruct = medicationTimeField.getText();
+				else instruct = medicationInstructionField.getText();
 
-				String medicine=(String)medicationTypeComboBox.getSelectedItem()+": "+(String)medicationNameComboBox.getSelectedItem()+", "
+				String medicine = (String)medicationTypeComboBox.getSelectedItem()+": "+(String)medicationNameComboBox.getSelectedItem()+", "
 				+(String)medicationDoseComboBox.getSelectedItem()+" time(s) in a day("+instruct+") X "
 				+(String)medicationDurationComboBox1.getSelectedItem()+" "+(String)medicationDurationComboBox2.getSelectedItem();
 
@@ -1074,18 +1033,18 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		medicationInstructionRadioButton.setSelected(true);
 
 	//initialize JScrollPane
-		on_examination_pane = new JScrollPane(on_examination_area);
-		address_pane = new JScrollPane(address_area);
-		family_history_pane = new JScrollPane(family_history_area);
-		medical_history_pane = new JScrollPane(medical_history_area);
-		complaint_of_pane = new JScrollPane(complaint_of_area);
+		on_examination_pane  =  new JScrollPane(on_examination_area);
+		address_pane  =  new JScrollPane(address_area);
+		family_history_pane  =  new JScrollPane(family_history_area);
+		medical_history_pane  =  new JScrollPane(medical_history_area);
+		complaint_of_pane  =  new JScrollPane(complaint_of_area);
 
-		advice_pane = new JScrollPane(advice_area);
-		medication_pane = new JScrollPane(medication_area);
-		diagnostic_test_pane = new JScrollPane(diagnostic_test_area);
-		provisional_diagnosis_pane = new JScrollPane(provisional_diagnosis_area);
-		final_diagnosis_pane = new JScrollPane(final_diagnosis_area);
-		referral_pane = new JScrollPane(referral_area);
+		advice_pane  =  new JScrollPane(advice_area);
+		medication_pane  =  new JScrollPane(medication_area);
+		diagnostic_test_pane  =  new JScrollPane(diagnostic_test_area);
+		provisional_diagnosis_pane  =  new JScrollPane(provisional_diagnosis_area);
+		final_diagnosis_pane  =  new JScrollPane(final_diagnosis_area);
+		referral_pane  =  new JScrollPane(referral_area);
 
 
    		address_pane.setBounds(640,120,150,80);
@@ -1116,13 +1075,13 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		add(final_diagnosis_pane);
 		add(referral_pane);
 
-		BasicDataPanel=new JPanel();
-		HealthInfoPanel=new JPanel();
-		DoctorPrescriptionPanel=new JPanel();
-		KioskCoordinatorPanel=new JPanel();
-		DoctorPanel=new JPanel();
-		ButtonPanel=new JPanel();
-		CommunicationPanel=new JPanel();
+		BasicDataPanel = new JPanel();
+		HealthInfoPanel = new JPanel();
+		DoctorPrescriptionPanel = new JPanel();
+		KioskCoordinatorPanel = new JPanel();
+		DoctorPanel = new JPanel();
+		ButtonPanel = new JPanel();
+		CommunicationPanel = new JPanel();
 
 		BasicDataPanel.setBounds(0,55,810,250);
 		HealthInfoPanel.setBounds(0,305,810,240);
@@ -1170,52 +1129,66 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 	private void addPrescriptionToReport()
 	{
-		DoctorPrescription docPrescription=new DoctorPrescription();
-		docPrescription.doctorName=CheckNullString(doctor_name_field.getText());
-		docPrescription.ProvisionalDiagnosis=CheckNullString(provisional_diagnosis_area.getText());
-		docPrescription.FinalDiagnosis=CheckNullString(final_diagnosis_area.getText());
-		docPrescription.Advice=CheckNullString(advice_area.getText());
-		docPrescription.Medication=CheckNullString(medication_area.getText());
-		docPrescription.Diagnosis=CheckNullString(diagnostic_test_area.getText());
-		docPrescription.Referral=CheckNullString(referral_area.getText());
-		docPrescription.Prescription_Date=CheckNullString(doctor_date_field.getText());
+		DoctorPrescription docPrescription = new DoctorPrescription();
+		docPrescription.doctorName = CheckNullString(doctor_name_field.getText());
+		docPrescription.ProvisionalDiagnosis = CheckNullString(provisional_diagnosis_area.getText());
+		docPrescription.FinalDiagnosis = CheckNullString(final_diagnosis_area.getText());
+		docPrescription.Advice = CheckNullString(advice_area.getText());
+		docPrescription.Medication = CheckNullString(medication_area.getText());
+		docPrescription.Diagnosis = CheckNullString(diagnostic_test_area.getText());
+		docPrescription.Referral = CheckNullString(referral_area.getText());
+		docPrescription.Prescription_Date = CheckNullString(doctor_date_field.getText());
 
-		patientReport.Reports.get(patientReport.Reports.size()-1).doctorPrescription=docPrescription;
+		patientReport.Reports.get(patientReport.Reports.size()-1).doctorPrescription = docPrescription;
 
 
+		String fileName = Constants.dataFolder + "tempPatientReport.xml";
+		File file  =  new File(fileName);
 		try
 		{
-			String fileName="tempFolder/tempPatientReport.xml";
-			File file = new File(fileName);
-			JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
-			Marshaller jm=jc.createMarshaller();
+			JAXBContext jc = JAXBContext.newInstance(PatientReport.class);
+			Marshaller jm = jc.createMarshaller();
 			jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
 			jm.marshal(patientReport,file);
-			int response = connection.putRequest(fileName,reg_no_field.getText()+".xml");
-			if(response!=0)
-			{
-				if(file.isFile())
-					file.delete();
-				if(response==-1)
-					JOptionPane.showMessageDialog(this,"File does not exist");
-				else if(response==-2)
-				{
-					JOptionPane.showMessageDialog(this,networkErrorMessage);
-					connection.logoutRequest();
-					for(File tempFile: new File("tempFolder/").listFiles())
-						tempFile.delete();
-					new PatientSelect(connection,doctor);
-					dispose();
-				}
-			}
-			else
-				file.delete();
 		}
-		catch(Exception jaxbe)
+		catch(JAXBException jaxbe)
 		{
 			jaxbe.printStackTrace();
-			(new File("tempFolder/tempPatientReport.xml")).delete();
 		}
+		int response = 0;
+		try
+		{
+			response = connection.putRequest(fileName,reg_no_field.getText()+".xml");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		if(response < 0)
+		{
+			if(file.isFile())
+				file.delete();
+			if(response == -2)
+				JOptionPane.showMessageDialog(this,"File does not exist");
+			else
+			{
+				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+				try
+				{
+					connection.logoutRequest();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				for(File tempFile: new File(Constants.dataFolder).listFiles())
+					tempFile.delete();
+				new PatientSelect(connection,doctor);
+				dispose();
+			}
+		}
+		else
+			file.delete();
 	}
 
 	private void setMedicationTimeButtonsEnabled(boolean enable)
@@ -1234,30 +1207,30 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	private  void encodeToString()
 	{
 
-		BufferedImage image=null;
+		BufferedImage image = null;
         try
         {
-            image = ImageIO.read(new File("patient_Picture.jpg"));
+            image  =  ImageIO.read(new File("patient_Picture.jpg"));
         }
         catch(IOException e)
         {
 
         }
         
-        String type="jpg";
+        String type = "jpg";
 
-        imageString = null;
-        if(imageSet!=0)
+        imageString  =  null;
+        if(imageSet != 0)
         {
-	        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	        ByteArrayOutputStream bos  =  new ByteArrayOutputStream();
 
 	        try
 	        {
 	            ImageIO.write(image, type, bos);
-	            byte[] imageBytes = bos.toByteArray();
+	            byte[] imageBytes  =  bos.toByteArray();
 
-	            BASE64Encoder encoder = new BASE64Encoder();
-	            imageString = encoder.encode(imageBytes);
+	            BASE64Encoder encoder  =  new BASE64Encoder();
+	            imageString  =  encoder.encode(imageBytes);
 
 	            bos.close();
 	        }
@@ -1331,14 +1304,14 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	private BufferedImage decodeToImage(String imageString)
 	{
 
-        BufferedImage image = null;
+        BufferedImage image  =  null;
         byte[] imageByte;
         try
         {
-            BASE64Decoder decoder = new BASE64Decoder();
-            imageByte = decoder.decodeBuffer(imageString);
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-            image = ImageIO.read(bis);
+            BASE64Decoder decoder  =  new BASE64Decoder();
+            imageByte  =  decoder.decodeBuffer(imageString);
+            ByteArrayInputStream bis  =  new ByteArrayInputStream(imageByte);
+            image  =  ImageIO.read(bis);
             bis.close();
         }
         catch (IOException ioe)
@@ -1357,9 +1330,9 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 	private void setReport(int report_count)
 	{
-		if(report_count!=-1)
+		if(report_count != -1)
 		{
-			Report report=patientReport.Reports.get(report_count);
+			Report report = patientReport.Reports.get(report_count);
 			weight_field.setText(report.patientComplaint.getWeight());
 			bmi_field.setText(report.patientComplaint.getBmi());
 			bp_field.setText(report.patientComplaint.getBp());
@@ -1372,9 +1345,9 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			kiosk_coordinator_name_field.setText(report.patientComplaint.getKioskCoordinatorName());
 			kiosk_coordinator_date_field.setText(report.patientComplaint.getcomplaint_date());
 
-			if(report.patientComplaint.getFileNames()!=null)
+			if(report.patientComplaint.getFileNames() != null)
 			{
-				DefaultComboBoxModel<String> defaultComboBoxModel=new DefaultComboBoxModel<String>(report.patientComplaint.getFileNames().split("\n"));
+				DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<String>(report.patientComplaint.getFileNames().split("\n"));
 				additionalReportsComboBox.setModel(defaultComboBoxModel);
 				additionalReportsButton.setEnabled(true);
 				additionalReportsComboBox.setEnabled(true);
@@ -1388,7 +1361,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 				additionalReportsLabel.setEnabled(false);
 			}
 
-			if(report.doctorPrescription!=null)
+			if(report.doctorPrescription != null)
 			{
 				doctor_name_field.setText(report.doctorPrescription.getdoctorName());
 				doctor_date_field.setText(report.doctorPrescription.getPrescription_date());
@@ -1423,91 +1396,51 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 	private boolean updatePatientLog()
 	{
+		String localFileName = Constants.dataFolder + "log.xml",serverFileName = "Patient_"+kioskNumber+"_Log.xml";
+		File localFile = new File(localFileName);
+		int receiveResponse = 0;
 		try
 		{
-			String localFileName = "tempFolder/log.xml",serverFileName = "Patient_"+kioskNumber+"_Log.xml";
-			File localFile = new File(localFileName);
-			int receiveResponse = connection.getRequest(serverFileName,localFileName);
-			if(receiveResponse>=0)
-			{
-				try
-				{
-					JAXBContext jc=JAXBContext.newInstance(PatientLog.class);
-					Unmarshaller um=jc.createUnmarshaller();
-					PatientLog patientLog=(PatientLog)um.unmarshal(localFile);
-
-					if(patientLog.Normal.indexOf(reg_no_field.getText())!=-1)
-						patientLog.Normal.remove(reg_no_field.getText());
-					else if(patientLog.Emergency.indexOf(reg_no_field.getText())!=-1)
-						patientLog.Emergency.remove(reg_no_field.getText());
-
-					Marshaller jm=jc.createMarshaller();
-					jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-					jm.marshal(patientLog,localFile);
-				}
-				catch(JAXBException jaxbe)
-				{
-					jaxbe.printStackTrace();
-				}
-				int sendResponse=connection.putRequest(localFileName,serverFileName);
-				if(sendResponse == -1 || sendResponse == -2)
-				{
-					localFile.delete();
-					JOptionPane.showMessageDialog(this,networkErrorMessage);
-					connection.logoutRequest();
-					for(File tempFile: new File("tempFolder/").listFiles())
-						tempFile.delete();
-					new DoctorLogin();
-					dispose();
-					return false;
-				}
-				localFile.delete();
-				return true;
-			}
-			else
-			{
-				if(localFile.isFile())
-					localFile.delete();
-				if(receiveResponse==-1)
-					JOptionPane.showMessageDialog(this,"File does not exists");
-				else if(receiveResponse==-2)
-					JOptionPane.showMessageDialog(this,networkErrorMessage);
-				return false;
-			}
+			receiveResponse = connection.getRequest(serverFileName,localFileName);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			return false;
 		}
-	}
-
-	private boolean updateDoctorLog()
-	{
-		String localFileName = "tempFolder/tempDoctor.xml",serverFileName = doctor.doctorId+".xml";
-		File localFile = new File(localFileName);
-		try
+		if(receiveResponse >= 0)
 		{
-			int index=doctor.patientIdList.indexOf(reg_no_field.getText());
-			if(index!=-1)
+			try
 			{
-				doctor.patientIdList.remove(index);
-				doctor.patientNameList.remove(index);
+				JAXBContext jc = JAXBContext.newInstance(PatientLog.class);
+				Unmarshaller um = jc.createUnmarshaller();
+				PatientLog patientLog = (PatientLog)um.unmarshal(localFile);
+
+				if(patientLog.Normal.indexOf(reg_no_field.getText()) != -1)
+					patientLog.Normal.remove(reg_no_field.getText());
+				else if(patientLog.Emergency.indexOf(reg_no_field.getText()) != -1)
+					patientLog.Emergency.remove(reg_no_field.getText());
+
+				Marshaller jm = jc.createMarshaller();
+				jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+				jm.marshal(patientLog,localFile);
 			}
-			doctor.patientIdList.add(reg_no_field.getText());
-			doctor.patientNameList.add(name_field.getText());
-
-			JAXBContext jc=JAXBContext.newInstance(Doctor.class);
-			Marshaller jm=jc.createMarshaller();
-			jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-			jm.marshal(doctor,localFile);
-
-			int sendResponse=connection.putRequest(localFileName,serverFileName);
-			if(sendResponse == -1 || sendResponse == -2)
+			catch(JAXBException jaxbe)
 			{
-				if(localFile.isFile())
-					localFile.delete();
-				JOptionPane.showMessageDialog(this,networkErrorMessage);
+				jaxbe.printStackTrace();
+			}
+			int sendResponse = 0;
+			try
+			{
+				sendResponse = connection.putRequest(localFileName,serverFileName);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			if(sendResponse < 0)
+			{
+				localFile.delete();
+				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(sendResponse));
 				try
 				{
 					connection.logoutRequest();
@@ -1516,7 +1449,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 				{
 					e.printStackTrace();
 				}
-				for(File tempFile: new File("tempFolder/").listFiles())
+				for(File tempFile: new File(Constants.dataFolder).listFiles())
 					tempFile.delete();
 				new DoctorLogin();
 				dispose();
@@ -1525,56 +1458,116 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			localFile.delete();
 			return true;
 		}
-		catch(Exception jaxbe)
+		else
 		{
-			jaxbe.printStackTrace();
+			if(localFile.isFile())
+				localFile.delete();
+			if(receiveResponse == -2)
+				JOptionPane.showMessageDialog(this,"File does not exists");
+			else
+				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(receiveResponse));
 			return false;
 		}
 	}
 
-	private void getPatientReport(String PatientId)
+	private boolean updateDoctorLog()
 	{
-		try
-		{
-			String fileName="tempFolder/tempPatientReport.xml";
-			File file = new File(fileName);
-			int response=connection.getRequest(PatientId+".xml",fileName);
-			if(response>=0)
-			{
-				try
-				{
-					JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
-					Unmarshaller um=jc.createUnmarshaller();
-					patientReport=(PatientReport)um.unmarshal(new File("tempFolder/tempPatientReport.xml"));
-				}
-				catch(JAXBException jaxbe)
-				{
-					jaxbe.printStackTrace();
-				}
-				file.delete();
+		String localFileName = Constants.dataFolder + "tempDoctor.xml",serverFileName = doctor.doctorId+".xml";
+		File localFile  =  new File(localFileName);
 
-			}
-			else
-			{
-				if(file.isFile())
-					file.delete();
-				if(response == -1)
-					JOptionPane.showMessageDialog(this,"File does not exist");
-				else if(response == -2)
-				{
-					JOptionPane.showMessageDialog(this,networkErrorMessage);
-					for(File tempFile: new File("tempFolder/").listFiles())
-						tempFile.delete();
-					new PatientSelect(connection,doctor);
-					dispose();
-				}
-			}
+		int index = doctor.patientIdList.indexOf(reg_no_field.getText());
+		if(index != -1)
+		{
+			doctor.patientIdList.remove(index);
+			doctor.patientNameList.remove(index);
+		}
+		doctor.patientIdList.add(reg_no_field.getText());
+		doctor.patientNameList.add(name_field.getText());
+		try
+		{	
+			JAXBContext jc = JAXBContext.newInstance(Doctor.class);
+			Marshaller jm = jc.createMarshaller();
+			jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+			jm.marshal(doctor,localFile);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		
+		int sendResponse = 0;
+		try
+		{
+			sendResponse = connection.putRequest(localFileName,serverFileName);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		if(sendResponse < 0)
+		{
+			if(localFile.isFile())
+				localFile.delete();
+			JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(sendResponse));
+			try
+			{
+				connection.logoutRequest();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			for(File tempFile: new File(Constants.dataFolder).listFiles())
+				tempFile.delete();
+			new DoctorLogin();
+			dispose();
+			return false;
+		}
+		localFile.delete();
+		return true;
+	}
+
+	private void getPatientReport(String PatientId)
+	{
+		String fileName = Constants.dataFolder + "tempPatientReport.xml";
+		File file  =  new File(fileName);
+		int response = 0;
+		try
+		{
+			response = connection.getRequest(PatientId+".xml",fileName);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		if(response >= 0)
+		{
+			try
+			{
+				JAXBContext jc = JAXBContext.newInstance(PatientReport.class);
+				Unmarshaller um = jc.createUnmarshaller();
+				patientReport = (PatientReport)um.unmarshal(file);
+			}
+			catch(JAXBException jaxbe)
+			{
+				jaxbe.printStackTrace();
+			}
+			file.delete();
+		}
+		else
+		{
+			if(file.isFile())
+				file.delete();
+			if(response == -2)
+				JOptionPane.showMessageDialog(this,"File does not exist");
+			else
+			{
+				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+				for(File tempFile: new File(Constants.dataFolder).listFiles())
+					tempFile.delete();
+				new PatientSelect(connection,doctor);
+				dispose();
+			}
+		}
 	}
 
 	private void setPatientReport()
@@ -1587,21 +1580,21 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			occupation_field.setText(patientReport.patientBasicData.getOccupation());
 
 			//image
-			if(patientReport.patientBasicData.getImage()!=null && patientReport.patientBasicData.getImage()!="")
+			if(patientReport.patientBasicData.getImage() != null && patientReport.patientBasicData.getImage() != "")
 			{
-				imgstr=patientReport.patientBasicData.getImage();
+				imgstr = patientReport.patientBasicData.getImage();
 				BufferedImage newImg;
-				newImg = this.decodeToImage(imgstr);
-				(new File("tempFolder/patient_Picture.jpg")).createNewFile();
-	    		ImageIO.write(newImg, "jpg", new File("tempFolder/patient_Picture.jpg"));
-	    		ImageIcon imageIcon = new ImageIcon("tempFolder/patient_Picture.jpg"); // load the image to a imageIcon
-				int h=picture.getHeight();
-				int w=picture.getWidth();
-				Image image = imageIcon.getImage(); // transform it 
-				Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-				imageIcon = new ImageIcon(newimg);
+				newImg  =  this.decodeToImage(imgstr);
+				(new File(Constants.dataFolder + "patient_Picture.jpg")).createNewFile();
+	    		ImageIO.write(newImg, "jpg", new File(Constants.dataFolder + "patient_Picture.jpg"));
+	    		ImageIcon imageIcon  =  new ImageIcon(Constants.dataFolder + "patient_Picture.jpg"); // load the image to a imageIcon
+				int h = picture.getHeight();
+				int w = picture.getWidth();
+				Image image  =  imageIcon.getImage(); // transform it 
+				Image newimg  =  image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+				imageIcon  =  new ImageIcon(newimg);
 				picture.setIcon(imageIcon);
-				(new File("tempFolder/patient_Picture.jpg")).delete();
+				(new File(Constants.dataFolder + "patient_Picture.jpg")).delete();
 			}
 
 			status_field.setText(patientReport.patientBasicData.getStatus());
@@ -1616,10 +1609,10 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 			if(!patientReport.Reports.isEmpty())
 			{
-				current_report_count=patientReport.Reports.size()-1;
+				current_report_count = patientReport.Reports.size()-1;
 				next_button.setEnabled(false);
 				status_field.setText("Review");
-				if(current_report_count==0)
+				if(current_report_count == 0)
 				{
 					prev_button.setEnabled(false);
 				}
@@ -1639,7 +1632,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 	private String[] getMedicineNameList()
 	{
-		String[] list=
+		String[] list = 
 		{
 			"Famodin",
 			"Famotin",
@@ -2111,210 +2104,55 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		Arrays.sort(list);
 		return list;
 	}
-
-/***********************************************************************************************************************************/
-
-	// private static PatientReport getPatientReportStatic(DoctorClient connection,String patientId)
-	// {
-	// 	String fileName="tempFolder/tempPatientReport.xml";
-	// 	File file=new File(fileName);
-	// 	int response=connection.getRequest(patientId+".xml",fileName);
-	// 	PatientReport patientReport;
-	// 	if(response>=0)
-	// 	{
-	// 		try
-	// 		{
-	// 			JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
-	// 			Unmarshaller jum=jc.createUnmarshaller();
-	// 			patientReport=(PatientReport)jum.unmarshal(file);
-	// 			file.delete();
-	// 			return patientReport;
-	// 			// nameValue.setVisible(true);
-	// 			// nameValue.setText(patientReport.patientBasicData.getName()+"/ "+patientReport.patientBasicData.getAge()+" yrs");
-	// 		}
-	// 		catch(Exception e)
-	// 		{
-	// 			e.printStackTrace();
-	// 		}
-	// 		return null;
-	// 		// group3WarningLabel.setVisible(false);
-	// 	}
-	// 	else
-	// 	{
-	// 		if(file.isFile())
-	// 			file.delete();
-	// 		if(response==-1)
-	// 		{
-	// 			// group3WarningLabel.setVisible(true);
-	// 			// nameValue.setVisible(false);
-	// 			System.err.println("File not found");
-	// 		}
-	// 		else if(response==-2)
-	// 		{
-	// 			// JOptionPane.showMessageDialog(this,networkErrorMessage);
-	// 			connection.logoutRequest();
-	// 			System.err.println("networkErrorMessage");
-	// 			// new DoctorLogin();
-	// 			// dispose();
-	// 		}
-	// 		return null;
-	// 	}
-	// }
-
-	// private static Doctor getDoctor(DoctorClient connection,String username)
-	// {
-	// 	try
-	// 	{
-	// 		int response=connection.getRequest(username+".xml","tempFolder/tempDoctor.xml");
-	// 		if(response>=0)
-	// 		{
-	// 			File doctorFile=new File("tempFolder/tempDoctor.xml");
-	// 			JAXBContext jc=JAXBContext.newInstance(Doctor.class);
-	// 			Unmarshaller jum=jc.createUnmarshaller();
-	// 			// jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-	// 			Doctor doctor=(Doctor)jum.unmarshal(doctorFile);
-	// 			doctorFile.delete();
-	// 			// errorLabel.setVisible(false);
-	// 			return doctor;
-	// 		}
-	// 		else
-	// 		{
-	// 			File doctorFile=new File("tempFolder/tempDoctor.xml");
-	// 			if(doctorFile.isFile())
-	// 				doctorFile.delete();
-	// 			connection.logoutRequest();
-	// 			connection=null;
-	// 			if(response==-1)
-	// 				// errorLabel.setVisible(true);
-	// 				System.err.println("File not present");
-	// 			else if(response==-2)
-	// 			{
-	// 				// errorLabel.setVisible(false);
-	// 				// JOptionPane.showMessageDialog(this,networkErrorMessage);
-	// 				System.err.println("networkErrorMessage");
-	// 			}
-	// 			return null;
-	// 		}
-	// 	}
-	// 	catch(JAXBException jaxbe)
-	// 	{
-	// 		File doctorFile=new File("tempFolder/tempDoctor.xml");
-	// 		if(doctorFile.isFile())
-	// 			doctorFile.delete();
-	// 		jaxbe.printStackTrace();
-	// 		return null;
-	// 	}
-	// }
-
-	// private static DoctorClient createNewConnection()
-	// {
-	// 	try
-	// 	{
-	// 		Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
-	// 		DoctorClient myCon=new DoctorClient(mySocket);
-			
-	// 		return myCon;
-	// 	}
-	// 	catch(UnknownHostException uhe)
-	// 	{
-	// 		return null;
-	// 	}
-	// 	catch(IOException ioe)
-	// 	{
-	// 		return null;
-	// 	}
-	// }
-
-	// public static void main(String args[])
-	// {
-	// 	final DoctorClient connection=createNewConnection();
-	// 	final Doctor doctor=getDoctor(connection,"Doctor_01");
-	// 	final PatientReport patientReport=getPatientReportStatic(connection,"Patient_01_01");
-	// 	SwingUtilities.invokeLater(new Runnable()
-	// 	{
-	// 		public void run()
-	// 		{
-	// 			try
-	// 			{
- //            		for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
- //            		{
- //                		if ("Nimbus".equals(info.getName()))
- //                		{
-	// 						javax.swing.UIManager.setLookAndFeel(info.getClassName());
- //                    		break;
- //                		}
- //            		}
- //        		}
- //        		catch (ClassNotFoundException ex)
- //        		{
- //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
- //        		}
- //        		catch (InstantiationException ex)
- //        		{
- //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
- //        		}
- //        		catch (IllegalAccessException ex)
- //        		{
- //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
- //        		}
- //        		catch (javax.swing.UnsupportedLookAndFeelException ex)
- //        		{
- //            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
- //        		}
-	// 			new PatientPrescriptionForm(connection,doctor,patientReport,"01");
-	// 		}
-	// 	});
-	// }
-
 }
 
 
 class Information
 {
-	public String date,doctor_name,doctor_degree,doctor_hospital;
-	public String patient_regno,patient_name,patient_sdw,patient_address,patient_age,patient_gender,patient_phone;
-	public String complaint,provisional_diagnosis,final_diagnosis;
-	public String doctor_advice,doctor_medication,doctor_diagnostic,doctor_referal;
-	public String kiosk_coordinator_name;
-	public Image patient_image;
+	protected String date,doctor_name,doctor_degree,doctor_hospital;
+	protected String patient_regno,patient_name,patient_sdw,patient_address,patient_age,patient_gender,patient_phone;
+	protected String complaint,provisional_diagnosis,final_diagnosis;
+	protected String doctor_advice,doctor_medication,doctor_diagnostic,doctor_referal;
+	protected String kiosk_coordinator_name;
+	protected Image patient_image;
 }
 
 class Prescription_applet extends JFrame
 {
-	public JLabel form_label,patient_picture_label, date1, date2, regno,regno_label,name1, name2,sdw_of_label,age1, age2, years, gender1, gender2, ph_no1, ph_no2, address, complaint1, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name1, kiosk_coordinator_name2,  kiosk_coordinator_date, doctor_name1, doctor_name2,doctor_sign,degree,hospital,doctor_ph_no1,doctor_ph_no2;
+	private JLabel form_label,patient_picture_label, date1, date2, regno,regno_label,name1, name2,sdw_of_label,age1, age2, years, gender1, gender2, ph_no1, ph_no2, address, complaint1, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name1, kiosk_coordinator_name2,  kiosk_coordinator_date, doctor_name1, doctor_name2,doctor_sign,degree,hospital,doctor_ph_no1,doctor_ph_no2;
 	
-	JTextArea address_area, complaint2,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area;
+	private JTextArea address_area, complaint2,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area;
 	
-	JPanel JPANEL1,JPANEL3,JPANEL4,JPANEL5,JPANEL6;
-	Font font=new Font("Serif",Font.BOLD,12);
-	String confirmMessage="Are you sure?";
+	private JPanel JPANEL1,JPANEL3,JPANEL4,JPANEL5,JPANEL6;
+	private Font font = new Font("Serif",Font.BOLD,12);
+	private String confirmMessage = "Are you sure?";
 	
 	
-	public Prescription_applet(Information info)
+	protected Prescription_applet(Information info)
 	{
 		
 		
-		final JFrame jframe=this;
+		final JFrame jframe = this;
 		setVisible(true);
 		setSize(595,852);
-		form_label=new JLabel("RURAL HEALTH KIOSK PRESCRIPTION");
+		form_label = new JLabel("RURAL HEALTH KIOSK PRESCRIPTION");
 		form_label.setForeground(Color.WHITE);
 		form_label.setBackground(Color.white);
        	form_label.setFont(new Font("Serif", Font.BOLD, 15));	
        	
-       	patient_picture_label=new JLabel();
-       	date1=new JLabel("Date:");
-        date2=new JLabel("-date-");
+       	patient_picture_label = new JLabel();
+       	date1 = new JLabel("Date:");
+        date2 = new JLabel("-date-");
                	
         //DOCTOR LABELS
         	
-        doctor_name1=new JLabel("Dr.");
-        doctor_name2=new JLabel("-name-");
-        degree=new JLabel("-Degree-");
-        hospital=new JLabel("-Hospital-");
-        doctor_sign=new JLabel("Signature : ");
-        doctor_ph_no1=new JLabel("Ph.No.:");
-        doctor_ph_no2=new JLabel("-number-");
+        doctor_name1 = new JLabel("Dr.");
+        doctor_name2 = new JLabel("-name-");
+        degree = new JLabel("-Degree-");
+        hospital = new JLabel("-Hospital-");
+        doctor_sign = new JLabel("Signature : ");
+        doctor_ph_no1 = new JLabel("Ph.No.:");
+        doctor_ph_no2 = new JLabel("-number-");
 		jframe.setBounds(200,10,595,846+190);
 		setLayout(null);
 
@@ -2325,7 +2163,7 @@ class Prescription_applet extends JFrame
 			@Override
 			public void windowClosing(WindowEvent we)
 			{
-				// for(File tempFile: new File("tempFolder/").listFiles())
+				// for(File tempFile: new File(Constants.dataFolder + "").listFiles())
 					// tempFile.delete();
 				dispose();
 			}
@@ -2333,39 +2171,39 @@ class Prescription_applet extends JFrame
         
         
         //PATIENT LABELS
-        regno=new JLabel("Reg No.:");
-        regno_label=new JLabel();
-        name1=new JLabel("Name :");
-        name2=new JLabel("-name-");
-        sdw_of_label=new JLabel();
-        age1=new JLabel("Age :");
-        age2=new JLabel("-age-");
-        years=new JLabel("years");
-        gender1=new JLabel("Gender:");
-        gender2=new JLabel("-m/f-");
-     	ph_no1=new JLabel("Ph.No. :");
-        ph_no2=new JLabel("-number-");
-        address=new JLabel("Address :");
-		complaint1=new JLabel("Complaint of :");
-		provisional_diagnosis=new JLabel("Provisional Diagnosis");
-		final_diagnosis=new JLabel("Final Diagnosis :");
-		advice=new JLabel("Advice :");
-		medication=new JLabel("Medication :");
-	    referral=new JLabel("Referral :"); 
-        diagnostic_test=new JLabel("Diagnostic Test :");
-        kiosk_coordinator=new JLabel("Kiosk Coordinator :");
-        kiosk_coordinator_name1=new JLabel("Kiosk Coordinator Name :");
-        kiosk_coordinator_name2=new JLabel("-name-");       	
+        regno = new JLabel("Reg No.:");
+        regno_label = new JLabel();
+        name1 = new JLabel("Name :");
+        name2 = new JLabel("-name-");
+        sdw_of_label = new JLabel();
+        age1 = new JLabel("Age :");
+        age2 = new JLabel("-age-");
+        years = new JLabel("years");
+        gender1 = new JLabel("Gender:");
+        gender2 = new JLabel("-m/f-");
+     	ph_no1 = new JLabel("Ph.No. :");
+        ph_no2 = new JLabel("-number-");
+        address = new JLabel("Address :");
+		complaint1 = new JLabel("Complaint of :");
+		provisional_diagnosis = new JLabel("Provisional Diagnosis");
+		final_diagnosis = new JLabel("Final Diagnosis :");
+		advice = new JLabel("Advice :");
+		medication = new JLabel("Medication :");
+	    referral = new JLabel("Referral :"); 
+        diagnostic_test = new JLabel("Diagnostic Test :");
+        kiosk_coordinator = new JLabel("Kiosk Coordinator :");
+        kiosk_coordinator_name1 = new JLabel("Kiosk Coordinator Name :");
+        kiosk_coordinator_name2 = new JLabel("-name-");       	
 
 
-        address_area=new JTextArea("-Address-");
-		complaint2=new JTextArea("-complaint-");
-		provisional_diagnosis_area=new JTextArea("-provisional diagnosis-");
-		final_diagnosis_area=new JTextArea("-final diagnosis-");
-		advice_area=new JTextArea("-advice-");
-		medication_area=new JTextArea("-medication-");
-        referral_area=new JTextArea();
-        diagnostic_test_area=new JTextArea();
+        address_area = new JTextArea("-Address-");
+		complaint2 = new JTextArea("-complaint-");
+		provisional_diagnosis_area = new JTextArea("-provisional diagnosis-");
+		final_diagnosis_area = new JTextArea("-final diagnosis-");
+		advice_area = new JTextArea("-advice-");
+		medication_area = new JTextArea("-medication-");
+        referral_area = new JTextArea();
+        diagnostic_test_area = new JTextArea();
 
 
 		address_area.setBackground(new Color(0, 0, 0, 0));
@@ -2460,17 +2298,17 @@ class Prescription_applet extends JFrame
 
 		try
 		{
-			BufferedImage newImg=((ToolkitImage)(info.patient_image)).getBufferedImage();
-			(new File("tempFolder/patient_Picture.jpg")).createNewFile();
-			ImageIO.write(newImg, "jpg", new File("tempFolder/patient_Picture.jpg"));
-			ImageIcon imageIcon = new ImageIcon("tempFolder/patient_Picture.jpg"); // load the image to a imageIcon
-			int h=patient_picture_label.getHeight();
-			int w=patient_picture_label.getWidth();
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);
+			BufferedImage newImg = ((ToolkitImage)(info.patient_image)).getBufferedImage();
+			(new File(Constants.dataFolder + "patient_Picture.jpg")).createNewFile();
+			ImageIO.write(newImg, "jpg", new File(Constants.dataFolder + "patient_Picture.jpg"));
+			ImageIcon imageIcon  =  new ImageIcon(Constants.dataFolder + "patient_Picture.jpg"); // load the image to a imageIcon
+			int h = patient_picture_label.getHeight();
+			int w = patient_picture_label.getWidth();
+			Image image  =  imageIcon.getImage(); // transform it 
+			Image newimg  =  image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			imageIcon  =  new ImageIcon(newimg);
 			patient_picture_label.setIcon(imageIcon);
-			(new File("tempFolder/patient_Picture.jpg")).delete();
+			(new File(Constants.dataFolder + "patient_Picture.jpg")).delete();
 		}
 		catch(IOException ioe)
 		{
@@ -2500,117 +2338,117 @@ class Prescription_applet extends JFrame
 
 		kiosk_coordinator_name2.setText(info.kiosk_coordinator_name);
 
-		boolean extraPage=false;
+		boolean extraPage = false;
 
-		int LEFTSIDECOLUMN=45;
-		int LEFTSIDEX=10;
-		int LEFTSIDEW=250;
+		int LEFTSIDECOLUMN = 45;
+		int LEFTSIDEX = 10;
+		int LEFTSIDEW = 250;
 
-		int RIGHTSIDECOLUMN=48;
-		int RIGHTSIDEX=280;
-		int RIGHTSIDEW=300;
+		int RIGHTSIDECOLUMN = 48;
+		int RIGHTSIDEX = 280;
+		int RIGHTSIDEW = 300;
 
-		int JPANEL6Y=630;
+		int JPANEL6Y = 630;
 
-		int ComplaintLabelY=160;
-		int ComplaintLabelH=15;
-		int ComplaintAreaY=ComplaintLabelY+ComplaintLabelH+5;
-		int ComplaintAreaH=getHeight(complaint2.getText(),LEFTSIDECOLUMN);
+		int ComplaintLabelY = 160;
+		int ComplaintLabelH = 15;
+		int ComplaintAreaY = ComplaintLabelY+ComplaintLabelH+5;
+		int ComplaintAreaH = getHeight(complaint2.getText(),LEFTSIDECOLUMN);
 
-		int ProvisionalDiagnosisLabelY=ComplaintAreaY+ComplaintAreaH+5;
-		int ProvisionalDiagnosisLabelH=15;
-		int ProvisionalDiagnosisAreaY=ProvisionalDiagnosisLabelY+ProvisionalDiagnosisLabelH+5;
-		int ProvisionalDiagnosisAreaH=getHeight(provisional_diagnosis_area.getText(),LEFTSIDECOLUMN);
+		int ProvisionalDiagnosisLabelY = ComplaintAreaY+ComplaintAreaH+5;
+		int ProvisionalDiagnosisLabelH = 15;
+		int ProvisionalDiagnosisAreaY = ProvisionalDiagnosisLabelY+ProvisionalDiagnosisLabelH+5;
+		int ProvisionalDiagnosisAreaH = getHeight(provisional_diagnosis_area.getText(),LEFTSIDECOLUMN);
 
 		if(isNullString(provisional_diagnosis_area.getText()))
 		{
 			provisional_diagnosis.setVisible(false);
 			provisional_diagnosis_area.setVisible(false);
 
-			ProvisionalDiagnosisLabelH=0;
-			ProvisionalDiagnosisAreaY=ProvisionalDiagnosisLabelY+ProvisionalDiagnosisLabelH+5;
-			ProvisionalDiagnosisAreaH=-10;
+			ProvisionalDiagnosisLabelH = 0;
+			ProvisionalDiagnosisAreaY = ProvisionalDiagnosisLabelY+ProvisionalDiagnosisLabelH+5;
+			ProvisionalDiagnosisAreaH = -10;
 		}
 
-		int FinalDiagnosisLabelY=ProvisionalDiagnosisAreaY+ProvisionalDiagnosisAreaH+5;
-		int FinalDiagnosisLabelH=15;
-		int FinalDiagnosisAreaY=FinalDiagnosisLabelY+FinalDiagnosisLabelH+5;
-		int FinalDiagnosisAreaH=getHeight(final_diagnosis_area.getText(),LEFTSIDECOLUMN);
+		int FinalDiagnosisLabelY = ProvisionalDiagnosisAreaY+ProvisionalDiagnosisAreaH+5;
+		int FinalDiagnosisLabelH = 15;
+		int FinalDiagnosisAreaY = FinalDiagnosisLabelY+FinalDiagnosisLabelH+5;
+		int FinalDiagnosisAreaH = getHeight(final_diagnosis_area.getText(),LEFTSIDECOLUMN);
 
-		int ReferralLabelY=FinalDiagnosisAreaY+FinalDiagnosisAreaH+5;
-		int ReferralLabelH=15;
-		int ReferralAreaY=ReferralLabelY+ReferralLabelH+5;
-		int ReferralAreaH=getHeight(referral_area.getText(),LEFTSIDECOLUMN);
-		int ReferralX=LEFTSIDEX;
-		int ReferralW=LEFTSIDEW;
+		int ReferralLabelY = FinalDiagnosisAreaY+FinalDiagnosisAreaH+5;
+		int ReferralLabelH = 15;
+		int ReferralAreaY = ReferralLabelY+ReferralLabelH+5;
+		int ReferralAreaH = getHeight(referral_area.getText(),LEFTSIDECOLUMN);
+		int ReferralX = LEFTSIDEX;
+		int ReferralW = LEFTSIDEW;
 
 		if(isNullString(referral_area.getText()))
 		{
 			referral.setVisible(false);
 			referral_area.setVisible(false);
 
-			ReferralLabelH=0;
-			ReferralAreaY=ReferralLabelY+ReferralLabelH+5;
-			ReferralAreaH=-10;
+			ReferralLabelH = 0;
+			ReferralAreaY = ReferralLabelY+ReferralLabelH+5;
+			ReferralAreaH = -10;
 		}
 
-		int AdviceLabelY=160;
-		int AdviceLabelH=15;
-		int AdviceAreaY=AdviceLabelY+AdviceLabelH+5;
-		int AdviceAreaH=getHeight(advice_area.getText(),RIGHTSIDECOLUMN);
+		int AdviceLabelY = 160;
+		int AdviceLabelH = 15;
+		int AdviceAreaY = AdviceLabelY+AdviceLabelH+5;
+		int AdviceAreaH = getHeight(advice_area.getText(),RIGHTSIDECOLUMN);
 
 		if(isNullString(advice_area.getText()))
 		{
 			advice.setVisible(false);
 			advice_area.setVisible(false);
 
-			AdviceLabelH=0;
-			AdviceAreaY=AdviceLabelY+AdviceLabelH+5;
-			AdviceAreaH=-10;
+			AdviceLabelH = 0;
+			AdviceAreaY = AdviceLabelY+AdviceLabelH+5;
+			AdviceAreaH = -10;
 		}
 
-		int MedicationLabelY=AdviceAreaY+AdviceAreaH+5;
-		int MedicationLabelH=15;
-		int MedicationAreaY=MedicationLabelY+MedicationLabelH+5;
-		int MedicationAreaH=getHeight(medication_area.getText(),RIGHTSIDECOLUMN);
+		int MedicationLabelY = AdviceAreaY+AdviceAreaH+5;
+		int MedicationLabelH = 15;
+		int MedicationAreaY = MedicationLabelY+MedicationLabelH+5;
+		int MedicationAreaH = getHeight(medication_area.getText(),RIGHTSIDECOLUMN);
 
-		int DiagnosticLabelY=MedicationAreaY+MedicationAreaH+5;
-		int DiagnosticLabelH=15;
-		int DiagnosticAreaY=DiagnosticLabelY+DiagnosticLabelH+5;
-		int DiagnosticAreaH=getHeight(info.doctor_diagnostic,RIGHTSIDECOLUMN);
-		int DiagnosticX=RIGHTSIDEX;
-		int DiagnosticW=RIGHTSIDEW;
+		int DiagnosticLabelY = MedicationAreaY+MedicationAreaH+5;
+		int DiagnosticLabelH = 15;
+		int DiagnosticAreaY = DiagnosticLabelY+DiagnosticLabelH+5;
+		int DiagnosticAreaH = getHeight(info.doctor_diagnostic,RIGHTSIDECOLUMN);
+		int DiagnosticX = RIGHTSIDEX;
+		int DiagnosticW = RIGHTSIDEW;
 
 		if(isNullString(diagnostic_test_area.getText()))
 		{
 			diagnostic_test.setVisible(false);
 			diagnostic_test_area.setVisible(false);
 
-			DiagnosticLabelH=0;
-			DiagnosticAreaY=DiagnosticLabelY+DiagnosticLabelH+5;
-			DiagnosticAreaH=0;
+			DiagnosticLabelH = 0;
+			DiagnosticAreaY = DiagnosticLabelY+DiagnosticLabelH+5;
+			DiagnosticAreaH = 0;
 		}
 
 		if(DiagnosticAreaY+DiagnosticAreaH+5>ReferralAreaY+ReferralAreaH+DiagnosticLabelH+DiagnosticAreaH)
 		{
-			DiagnosticLabelY=ReferralAreaY+ReferralAreaH+5;
-			DiagnosticAreaY=DiagnosticLabelY+DiagnosticLabelH+5;
+			DiagnosticLabelY = ReferralAreaY+ReferralAreaH+5;
+			DiagnosticAreaY = DiagnosticLabelY+DiagnosticLabelH+5;
 
-			DiagnosticX=LEFTSIDEX;
-			DiagnosticW=LEFTSIDEW;
+			DiagnosticX = LEFTSIDEX;
+			DiagnosticW = LEFTSIDEW;
 		}
 		else if(ReferralAreaY+ReferralAreaH+5>DiagnosticAreaY+DiagnosticAreaH+ReferralLabelH+ReferralAreaH)
 		{
-			ReferralLabelY=DiagnosticAreaY+DiagnosticAreaH+5;
-			ReferralAreaY=ReferralLabelY+ReferralLabelH+5;
+			ReferralLabelY = DiagnosticAreaY+DiagnosticAreaH+5;
+			ReferralAreaY = ReferralLabelY+ReferralLabelH+5;
 
-			ReferralX=RIGHTSIDEX;
-			ReferralW=RIGHTSIDEW;
+			ReferralX = RIGHTSIDEX;
+			ReferralW = RIGHTSIDEW;
 		}
 
-		int[] data={JPANEL6Y,DiagnosticAreaY+DiagnosticAreaH,ReferralAreaY+ReferralAreaH,MedicationAreaY+MedicationAreaH,FinalDiagnosisAreaY+FinalDiagnosisAreaH};
+		int[] data = {JPANEL6Y,DiagnosticAreaY+DiagnosticAreaH,ReferralAreaY+ReferralAreaH,MedicationAreaY+MedicationAreaH,FinalDiagnosisAreaY+FinalDiagnosisAreaH};
 		Arrays.sort(data);
-		JPANEL6Y=data[4]+10;
+		JPANEL6Y = data[4]+10;
 
 		// setSize(595,950);
 
@@ -2685,12 +2523,12 @@ class Prescription_applet extends JFrame
         add(kiosk_coordinator_name2);
 
         //you dont have to touch this one
-        JPANEL1=new JPanel();
-		// JPANEL2=new JPanel();
-		JPANEL3=new JPanel();
-		JPANEL4=new JPanel();
-		JPANEL5=new JPanel();
-		JPANEL6=new JPanel();
+        JPANEL1 = new JPanel();
+		// JPANEL2 = new JPanel();
+		JPANEL3 = new JPanel();
+		JPANEL4 = new JPanel();
+		JPANEL5 = new JPanel();
+		JPANEL6 = new JPanel();
 
 		JPANEL1.setLayout(new BorderLayout());
 		// JPANEL2.setLayout(new BorderLayout());
@@ -2747,12 +2585,12 @@ class Prescription_applet extends JFrame
 
 		// try
 		// {
-		// 	PrinterJob pjob = PrinterJob.getPrinterJob();
-		// 	PageFormat preformat = pjob.defaultPage();
+		// 	PrinterJob pjob  =  PrinterJob.getPrinterJob();
+		// 	PageFormat preformat  =  pjob.defaultPage();
 		// 	preformat.setOrientation(PageFormat.LANDSCAPE);
-		// 	PageFormat postformat = pjob.pageDialog(preformat);
+		// 	PageFormat postformat  =  pjob.pageDialog(preformat);
 		// 	//If user does not hit cancel then print.
-		// 	if (preformat != postformat) {
+		// 	if (preformat  !=  postformat) {
 		// 	    //Set print component
 		// 	    pjob.setPrintable(new Printer(this), postformat);
 		// 	    if (pjob.printDialog()) {
@@ -2769,15 +2607,15 @@ class Prescription_applet extends JFrame
 
 	private int getHeight(String str,int width)
 	{
-		String arr[]=str.split("\n");
-		for(int i=0;i<arr.length;i++)
+		String arr[] = str.split("\n");
+		for(int i = 0;i<arr.length;i++)
 		{
-			int extraLine=arr[i].length()/width;
-			for(int j=0;j<extraLine;j++)
-				str=str+"\nab";
+			int extraLine = arr[i].length()/width;
+			for(int j = 0;j<extraLine;j++)
+				str = str+"\nab";
 		}
-		str+="\n";
-		JTextArea tempTextArea=new JTextArea(str);
+		str += "\n";
+		JTextArea tempTextArea = new JTextArea(str);
 		return (int)tempTextArea.getPreferredSize().getHeight();
 	}
 
