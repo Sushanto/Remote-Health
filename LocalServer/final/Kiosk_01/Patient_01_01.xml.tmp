@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_01</id>
+        <date>20-06-2015</date>
+        <name>Sushanto Halder</name>
+        <reference>Son of Mr Halder</reference>
+        <gender>MALE</gender>
+        <age>20</age>
+        <phone>1234567890</phone>
+        <address>Durgapur</address>
+        <occupation>Student</occupation>
+        <status>Review</status>
+        <height>152</height>
+        <familyhistory>None</familyhistory>
+        <medicalhistory>none</medicalhistory>
+    </PatientBasicData>
+    <Reports>
+        <Report>
+            <patientComplaint>
+                <complaint>Diarrhoea
+No. Of Times --&gt; 5
+Duration --&gt; 10
+Blood --&gt; Yes
+Stool --&gt; Watery
+Stool --&gt; Soft
+Stool --&gt; Ill Formed</complaint>
+                <complaint_date>21-06-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>Vomiting</otherResults>
+                <kioskCoordinatorName>Sourav Maji</kioskCoordinatorName>
+                <prevDiagnosis>No</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>jdg</doctorName>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint_date>21-06-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <kioskCoordinatorName>Sourav Maji</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription/>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint_date>21-06-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <kioskCoordinatorName>Akansha Subba</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription/>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>WEF,WENF</complaint>
+                <complaint_date>07-07-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>WEFEF</otherResults>
+                <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
+                <prevDiagnosis>kgW,EFEJHF</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>doctor name</doctorName>
+                <prescription_date>2015-07-09</prescription_date>
+                <provisionalDiagnosis></provisionalDiagnosis>
+                <finalDiagnosis></finalDiagnosis>
+                <advice></advice>
+                <medication>tab   ACAREX  dose  1   before   lunch  1   week
+tab   ACAREX  dose  1   before   lunch  1   week
+tab   ACTRAPID-HM(PENFILL 100U/ML)  dose  1   before   lunch  1   week
+</medication>
+                <diagnosis></diagnosis>
+                <referral></referral>
+                <signature>doctor signature</signature>
+                <registration_number>registration number</registration_number>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>Weakness
+Description --&gt; Heart beat=51
+
+</complaint>
+                <complaint_date>10-07-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>Nothing</otherResults>
+                <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
+                <prevDiagnosis>yes</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>05-10-2015</prescription_date>
+                <provisionalDiagnosis>pd</provisionalDiagnosis>
+                <finalDiagnosis>fd</finalDiagnosis>
+                <advice>ad</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>dt</diagnosis>
+                <referral>rf</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>sfsdf</complaint>
+                <complaint_date>05-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>dfdf</otherResults>
+                <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
+                <prevDiagnosis>dfdf</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>05-10-2015</prescription_date>
+                <provisionalDiagnosis>dfdf</provisionalDiagnosis>
+                <finalDiagnosis>dfdf</finalDiagnosis>
+                <advice>d</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>fdfd</diagnosis>
+                <referral>fdf</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>dfdf</complaint>
+                <complaint_date>05-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>dfdfAnemia
+Edema
+</otherResults>
+                <fileNames>sushanto.pdf
+</fileNames>
+                <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
+                <prevDiagnosis>dfdf</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>05-10-2015</prescription_date>
+                <provisionalDiagnosis>pd</provisionalDiagnosis>
+                <finalDiagnosis>fd</finalDiagnosis>
+                <advice>ad</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day(1.00AM) X 1 Day(s)</medication>
+                <diagnosis>dt</diagnosis>
+                <referral>rt</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>dfdfgSwelling
+Where --&gt; Head-Back
+Where --&gt; Teeth
+Where --&gt; Neck
+
+</complaint>
+                <complaint_date>05-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>dfdfdfAnemia
+Edema
+</otherResults>
+                <fileNames>Java_Printing.pdf
+sushanto.pdf
+</fileNames>
+                <kioskCoordinatorName>Sushanto Halder</kioskCoordinatorName>
+                <prevDiagnosis>dfdf</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>05-10-2015</prescription_date>
+                <provisionalDiagnosis>pd</provisionalDiagnosis>
+                <finalDiagnosis>fd</finalDiagnosis>
+                <advice>ad</advice>
+                <medication>Syrup: DALACIN-C, 2 time(s) in a day(After Food) X 4 Day(s)
+Tablet: GENTALENE - C, 2 time(s) in a day(1.00AM/5.00AM) X 4 Day(s)</medication>
+                <diagnosis>dt</diagnosis>
+                <referral>rf</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>hkjuk</complaint>
+                <complaint_date>09-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>fjhjh</otherResults>
+                <fileNames>sushanto.pdf
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>jhgjh</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>09-10-2015</prescription_date>
+                <provisionalDiagnosis>sdf</provisionalDiagnosis>
+                <finalDiagnosis>dfdfdf</finalDiagnosis>
+                <advice>dfdfdfd</advice>
+                <medication>fdfdfdfdf</medication>
+                <diagnosis>fdfdfdf</diagnosis>
+                <referral>dfd</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>dfghffgfg</complaint>
+                <complaint_date>09-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>fgfg</otherResults>
+                <fileNames>sushanto.pdf
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>fgfgf</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>09-10-2015</prescription_date>
+                <provisionalDiagnosis>dfgdfdf</provisionalDiagnosis>
+                <finalDiagnosis>dfdfd</finalDiagnosis>
+                <advice>fdfd</advice>
+                <medication>df</medication>
+                <diagnosis>fdfd</diagnosis>
+                <referral>fdfdf</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>drfgfgfgfg</complaint>
+                <complaint_date>09-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>fgfg</otherResults>
+                <fileNames>sushanto.pdf
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>fgfgfg</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>09-10-2015</prescription_date>
+                <provisionalDiagnosis>sgdtg</provisionalDiagnosis>
+                <finalDiagnosis>grgrg</finalDiagnosis>
+                <advice>rgr</advice>
+                <medication>rg</medication>
+                <diagnosis>grgrg</diagnosis>
+                <referral>rgrg</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>65yu5y</complaint>
+                <complaint_date>09-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>rtuty</otherResults>
+                <fileNames>17216_827310057387986_8387795314948038095_n.jpg
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>fvfv</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>09-10-2015</prescription_date>
+                <provisionalDiagnosis>fgfg</provisionalDiagnosis>
+                <finalDiagnosis>fgfgfgfgfg</finalDiagnosis>
+                <advice>fgfgfgfgfgg</advice>
+                <medication>fg</medication>
+                <diagnosis>fgfgfg</diagnosis>
+                <referral>fgfgfg</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>fdhgh</complaint>
+                <complaint_date>09-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>ghghghgh</otherResults>
+                <fileNames>Devil_May_Cry_4_Wallpaper_.jpg
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>ghgthghgh</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>09-10-2015</prescription_date>
+                <provisionalDiagnosis>sdfdgfg</provisionalDiagnosis>
+                <finalDiagnosis>hfgfgfhfhhg</finalDiagnosis>
+                <advice>hghg</advice>
+                <medication>ghghg</medication>
+                <diagnosis>hghghg</diagnosis>
+                <referral>hghgh</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>tthth</complaint>
+                <complaint_date>09-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>thth</otherResults>
+                <fileNames>vodopad-reka-derevya-zelen.jpg
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>rthth</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription/>
+        </Report>
+    </Reports>
+</PatientReport>

@@ -2,7 +2,6 @@ package ServerCode;
 
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.net.ConnectException;
 
 import java.util.Scanner;
 
@@ -10,9 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.DirectoryNotEmptyException;
 
 import java.io.File;
-// import commons.RHErrors;
+
 
 import java.io.IOException;
 import java.nio.file.DirectoryNotEmptyException;
@@ -27,41 +27,6 @@ public class KioskClient
 	private String syncpath = null;			/* Where to put sync files */
 	private static String logintype = "KOP";	/* This will only run at the kiosk end */
 
-	protected String getMode()
-	{
-		return mode;
-	}
-
-	private int runSync()
-	{
-		try {
-			File syncFolder = new File(syncpath);
-
-			Runtime r = Runtime.getRuntime();
-			Process grive = r.exec(new String[]{"grive"},null,syncFolder.getParentFile());
-			int resp = grive.waitFor();
-			if (resp > 0)
-				return RHErrors.RHE_SUBPROC;
-			else
-				return 0;
-		} catch (SecurityException se) {
-			se.printStackTrace();
-			return RHErrors.RHE_GENERAL;
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			return RHErrors.RHE_IOE;
-		} catch (NullPointerException npe) {
-			npe.printStackTrace();
-			return RHErrors.RHE_NULL;
-		} catch (IndexOutOfBoundsException ioobe) {
-			ioobe.printStackTrace();
-			return RHErrors.RHE_GENERAL;
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-			return RHErrors.RHE_SUBPROC;
-		}
-	}
-
 	/**
 	* Initiate a kiosk object with an ID(specific to machine), server name, port and syncfolder location
 	* @param id The ID of the machine of the kiosk
@@ -73,25 +38,32 @@ public class KioskClient
 		Socket sock = connectToServer(serverHostName, port);
 		if (sock != null) {
 			this.con = new ClientConnection(sock, id);
+			System.out.println("Set DC mode to DS");
 			this.mode = "DS";
 		} else {
+			System.out.println("Set DC mode to GD");
 			this.mode = "GD";
 		}
 		this.syncpath = syncfolder;
 	}
+
+
+	public String getMode()
+	{
+		return mode;
+	}
+
 
 	/**
 	* Connect to the data server
 	* @param serverHostName The host name of the server
 	* @param port The remote health port number
 	*/
-	protected Socket connectToServer(String serverHostName, int port)
+	public Socket connectToServer(String serverHostName, int port)
 	{
 		try {
 			Socket mysock = new Socket(serverHostName, port);
 			return mysock;
-		} catch(ConnectException ce) {
-			ce.printStackTrace();
 		} catch (UnknownHostException uhe) {
 			uhe.printStackTrace();
 		} catch (IOException ioe) {
@@ -105,21 +77,35 @@ public class KioskClient
 	}
 
 	/**
-	* Utility function for copying a file from one location to another
+	* Utility function for moving a file from one location to another
 	* @param source source path (including filename)
 	* @param destination destination path (including filename)
-	* @return File a File object of the copied file
-	* @throws DirectoryNotEmptyException see java.nio.files.Files.copy()
-	* @throws IOException see java.nio.files.Files.copy()
-	* @throws SecurityException see java.nio.files.Files.copy()
+	* @return File a File object of the moved file
+	* @throws DirectoryNotEmptyException see java.nio.files.Files.move()
+	* @throws IOException see java.nio.files.Files.move()
+	* @throws SecurityException see java.nio.files.Files.move()
 	**/
-	private File copyFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
 	{
 		Path src = Paths.get(source);
 		Path dst = Paths.get(destination);
-		Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+		Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING);
 		File copied = dst.toFile();
 		return copied;
+	}
+
+	/**
+	* Check if a file is an xml or txt file. If not, then encode it as such.
+	* @param inFileName Name of input file
+	*/
+	private void checkAndDecode(String inFileName)
+	{
+		FileConverter.decodeFile(inFileName, inFileName + ".temp");
+		try {
+			moveFile(inFileName + ".temp", inFileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -134,7 +120,7 @@ public class KioskClient
 		Process gdproc = null;
 		String[] command = new String[commandArguments.length + 2];
 		command[0] = "python";
-		command[1] = "rh_gdrive.py";
+		command[1] = "gdrive_simple.py";
 		for (int i = 2, j = 0; j < commandArguments.length; i++, j++) {
 			command[i] = commandArguments[j];
 		}
@@ -174,16 +160,15 @@ public class KioskClient
 	public int getRequest(String serverFileName, String localFileName) throws Exception
 	{
 		if (this.mode.equals("DS")) {
-			String command = "get " + serverFileName;
+			String command = "get " + serverFileName;// + " " + localFileName;
 			con.sendString(command);
 			int resp = con.receiveInt();
-			runSync();
-			int sync = runSync();
-                        if (resp > 0 && sync == 0) {
-				copyFile(this.syncpath + serverFileName, localFileName);
-                        }
+			if (resp > 0)
+				con.receiveFileln(localFileName, resp);
+			checkAndDecode(localFileName);
 			return resp;
 		} else {
+			System.out.println("get(): Falling back to GD script");
 			return runGDScript(new String[]{"get", serverFileName, localFileName});
 		}
 	}
@@ -205,13 +190,13 @@ public class KioskClient
 			int resp = RHErrors.RHE_GENERAL;
 			if (localFile.exists()) {
 				con.sendString(command);
-				File sent = copyFile(localFileName, this.syncpath + serverFileName);
-				runSync();
-				int sync = runSync();
+				localFile = checkAndEncode(localFileName);
+				con.sendFileln(localFile);
 				resp = con.receiveInt();
 			}
 			return resp;
 		} else {
+			System.out.println("put(): Falling back to GD script");
 			return runGDScript(new String[]{"put", serverFileName, localFileName});
 		}
 	}
@@ -295,5 +280,59 @@ public class KioskClient
 			return resp;
 		}
 		return 0;
+	}
+
+
+
+	/**
+	* Check if a file is an xml or txt file. If not, then encode it as such.
+	* @param inFileName Name of input file
+	* @return File The file object of the output file
+	*/
+	private File checkAndEncode(String inFileName)
+	{
+		String[] fileNameParts = inFileName.split("\\.");
+		String extension = fileNameParts[fileNameParts.length - 1];
+		switch (extension) {
+		case "xml":
+		case "txt":
+		case "XML":
+		case "TXT":
+			File file = null;
+			try
+			{
+				file = copyFile(inFileName,inFileName + ".tmp");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			System.out.println("copy file...");
+			return file;
+		default:
+			FileConverter.encodeFile(inFileName, inFileName + ".tmp");
+			return new File (inFileName + ".tmp");
+		}
+	}
+
+
+	/**
+	* Utility function for copying a file from one location to another
+	* @param source source path (including filename)
+	* @param destination destination path (including filename)
+	* @return File a File object of the copied file
+	* @throws DirectoryNotEmptyException see java.nio.files.Files.copy()
+	* @throws IOException see java.nio.files.Files.copy()
+	* @throws SecurityException see java.nio.files.Files.copy()
+	**/
+	private File copyFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	{
+		Path src = Paths.get(source);
+		Path dst = Paths.get(destination);
+		System.out.println("in copy file function...");
+		Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+		System.out.println("file copied...");
+		File copied = dst.toFile();
+		return copied;
 	}
 }

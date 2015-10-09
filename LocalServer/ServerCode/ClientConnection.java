@@ -12,8 +12,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
-// import commons.RHErrors;
+import java.io.FileReader;
 
 import java.io.IOException;
 import java.io.EOFException;
@@ -92,7 +91,7 @@ public class ClientConnection
 			biStream.read(fileBuffer, 0, fileBuffer.length);
 			try {
 				int x = this.receiveInt();
-				System.out.println("x= " + x);
+				System.out.println("Reception=" + x);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -102,6 +101,36 @@ public class ClientConnection
 			return fileBuffer.length;
 		} catch(IOException e) {
 			e.printStackTrace();
+			return RHErrors.RHE_IOE;
+		}
+	}
+
+	/**
+	* Send a file to the connected client line by line
+	* @param inFile The file to send
+	* @return int number of lines sent
+	*/
+	public int sendFileln(File inFile)
+	{
+		try {
+			FileReader fr = new FileReader(inFile);
+			BufferedReader br = new BufferedReader(fr);
+
+			String line = "";
+			int k = 0;
+			sendString("START_OF_FILE");
+			k++;
+			while ((line = br.readLine()) != null) {
+				sendString(line);
+				k++;
+			}
+			sendString("END_OF_FILE");
+			k++;
+			br.close();
+			fr.close();
+			return k;
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 			return RHErrors.RHE_IOE;
 		}
 	}
@@ -124,15 +153,11 @@ public class ClientConnection
 			byte[] fileBuffer = new byte[fileLength];
 			int byteRead = 0;
 
-			System.out.println("Start");
-
 			while((fileLength > 0) && (byteRead = inStream.read(fileBuffer, 0, Math.min(fileBuffer.length, fileLength))) != -1)
 			{
 				boStream.write(fileBuffer, 0, byteRead);
 				fileLength -= byteRead;
-				System.out.println("fileLength : "+fileLength+" byteRead : "+byteRead);
 			}
-			System.out.println("Done");
 			boStream.close();
 			ofStream.close();
 
@@ -140,6 +165,44 @@ public class ClientConnection
 		} catch(IOException e) {
 			e.printStackTrace();
 			return RHErrors.RHE_IOE;
+		}
+	}
+
+	/**
+	* Receive a file from the connected client line by line
+	* @param outFileName Name at server to save as
+	* @param fileLength Length of file in bytes (not used here)
+	* @return int Number of lines read
+	*/
+	public int receiveFileln(String outFileName, int fileLength)
+	{
+		try {
+			File outFile = new File(outFileName);
+			//FileWriter fw = new FileWriter(outFile);
+			PrintWriter pw = new PrintWriter(outFile);
+
+			String line = "";
+			int k = 0;
+			line = receiveString();
+			k++;
+			if (line.equals("START_OF_FILE")) {
+				line = receiveString();
+				k++;
+				pw.print(line);
+
+				while (!(line = receiveString()).equals("END_OF_FILE")) {
+					pw.print("\n" + line);
+					k++;
+				}
+			}
+			pw.close();
+			return k;
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			return RHErrors.RHE_IOE;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RHErrors.RHE_GENERAL;
 		}
 	}
 

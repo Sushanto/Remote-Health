@@ -17,6 +17,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.DirectoryNotEmptyException;
+
 class Connection extends Thread
 {
 	private Socket clientSocket;
@@ -93,9 +99,12 @@ class Connection extends Thread
 					if(LocalServer.client.getMode().equals("GD"))
 					{
 						System.out.println("Trying to connect to DS...");
-						if(LocalServer.client.connectToServer(LocalServer.serverHostName,LocalServer.serverPort)!=null)
+						Socket sock;
+						if((sock=LocalServer.client.connectToServer(LocalServer.serverHostName,LocalServer.serverPort))!=null)
 						{
 							System.out.println("Connected to DS...");
+							sock.close();
+							// LocalServer.client = new KioskClientSync(LocalServer.kioskId,LocalServer.serverHostName,LocalServer.serverPort,LocalServer.syncFolder);
 							LocalServer.client = new KioskClient(LocalServer.kioskId,LocalServer.serverHostName,LocalServer.serverPort,LocalServer.syncFolder);
 							LocalServer.client.loginRequest(LocalServer.loginUsername,LocalServer.loginPassword);
 						}
@@ -134,6 +143,7 @@ class Connection extends Thread
 			String[] folders=fileInfo[0].split("/");
 			System.out.println("Requested file: "+localFileName);
 			receiveFile1(fileInfo[0],Integer.parseInt(fileInfo[1]));
+			checkAndDecode(fileInfo[0]);
 			System.out.println("File received: "+localFileName);
 			sendInt(0);
 			if((folders[0]+"/"+folders[1]).equals(LocalServer.finalDataPath))
@@ -165,7 +175,9 @@ class Connection extends Thread
 			if(tempFile.isFile())
 			{
 				sendInt((int)tempFile.length());
+				tempFile = checkAndEncode(LocalServer.tempDataPath+"/"+localFileName);
 				sendFile1(tempFile);
+				// tempFile.delete();
 				System.out.println("File sent: "+localFileName);
 				return true;
 			}
@@ -176,10 +188,12 @@ class Connection extends Thread
 				System.out.println("Sync complete....");
 				System.out.println("Response: "+response);
 				File finalFile= new File(LocalServer.finalDataPath+"/"+localFileName);
-				if(response>=0 && response==(int)finalFile.length())
+				if(response>=0)
 				{
 					sendInt(response);
+					finalFile = checkAndEncode(LocalServer.finalDataPath+"/"+localFileName);
 					sendFile1(finalFile);
+					// finalFile.delete();
 					System.out.println("File sent: "+localFileName);
 					return true;
 				}
@@ -370,5 +384,84 @@ class Connection extends Thread
 			throw new Exception("Received null string");
 		}
 		return val;
+	}
+
+
+
+
+	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	{
+		Path src = Paths.get(source);
+		Path dst = Paths.get(destination);
+		Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING);
+		File copied = dst.toFile();
+		return copied;
+	}
+
+	/**
+	* Check if a file is an xml or txt file. If not, then encode it as such.
+	* @param inFileName Name of input file
+	*/
+	private void checkAndDecode(String inFileName)
+	{
+		FileConverter.decodeFile(inFileName, inFileName + ".temp");
+		try {
+			moveFile(inFileName + ".temp",inFileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	* Check if a file is an xml or txt file. If not, then encode it as such.
+	* @param inFileName Name of input file
+	* @return File The file object of the output file
+	*/
+	private File checkAndEncode(String inFileName)
+	{
+		String[] fileNameParts = inFileName.split("\\.");
+		String extension = fileNameParts[fileNameParts.length - 1];
+		switch (extension) {
+		case "xml":
+		case "txt":
+		case "XML":
+		case "TXT":
+			File file = null;
+			try
+			{
+				file = copyFile(inFileName,inFileName + ".tmp");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			System.out.println("copy file...");
+			return file;
+		default:
+			FileConverter.encodeFile(inFileName, inFileName + ".tmp");
+			return new File (inFileName + ".tmp");
+		}
+	}
+
+
+	/**
+	* Utility function for copying a file from one location to another
+	* @param source source path (including filename)
+	* @param destination destination path (including filename)
+	* @return File a File object of the copied file
+	* @throws DirectoryNotEmptyException see java.nio.files.Files.copy()
+	* @throws IOException see java.nio.files.Files.copy()
+	* @throws SecurityException see java.nio.files.Files.copy()
+	**/
+	private File copyFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	{
+		Path src = Paths.get(source);
+		Path dst = Paths.get(destination);
+		System.out.println("in copy file function...");
+		Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+		System.out.println("file copied...");
+		File copied = dst.toFile();
+		return copied;
 	}
 }

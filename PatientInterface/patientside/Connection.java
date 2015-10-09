@@ -16,6 +16,12 @@ import java.net.Socket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.DirectoryNotEmptyException;
 public class Connection
 {
 	private Socket clientSocket;
@@ -88,6 +94,7 @@ public class Connection
 			if(response>=0)
 			{
 				receiveFile1(localFileName,response);
+				checkAndDecode(localFileName);
 				return 0;
 			}
 			else return response;
@@ -106,8 +113,9 @@ public class Connection
 			sendString("RECEIVE_FILE");
 			File localFile=new File(localFileName);
 			sendString(serverFileName+" "+localFile.length());
+			localFile = checkAndEncode(localFileName);
 			sendFile1(localFile);
-
+			// localFile.delete();
 			int response=receiveInt();
 			return response;
 		}
@@ -296,5 +304,78 @@ public class Connection
 	protected void finalize()
 	{
 		System.out.println("Garbage Collection: Connection");
+	}
+
+
+	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	{
+		Path src = Paths.get(source);
+		Path dst = Paths.get(destination);
+		Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING);
+		File copied = dst.toFile();
+		return copied;
+	}
+
+	/**
+	* Check if a file is an xml or txt file. If not, then encode it as such.
+	* @param inFileName Name of input file
+	*/
+	private void checkAndDecode(String inFileName)
+	{
+		FileConverter.decodeFile(inFileName, inFileName + ".temp");
+		try {
+			moveFile(inFileName + ".temp",inFileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	* Check if a file is an xml or txt file. If not, then encode it as such.
+	* @param inFileName Name of input file
+	* @return File The file object of the output file
+	*/
+	private File checkAndEncode(String inFileName)
+	{
+		String[] fileNameParts = inFileName.split("\\.");
+		String extension = fileNameParts[fileNameParts.length - 1];
+		switch (extension) {
+		case "xml":
+		case "txt":
+		case "XML":
+		case "TXT":
+			File file = null;
+			try
+			{
+				file = copyFile(inFileName,inFileName + ".tmp");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			return file;
+		default:
+			FileConverter.encodeFile(inFileName, inFileName + ".tmp");
+			return new File (inFileName + ".tmp");
+		}
+	}
+	
+	/**
+	* Utility function for copying a file from one location to another
+	* @param source source path (including filename)
+	* @param destination destination path (including filename)
+	* @return File a File object of the copied file
+	* @throws DirectoryNotEmptyException see java.nio.files.Files.copy()
+	* @throws IOException see java.nio.files.Files.copy()
+	* @throws SecurityException see java.nio.files.Files.copy()
+	**/
+	private File copyFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	{
+		Path src = Paths.get(source);
+		Path dst = Paths.get(destination);
+		Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+		File copied = dst.toFile();
+		return copied;
 	}
 }

@@ -26,6 +26,7 @@ public class LocalServer
 	public static String loginPassword;
 
 	private ServerSocket serverSocket;
+	// public static KioskClientSync client;
 	public static KioskClient client;
 
 
@@ -38,6 +39,7 @@ public class LocalServer
 		{
 			serverSocket=new ServerSocket(clientPort,1,InetAddress.getByName(clientHostName));
 			connections=new ArrayList<Connection>();
+			// client=new KioskClientSync(kioskId,serverHostName,serverPort,syncFolder);
 			client=new KioskClient(kioskId,serverHostName,serverPort,syncFolder);
 			client.loginRequest(loginUsername,loginPassword);
 			System.out.println("Local server is running....");

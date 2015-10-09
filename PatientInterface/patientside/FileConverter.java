@@ -1,18 +1,36 @@
 package patientside;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import sun.misc.BASE64Encoder;
 import sun.misc.BASE64Decoder;
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.JAXBException;
 
 
-public class FileConverter
-{
-	public static int decodeFile(String inFileName,String outFileName)
+
+/**
+* Convert binary files to xml binary data for easier transmission
+*/
+public class FileConverter {
+
+	/**
+	* Decodes a file.
+	* @param inFileName Name of input file
+	* @param outFileName Name of output file
+	*/
+	protected static void decodeFile(String inFileName, String outFileName)
 	{
-		try
-		{
+		try {
 			File inFile = new File(inFileName);
 			JAXBContext jc = JAXBContext.newInstance(FileData.class);
 			Unmarshaller jum = jc.createUnmarshaller();
@@ -21,30 +39,34 @@ public class FileConverter
 			String encodedStr = fileData.getBinaryData();
 			byte[] byteArray;
 
-            BASE64Decoder decoder = new BASE64Decoder();
-            byteArray = decoder.decodeBuffer(encodedStr);
+			BASE64Decoder decoder = new BASE64Decoder();
+			byteArray = decoder.decodeBuffer(encodedStr);
 
-            File outFile = new File(outFileName);
-            FileOutputStream ofStream = new FileOutputStream(outFile);
-            BufferedOutputStream boStream = new BufferedOutputStream(ofStream);
-            boStream.write(byteArray,0,byteArray.length);
-            boStream.flush();
-            boStream.close();
-            ofStream.close();
-            return 0;
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			return -1;
+			File outFile = new File(outFileName);
+			FileOutputStream ofStream = new FileOutputStream(outFile);
+			BufferedOutputStream boStream = new BufferedOutputStream(ofStream);
+			boStream.write(byteArray, 0, byteArray.length);
+			boStream.flush();
+			boStream.close();
+			ofStream.close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} catch(JAXBException jaxbe) {
+			File oldFile = new File(inFileName);
+			File newFile = new File(outFileName);
+			oldFile.renameTo(newFile);
+			// jaxbe.printStackTrace();
 		}
 	}
 
-
-	public static int encodeFile(String inFileName,String outFileName)
+	/**
+	* Encode a file
+	* @param inFileName name of encoded file
+	* @param outFileName name of output file
+	*/
+	protected static void encodeFile(String inFileName, String outFileName)
 	{
-		try
-		{
+		try {
 			File inFile = new File(inFileName);
 			FileInputStream ifStream = new FileInputStream(inFile);
 			BufferedInputStream biStream = new BufferedInputStream(ifStream);
@@ -54,25 +76,23 @@ public class FileConverter
 			biStream.close();
 			ifStream.close();
 
-            BASE64Encoder encoder = new BASE64Encoder();
-            String encodedStr = encoder.encode(byteArray);
+			BASE64Encoder encoder = new BASE64Encoder();
+			String encodedStr = encoder.encode(byteArray);
 
-            FileData fileData = new FileData();
-            fileData.setBinaryData(encodedStr);
+			FileData fileData = new FileData();
+			fileData.setBinaryData(encodedStr);
 
-            File outFile = new File(outFileName);
+			File outFile = new File(outFileName);
 
-            JAXBContext jc = JAXBContext.newInstance(FileData.class);
-            Marshaller jm = jc.createMarshaller();
-            jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-            jm.marshal(fileData,outFile);
-            return 0;
-        }
-        catch (Exception e)
-        {
-           e.printStackTrace();
-           return -1;
-        }
+			JAXBContext jc = JAXBContext.newInstance(FileData.class);
+			Marshaller jm = jc.createMarshaller();
+			jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+			jm.marshal(fileData, outFile);
+	        } catch (IOException ioe) {
+			ioe.printStackTrace();
+		} catch(JAXBException jaxbe) {
+			// jaxbe.printStackTrace();
+		}
 	}
 }
 
@@ -82,14 +102,12 @@ public class FileConverter
 class FileData
 {
 	String binaryData;
-
-	public String getBinaryData()
-	{
+	public String getBinaryData() {
 		return binaryData;
 	}
+
 	@XmlElement(name="BinaryData")
-	public void setBinaryData(String binaryData)
-	{
+	public void setBinaryData(String binaryData) {
 		this.binaryData = binaryData;
 	}
 }
