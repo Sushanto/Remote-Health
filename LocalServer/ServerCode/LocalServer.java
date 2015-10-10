@@ -17,30 +17,34 @@ public class LocalServer
 	private String clientHostName;
 	private int clientPort;
 
-	public static String kioskId;
-	public static String serverHostName;
-	public static int serverPort;
-	public static String syncFolder;
+	protected static String kioskId;
+	protected static String serverHostName;
+	protected static int serverPort;
+	protected static String syncFolder = "final/Kiosk_01/";
 
-	public static String loginUsername;
-	public static String loginPassword;
+	protected static String loginUsername;
+	protected static String loginPassword;
 
 	private ServerSocket serverSocket;
-	// public static KioskClientSync client;
-	public static KioskClient client;
+	// protected static KioskClientSync client;
+	protected static KioskClient client;
+
+	protected static String tempDataPath = "temp";
+	protected static String finalDataPath = "final/Kiosk_01";
+	protected static String logintype = null;
 
 
 	private static ArrayList<Connection> connections;
 
-	public LocalServer()
+	private LocalServer()
 	{
 		readInfo();
 		try
 		{
-			serverSocket=new ServerSocket(clientPort,1,InetAddress.getByName(clientHostName));
-			connections=new ArrayList<Connection>();
+			serverSocket = new ServerSocket(clientPort,1,InetAddress.getByName(clientHostName));
+			connections = new ArrayList<Connection>();
 			// client=new KioskClientSync(kioskId,serverHostName,serverPort,syncFolder);
-			client=new KioskClient(kioskId,serverHostName,serverPort,syncFolder);
+			client = new KioskClient(kioskId,serverHostName,serverPort,syncFolder);
 			client.loginRequest(loginUsername,loginPassword);
 			System.out.println("Local server is running....");
 		}
@@ -54,7 +58,7 @@ public class LocalServer
 	{
 		try
 		{
-			FileReader fReader = new FileReader(new File("ServerCode/KioskInfo.gpg"));
+			FileReader fReader = new FileReader(new File("KioskMetadata.cfg"));
 			BufferedReader bReader = new BufferedReader(fReader);
 			System.out.println("Kiosk Information reading....");
 
@@ -80,7 +84,17 @@ public class LocalServer
 						serverPort = Integer.parseInt(tokens[1]);
 						break;
 					case "SYNC_FOLDER":
+						String[] path = tokens[1].split("/");
+						finalDataPath = path[0];
+						for(int i = 1; i < path.length; i++)
+							finalDataPath += "/" + path[i];
 						syncFolder = tokens[1];
+						break;
+					case "TEMP_FOLDER":
+						String[] tempPath = tokens[1].split("/");
+						tempDataPath = tempPath[0];
+						for(int i = 1; i < tempPath.length; i++)
+							tempDataPath += "/" + tempPath[i];
 						break;
 					case "LOGIN_ID":
 						loginUsername = tokens[1];
@@ -101,16 +115,16 @@ public class LocalServer
 		}
 	}
 
-	public Connection listen()
+	private Connection listen()
 	{
 		try
 		{
 			System.out.println("Listening.....");
 
-			Socket clientSocket=serverSocket.accept();
-			Connection newCon=new Connection(clientSocket);
+			Socket clientSocket = serverSocket.accept();
+			Connection newCon = new Connection(clientSocket);
 			connections.add(newCon);
-			System.out.println("Connection Added : "+connections.size());
+			System.out.println("Connection Added : " + connections.size());
 
 			if(!newCon.login())
 				newCon.disconnect();
@@ -123,30 +137,21 @@ public class LocalServer
 		}
 	}
 
-	public static synchronized void remove(Connection oldCon)
+	protected static synchronized void remove(Connection oldCon)
 	{
 		connections.remove(oldCon);
-		oldCon=null;
+		oldCon = null;
 		System.out.println("Connection Removed : "+connections.size());
 	}
 
 	public static void main(String args[])
 	{
-		LocalServer rhServer=new LocalServer();
+		LocalServer rhServer = new LocalServer();
 		while(true)
 		{
-			Connection mycon=rhServer.listen();
+			Connection mycon = rhServer.listen();
 			mycon.start();
 		}
 	}
-
-/***********************************************************************************************************************************/
-	public static String tempDataPath = "temp";
-	public static String finalDataPath = "final/Kiosk_01";
-	public static String logintype = null;
-
-
-
-/****************************************************************************************************************************/
 
 }

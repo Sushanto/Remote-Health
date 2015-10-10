@@ -47,8 +47,8 @@ public class RegisterNewPatient
 {
 	public RegisterNewPatient(Connection myCon,Employee e)
 	{
-		final Connection connection=myCon;
-		final Employee emp=e;
+		final Connection connection = myCon;
+		final Employee emp = e;
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
@@ -66,7 +66,7 @@ class BasicInformation
 	private JTextField nameField,phoneField,ageField,referenceField,occuField,heightField;
 
 	private final ButtonGroup jb = new ButtonGroup();
-	private final ButtonGroup cb=new ButtonGroup();
+	private final ButtonGroup cb = new ButtonGroup();
 	private JTextArea addressArea,familyHisArea,medicalHisArea;
 	private JButton btnSubmit,btnReset,btnBack;
 	private JRadioButton rdbtnMale,rdbtnFemale;
@@ -74,10 +74,10 @@ class BasicInformation
 	private JCheckBox chckbxSon,chckbxDaughter,chckbxW;
 	private JLabel status_value,lblImage;
 	private JLabel lblPatientId,lblBasicInformation,lblName,lblDate,lblDateValue,lblGender,lblAge,ageUnit_label,lblPhoneNumber,lblAddress;
-	private Font LABELFONT=new Font("Serif",Font.BOLD,16);
+	private Font LABELFONT = new Font("Serif",Font.BOLD,16);
 
-	private String patientId,fileDirectory,Language,confirmMessage="আপনি কি নিশ্চিত?",networkErrorMessage="নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
-	private String imagePath,imageString,KioskNumber;
+	private String patientId,fileDirectory,confirmMessage = "আপনি কি নিশ্চিত?",networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
+	private String imagePath,imageString;
 
 	private int countId,imageSet;
 
@@ -88,16 +88,16 @@ class BasicInformation
 
 	private boolean checkField()
 	{
-		boolean emptyCheck=!(nameVar.trim().isEmpty() || addressVar.trim().isEmpty() 
+		boolean emptyCheck = !(nameVar.trim().isEmpty() || addressVar.trim().isEmpty() 
 		 || occuVar.trim().isEmpty() || referenceField.getText().trim().isEmpty() || ageVar.trim().isEmpty()
 		 || heightVar.trim().isEmpty());
 
-		boolean nameCheck=!nameVar.matches(".*[0-9]+.*");
-		boolean sdwCheck=!referenceField.getText().matches(".*[0-9]+.*");
-		boolean occupationCheck=!occuVar.matches(".*[0-9]+.*");
-		boolean phoneCheck=!phoneField.getText().matches(".*[a-zA-Z]+.*");
-		boolean ageCheck=!ageVar.matches(".*[a-zA-Z]+.*");
-		boolean heightCheck=!heightVar.matches(".*[a-zA-Z]+.*");
+		boolean nameCheck = !nameVar.matches(".*[0-9]+.*");
+		boolean sdwCheck = !referenceField.getText().matches(".*[0-9]+.*");
+		boolean occupationCheck = !occuVar.matches(".*[0-9]+.*");
+		boolean phoneCheck = !phoneField.getText().matches(".*[a-zA-Z]+.*");
+		boolean ageCheck = !ageVar.matches(".*[a-zA-Z]+.*");
+		boolean heightCheck = !heightVar.matches(".*[a-zA-Z]+.*");
 
 		if(nameCheck)
 			nameField.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -129,20 +129,20 @@ class BasicInformation
 
 	private  void encodeToString()
 	{
-		BufferedImage image=null;
+		BufferedImage image = null;
         try
         {
-            image = ImageIO.read(new File(imagePath+"patient_Picture.jpg"));
+            image = ImageIO.read(new File(imagePath + "patient_Picture.jpg"));
         }
         catch(IOException e)
         {
 
         }
         
-        String type="jpg";
+        String type = "jpg";
 
         imageString = null;
-        if(imageSet!=0)
+        if(imageSet != 0)
         {
 	        ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -171,7 +171,7 @@ class BasicInformation
 	}
 
 	private void  deleteImage(){
-		File f=new File(imagePath+"patient_Picture.jpg");
+		File f = new File(imagePath + "patient_Picture.jpg");
 		f.delete();
 	}      	
 
@@ -186,28 +186,28 @@ class BasicInformation
 	}
 
 	private void getValues(){
-		nameVar=nameField.getText();
-		addressVar=addressArea.getText();
-		phoneVar=phoneField.getText();
+		nameVar = nameField.getText();
+		addressVar = addressArea.getText();
+		phoneVar = phoneField.getText();
 		if(rdbtnMale.isSelected())
-			genVar="Male";
-		else genVar="Female";
-		ageVar=ageField.getText();
+			genVar = "Male";
+		else genVar = "Female";
+		ageVar = ageField.getText();
 		if(chckbxSon.isSelected())
-			referenceVar="Son";
+			referenceVar = "Son";
 		else if(chckbxDaughter.isSelected())
-			referenceVar="Daughter";
+			referenceVar = "Daughter";
 		else if(chckbxW.isSelected())
-			referenceVar="Wife";
-		reNameVar=referenceVar+" of "+referenceField.getText();
-		occuVar=occuField.getText();
+			referenceVar = "Wife";
+		reNameVar = referenceVar + " of " + referenceField.getText();
+		occuVar = occuField.getText();
 
 
-		statusVar="New";
-		heightVar=heightField.getText();
-		// weightVar=weightField.getText();
-		familyVar=CheckNullString(familyHisArea.getText());
-		medicalVar=CheckNullString(medicalHisArea.getText());
+		statusVar = "New";
+		heightVar = heightField.getText();
+		// weightVar = weightField.getText();
+		familyVar = CheckNullString(familyHisArea.getText());
+		medicalVar = CheckNullString(medicalHisArea.getText());
 		
 
 	}
@@ -224,7 +224,7 @@ class BasicInformation
 		familyHisArea.setText("");
 		medicalHisArea.setText("");
 		warnField.setVisible(false);
-		imageSet=0;
+		imageSet = 0;
 		deleteImage();
 		lblImage.setIcon(null);
 	}
@@ -234,14 +234,15 @@ class BasicInformation
 	{
 		try
 		{
-			File file=new File("tempFolder/PatientIdCount.txt");
+			File file = new File(Constants.dataPath + "PatientIdCount.txt");
 			file.createNewFile();
-			BufferedWriter bout=new BufferedWriter(new FileWriter(file));
+			BufferedWriter bout = new BufferedWriter(new FileWriter(file));
 			bout.write(String.valueOf(countId));
 			bout.close();
-			if(connection.sendToServer("tempFolder/PatientIdCount.txt",Constants.finalDataPath+"Patient_"+KioskNumber+"_IdCount.txt")<0)
+			int sendResponse;
+			if((sendResponse = connection.sendToServer(Constants.dataPath + "PatientIdCount.txt",Constants.finalDataPath + "Patient_" + Constants.kioskNo + "_IdCount.txt")) < 0)
 			{
-				JOptionPane.showMessageDialog(frame,networkErrorMessage);
+				JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
 				file.delete();
 				new PatientLogin(connection,emp);
 				frame.dispose();
@@ -256,50 +257,47 @@ class BasicInformation
 
 	private void createId()
 	{
-		Date date=new Date();
-		SimpleDateFormat ft=new SimpleDateFormat("dd-MM-yyyy");
-		this.dateVar=ft.format(date);
-		this.fileDirectory="tempFolder/";
-		try
+		Date date = new Date();
+		SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yyyy");
+		this.dateVar = ft.format(date);
+		this.fileDirectory = Constants.dataPath + "";
+		// Thread.sleep(100);
+		int response = connection.receiveFromServer("Patient_" + Constants.kioskNo + "_IdCount.txt",Constants.dataPath + "PatientIdCount.txt");
+		if(response >= 0)
 		{
-			// Thread.sleep(100);
-			int response=connection.receiveFromServer("Patient_"+KioskNumber+"_IdCount.txt","tempFolder/PatientIdCount.txt");
-			if(response>=0)
+			try
 			{
-				BufferedReader bin=new BufferedReader(new FileReader(this.fileDirectory+"PatientIdCount.txt"));
-				countId=Integer.parseInt(bin.readLine());
+				BufferedReader bin = new BufferedReader(new FileReader(this.fileDirectory + "PatientIdCount.txt"));
+				countId = Integer.parseInt(bin.readLine());
 				bin.close();
-				String temp="Patient_"+KioskNumber+"_"+String.format("%02d",(countId++));
-				patientId=temp;
-				if((new File("tempFolder/PatientIdCount.txt")).isFile())
-					(new File("tempFolder/PatientIdCount.txt")).delete();
 			}
+			catch(IOException ioe)
+			{
+				ioe.printStackTrace();
+			}
+			String temp = "Patient_" + Constants.kioskNo + "_" + String.format("%02d",(countId++));
+			patientId = temp;
+			if((new File(Constants.dataPath + "PatientIdCount.txt")).isFile())
+				(new File(Constants.dataPath + "PatientIdCount.txt")).delete();
+		}
+		else
+		{
+			if(response == -2)
+				JOptionPane.showMessageDialog(frame,"File does not exist");
 			else
 			{
-				if(response==-1)
-					JOptionPane.showMessageDialog(frame,"File does not exist");
-				else if(response==-2)
-				{
-					JOptionPane.showMessageDialog(frame,networkErrorMessage+"createId");
-					new KioskLogin();
-					frame.dispose();
-				}
+				JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(response));
+				new KioskLogin();
+				frame.dispose();
 			}
 		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(frame,networkErrorMessage);
-			new KioskLogin();
-			frame.dispose();
-		}	
 	}
 	
 	private void takePicture()
 	{
 		try
 		{
-			Process ps=Runtime.getRuntime().exec("java "/*-cp PatientApp.jar*/+"webTake.myCam");
+			Process ps = Runtime.getRuntime().exec("java "/*-cp PatientApp.jar*/ + "webTake.myCam");
 			ps.waitFor();
 		}
 		catch(InterruptedException ie)
@@ -317,12 +315,12 @@ class BasicInformation
 	private void setImage(){
 
 		
-		if(new File(imagePath+"patient_Picture.jpg").exists())
+		if(new File(imagePath + "patient_Picture.jpg").exists())
 		{
 			
-			ImageIcon imageIcon = new ImageIcon(imagePath+"patient_Picture.jpg"); // load the image to a imageIcon
-			int h=lblImage.getHeight();
-			int w=lblImage.getWidth();
+			ImageIcon imageIcon = new ImageIcon(imagePath + "patient_Picture.jpg"); // load the image to a imageIcon
+			int h = lblImage.getHeight();
+			int w = lblImage.getWidth();
 		
 		
 			Image image = imageIcon.getImage(); // transform it 
@@ -331,7 +329,7 @@ class BasicInformation
 
 		
 			lblImage.setIcon(imageIcon);
-			imageSet=1;
+			imageSet = 1;
 			// deleteImage();
 		}
 		else System.out.println("no image");
@@ -339,7 +337,7 @@ class BasicInformation
 
 	private void setLanguage(String str)
 	{
-		if(str.equals("বাংলা"))
+		if(str.equals("Bengali"))
 		{
 			lblPatientId.setText("রেজিস্ট্রেশন নম্বর : ");
 			lblBasicInformation.setText("প্রাথমিক তথ্য");
@@ -394,8 +392,8 @@ class BasicInformation
 			btnReset.setFont(Constants.BENGALILABELFONT);
 
 
-			confirmMessage="আপনি কি নিশ্চিত?";
-			networkErrorMessage="নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
+			confirmMessage = "আপনি কি নিশ্চিত?";
+			networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
 
 			lblBasicInformation.setBounds(380, 12, 500, 43);
 		}
@@ -453,8 +451,8 @@ class BasicInformation
 			btnBack.setFont(Constants.SMALLLABELFONT);
 			btnReset.setFont(Constants.SMALLLABELFONT);
 
-			confirmMessage="Are you sure?";
-			networkErrorMessage="Connection error! Try again later!";
+			confirmMessage = "Are you sure?";
+			networkErrorMessage = "Connection error! Try again later!";
 
 
 			lblBasicInformation.setBounds(220, 12, 500, 43);
@@ -464,14 +462,13 @@ class BasicInformation
 
 	public BasicInformation(Connection myCon,Employee e)
 	{
-		connection=myCon;
-		emp=e;
-		KioskNumber=Constants.getKioskNumber();
+		connection = myCon;
+		emp = e;
 		frame = new JFrame();
 		frame.setVisible(true);
 		
-		imagePath="";
-		imageSet=0;
+		imagePath = "";
+		imageSet = 0;
 
 		frame.setResizable(false);
 		frame.setTitle("KIOSK ENTERPRISE");
@@ -485,7 +482,7 @@ class BasicInformation
 			public void windowClosing(WindowEvent we)
 			{
 
-				if(JOptionPane.showConfirmDialog(frame,confirmMessage)==JOptionPane.YES_OPTION)
+				if(JOptionPane.showConfirmDialog(frame,confirmMessage) == JOptionPane.YES_OPTION)
 				{
 					deleteImage();
 					frame.dispose();
@@ -603,18 +600,7 @@ class BasicInformation
 		jb.add(rdbtnFemale);
 		rdbtnFemale.setBounds(290, 160, 90, 23);
 		frame.add(rdbtnFemale);
-		
-		// //DATE OF BIRTH
-		// JLabel lblDateOfBirth = new JLabel("DATE OF BIRTH : ");
-		// lblDateOfBirth.setFont(LABELFONT);
-		// lblDateOfBirth.setForeground(Color.BLACK);
-		// lblDateOfBirth.setBounds(12, 224, 166, 15);
-		// frame.add(lblDateOfBirth);
-		
-		// birthField = new JTextField();
-		// birthField.setBounds(190, 221, 234, 30);
-		// frame.add(birthField);
-		// birthField.setColumns(10);
+
 		
 		//AGE
 		lblAge = new JLabel("বয়স :");
@@ -628,7 +614,7 @@ class BasicInformation
 		frame.add(ageField);
 		ageField.setColumns(10);
 
-		ageUnit_label=new JLabel("বছর");
+		ageUnit_label = new JLabel("বছর");
 		ageUnit_label.setFont(LABELFONT);
 		ageUnit_label.setForeground(Color.BLACK);
 		ageUnit_label.setBounds(562,160,48,23);
@@ -660,7 +646,7 @@ class BasicInformation
 		addressArea.setLineWrap(true);
 		frame.add(addressArea);
 
-		JScrollPane ap=new JScrollPane(addressArea);
+		JScrollPane ap = new JScrollPane(addressArea);
 		ap.setBounds(530,200,300,80);
 		frame.add(ap);
 		
@@ -686,7 +672,7 @@ class BasicInformation
 		occuField.setColumns(10);
 
 		//IMAGE
-		lblImage=new JLabel();
+		lblImage = new JLabel();
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
 		lblImage.setBorder(border);
 		lblImage.setBounds(10, 110, 150, 150);
@@ -721,74 +707,13 @@ class BasicInformation
 		frame.add(heightField);
 		heightField.setColumns(10);
 
-		heightUnit_label=new JLabel("সেমি");
+		heightUnit_label = new JLabel("সেমি");
 		heightUnit_label.setFont(LABELFONT);
 		heightUnit_label.setForeground(Color.BLACK);
 		heightUnit_label.setBounds(797,160,30,23);
 		frame.add(heightUnit_label);
-		
-		// //WEIGHT
-		// JLabel lblWeight = new JLabel("WEIGHT : ");
-		// lblWeight.setFont(LABELFONT);
-		// lblWeight.setForeground(Color.BLACK);
-		// lblWeight.setBounds(559, 326, 91, 15);
-		// frame.add(lblWeight);
-		
-		// weightField = new JTextField();
-		// weightField.setBounds(690, 325, 114, 19);
-		// frame.add(weightField);
-		// weightField.setColumns(10);
-		
-		
-		
-		// //TEMPERATURE
-		// JLabel lblTemp = new JLabel("TEMP :");
-		// lblTemp.setFont(LABELFONT);
-		// lblTemp.setForeground(Color.BLACK);
-		// lblTemp.setBounds(559, 376, 87, 15);
-		// frame.add(lblTemp);
-		
-		// tempField = new JTextField();
-		// tempField.setBounds(690, 375, 114, 19);
-		// frame.add(tempField);
-		// tempField.setColumns(10);
-		
-		// //BLOOD PRESSURE
-		// JLabel lblBp = new JLabel("BP : ");
-		// lblBp.setForeground(Color.BLACK);
-		// lblBp.setFont(LABELFONT);
-		// lblBp.setBounds(559, 420, 70, 15);
-		// frame.add(lblBp);
-		
-		// bpField = new JTextField();
-		// bpField.setBounds(690, 419, 114, 19);
-		// frame.add(bpField);
-		// bpField.setColumns(10);
-		
-		// //PULSE
-		// JLabel lblPulse = new JLabel("PULSE :");
-		// lblPulse.setFont(LABELFONT);
-		// lblPulse.setForeground(Color.BLACK);
-		// lblPulse.setBounds(559, 468, 87, 15);
-		// frame.add(lblPulse);
-		
-		// pulseField = new JTextField();
-		// pulseField.setBounds(690, 467, 114, 19);
-		// frame.add(pulseField);
-		// pulseField.setColumns(10);
-		
 
-		// //BMI
-		// JLabel lblBmi = new JLabel("BMI : ");
-		// lblBmi.setForeground(Color.BLACK);
-		// lblBmi.setFont(LABELFONT);
-		// lblBmi.setBounds(559, 511, 70, 15);
-		// frame.add(lblBmi);
-		
-		// bmiField = new JTextField();
-		// bmiField.setBounds(690, 510, 114, 19);
-		// frame.add(bmiField);
-		// bmiField.setColumns(10);
+
 
 		
 		//FAMILY HISTORY
@@ -803,7 +728,7 @@ class BasicInformation
 		familyHisArea.setLineWrap(true);
 		frame.add(familyHisArea);
 
-		JScrollPane fp=new JScrollPane(familyHisArea);
+		JScrollPane fp = new JScrollPane(familyHisArea);
 		fp.setBounds(130, 290, 330, 80);
 		frame.add(fp);
 
@@ -819,7 +744,7 @@ class BasicInformation
 		medicalHisArea.setLineWrap(true);
 		frame.add(medicalHisArea);
 
-		JScrollPane mp=new JScrollPane(medicalHisArea);
+		JScrollPane mp = new JScrollPane(medicalHisArea);
 		mp.setBounds(530, 290, 300, 80);
 		frame.add(mp);
 
@@ -873,7 +798,7 @@ class BasicInformation
 		btnReset.setBounds(720, 420, 110, 30);
 		frame.add(btnReset);
 
-		setLanguage(Constants.readCurrentLanguage());
+		setLanguage(Constants.language);
 
 
 		btnReset.addActionListener(new ActionListener() {
@@ -898,8 +823,8 @@ class BasicInformation
 
 	private void createPatientBasicData()
 	{
-		patientReport=new PatientReport();
-		patientReport.patientBasicData=new PatientBasicData();
+		patientReport = new PatientReport();
+		patientReport.patientBasicData = new PatientBasicData();
 
 
 		patientReport.patientBasicData.setId(patientId);
@@ -915,11 +840,7 @@ class BasicInformation
 		patientReport.patientBasicData.setStatus(statusVar);
 		patientReport.patientBasicData.setHeight(heightVar);
 		patientReport.patientBasicData.setImage(imageString);
-		// patientReport.patientBasicData.setWeight(weightVar);
-		// patientReport.patientBasicData.setTemperature(tempVar);
-		// patientReport.patientBasicData.setBp(bpVar);
-		// patientReport.patientBasicData.setBmi(bmiVar);
-		// patientReport.patientBasicData.setPulse(pulseVar);
+
 		patientReport.patientBasicData.setFamilyhistory(familyVar);
 		patientReport.patientBasicData.setMedicalhistory(medicalVar);
 
@@ -928,14 +849,7 @@ class BasicInformation
 			JAXBContext context = JAXBContext.newInstance(PatientReport.class);
 		    Marshaller m = context.createMarshaller();
 		    m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		    m.marshal(patientReport, new File("tempFolder/tempPatient.xml"));
-		    if(connection.sendToServer("tempFolder/tempPatient.xml",Constants.tempDataPath+patientId+".xml")<0)
-		    {
-		    	JOptionPane.showMessageDialog(frame,networkErrorMessage);
-		    	new PatientLogin(connection,emp);
-		    	frame.dispose();
-		    }
-		    (new File("tempFolder/tempPatient.xml")).delete();
+		    m.marshal(patientReport, new File(Constants.dataPath + "tempPatient.xml"));
 		}
 		catch(JAXBException e)
 		{
@@ -944,5 +858,13 @@ class BasicInformation
 			new PatientLogin(connection,emp);
 			frame.dispose();
 		}
+	    int sendResponse;
+	    if((sendResponse = connection.sendToServer(Constants.dataPath + "tempPatient.xml",Constants.tempDataPath + patientId + ".xml")) < 0)
+	    {
+	    	JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
+	    	new PatientLogin(connection,emp);
+	    	frame.dispose();
+	    }
+	    (new File(Constants.dataPath + "tempPatient.xml")).delete();
 	}
 }

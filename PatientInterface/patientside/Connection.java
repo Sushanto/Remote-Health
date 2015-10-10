@@ -1,45 +1,36 @@
 package patientside;
 
 import java.io.BufferedReader;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.PrintWriter;
 import java.io.InputStreamReader;
-import java.io.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.EOFException;
 import java.net.Socket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.DirectoryNotEmptyException;
+
 public class Connection
 {
 	private Socket clientSocket;
 	private PrintWriter strWriter;
 	private BufferedReader strReader;
-	private DataOutputStream outStream;
-	private DataInputStream inStream;
-	private static final int FILE_SIZE=6022386;
+	private static final int FILE_SIZE = 6022386;
 
-	public Connection(Socket socket)
+	protected Connection(Socket socket)
 	{
 		try
 		{
-			clientSocket=socket;
-			outStream=new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-			inStream=new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
-			strWriter=new PrintWriter(clientSocket.getOutputStream(),true);
-			strReader=new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			clientSocket = socket;
+			strWriter = new PrintWriter(clientSocket.getOutputStream(),true);
+			strReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		}
 		catch(IOException e)
 		{
@@ -47,16 +38,14 @@ public class Connection
 		}
 	}
 
-	public Connection(String address,int port)
+	protected Connection(String address,int port)
 	{
 		try
 		{
-			InetAddress inetAddress=InetAddress.getByName(address);
-			clientSocket=new Socket(inetAddress,port);
-			outStream=new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-			inStream=new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
-			strWriter=new PrintWriter(clientSocket.getOutputStream(),true);
-			strReader=new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			InetAddress inetAddress = InetAddress.getByName(address);
+			clientSocket = new Socket(inetAddress,port);
+			strWriter = new PrintWriter(clientSocket.getOutputStream(),true);
+			strReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		}
 		catch(UnknownHostException uhe)
 		{
@@ -68,14 +57,12 @@ public class Connection
 		}
 	}
 
-	public void disconnect()
+	protected void disconnect()
 	{
 		try
 		{
 			strReader.close();
 			strWriter.close();
-			inStream.close();
-			outStream.close();
 			clientSocket.close();
 		}
 		catch(IOException ioe)
@@ -84,16 +71,16 @@ public class Connection
 		}
 	}
 
-	public int receiveFromServer(String serverFileName,String localFileName)
+	protected int receiveFromServer(String serverFileName,String localFileName)
 	{
 		try
 		{
 			sendString("SEND_FILE");
 			sendString(serverFileName);
-			int response=receiveInt();
-			if(response>=0)
+			int response = receiveInt();
+			if(response >= 0)
 			{
-				receiveFile1(localFileName,response);
+				receiveFile(localFileName,response);
 				checkAndDecode(localFileName);
 				return 0;
 			}
@@ -106,17 +93,17 @@ public class Connection
 		}
 	}
 
-	public int sendToServer(String localFileName,String serverFileName)
+	protected int sendToServer(String localFileName,String serverFileName)
 	{
 		try
 		{
 			sendString("RECEIVE_FILE");
-			File localFile=new File(localFileName);
-			sendString(serverFileName+" "+localFile.length());
+			File localFile = new File(localFileName);
+			sendString(serverFileName + " " + localFile.length());
 			localFile = checkAndEncode(localFileName);
-			sendFile1(localFile);
+			sendFile(localFile);
 			// localFile.delete();
-			int response=receiveInt();
+			int response = receiveInt();
 			return response;
 		}
 		catch(Exception ioe)
@@ -126,43 +113,17 @@ public class Connection
 		}
 	}
 
-	public int sendFile(File inFile)
-	{
-		try {
-			FileInputStream ifStream = new FileInputStream(inFile);
-			BufferedInputStream biStream = new BufferedInputStream(ifStream);
-
-			byte[] fileBuffer = new byte[(int)inFile.length()];
-			biStream.read(fileBuffer, 0, fileBuffer.length);
-			try {
-				int x = this.receiveInt();
-				System.out.println("x= " + x);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			outStream.write(fileBuffer, 0, fileBuffer.length);
-			outStream.flush();
-
-			return fileBuffer.length;
-		} catch(IOException e) {
-			e.printStackTrace();
-			return RHErrors.RHE_IOE;
-		}
-	}
-
-
-
-	public int sendFile1(File inFile)
+	private int sendFile(File inFile)
 	{
 		try
 		{
 			FileReader fReader = new FileReader(inFile);
-			BufferedReader bReader= new BufferedReader(fReader);
+			BufferedReader bReader = new BufferedReader(fReader);
 
-			String line="";
+			String line = "";
 
 			sendString("FILE_START");
-			while((line=bReader.readLine())!=null)
+			while((line = bReader.readLine()) != null)
 			{
 				sendString(line);
 			}
@@ -178,40 +139,8 @@ public class Connection
 		}
 	}
 
-	public int receiveFile(String outFileName, int fileLength)
-	{
-		try {
-			int origFileLength = fileLength;
-			File outFile = new File(outFileName);
-			outFile.getParentFile().mkdirs();
-			outFile.createNewFile();
-			FileOutputStream ofStream = new FileOutputStream(outFile);
-			BufferedOutputStream boStream = new BufferedOutputStream(ofStream);
 
-			byte[] fileBuffer = new byte[fileLength];
-			int byteRead = 0;
-
-			System.out.println("receive file, start");
-			while((fileLength > 0) && (byteRead = inStream.read(fileBuffer, 0, Math.min(fileBuffer.length, fileLength))) != -1)
-			{
-				boStream.write(fileBuffer, 0, byteRead);
-				fileLength -= byteRead;
-				System.out.println("fileLength : "+fileLength+" byteRead : "+byteRead);
-			}
-			System.out.println("receive file, done");
-			boStream.close();
-			ofStream.close();
-
-			return origFileLength;
-		} catch(IOException e) {
-			e.printStackTrace();
-			return RHErrors.RHE_IOE;
-		}
-	}
-
-
-
-	public int receiveFile1(String outFileName, int fileLength)
+	private int receiveFile(String outFileName, int fileLength)
 	{
 		try
 		{
@@ -219,15 +148,15 @@ public class Connection
 			FileWriter fWriter = new FileWriter(outFile);
 			PrintWriter pWriter = new PrintWriter(outFile);
 
-			String reply="";
-			reply= receiveString();
+			String reply = "";
+			reply = receiveString();
 			if(reply.equals("FILE_START"))
 			{
-				reply=receiveString();
+				reply = receiveString();
 				pWriter.print(reply);
 
-				while(!(reply=receiveString()).equals("FILE_END"))
-					pWriter.print("\n"+reply);
+				while(!(reply = receiveString()).equals("FILE_END"))
+					pWriter.print("\n" + reply);
 			}
 
 			pWriter.close();
@@ -240,22 +169,22 @@ public class Connection
 		}
 	}
 
-	public void sendString(String str)
+	private void sendString(String str)
 	{
 		strWriter.println(str);
 		return;
 	}
 
-	public String receiveString()
+	private String receiveString()
 	throws IOException
 	{
-		String str=strReader.readLine();
-		if(str==null)
+		String str = strReader.readLine();
+		if(str == null)
 			throw new IOException();
 		return str;
 	}
 
-	public boolean login(String username,String password)
+	protected boolean login(String username,String password)
 	{
 		try
 		{
@@ -273,7 +202,7 @@ public class Connection
 		}
 	}
 
-	public int sendInt(int val)
+	private int sendInt(int val)
 	{
 		sendString(Integer.toString(val));
 		return 0;
@@ -284,7 +213,7 @@ public class Connection
 	* @return the received int or error number
 	* @throws Exception if a null string was received
 	*/
-	public int receiveInt() throws Exception {
+	private int receiveInt() throws Exception {
 		int val = RHErrors.RHE_GENERAL;
 		try {
 			String str = receiveString();

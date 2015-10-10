@@ -72,7 +72,7 @@ public class Constants
 	{
 		try
 		{
-			FileReader fReader = new FileReader(new File("DoctorInfo.cfg"));
+			FileReader fReader = new FileReader(new File("DoctorMetadata.cfg"));
 			BufferedReader bReader = new BufferedReader(fReader);
 			System.out.println("Doctor Information reading....");
 

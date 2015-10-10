@@ -21,15 +21,20 @@ import java.awt.event.MouseEvent;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.JAXBException;
-import java.io.BufferedWriter;
+import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.DirectoryNotEmptyException;
 
 /**
 *Drivier class
@@ -44,8 +49,8 @@ public class KioskLogin extends JFrame
 	*/
 	public static void main(String args[])
 	{
-		if(!(new File("tempFolder")).exists())
-			(new File("tempFolder")).mkdir();
+		if(!(new File(Constants.dataPath)).exists())
+			(new File(Constants.dataPath)).mkdir();
 		new KioskLogin();
 	}
 
@@ -105,7 +110,7 @@ class loginApplet extends JFrame
 	private JButton signinButton,languageSaveButton;
 	private JCheckBox showPassword;
 	private JComboBox languageComboBox;
-	private String language,confirmMessage,networkErrorMessage;
+	private String confirmMessage,networkErrorMessage;
 	private Connection connection;
 	private Employee emp;
 
@@ -115,7 +120,7 @@ class loginApplet extends JFrame
 	*/
 	private void setLanguage(String language)
 	{
-		if(language.equals("বাংলা"))
+		if(language.equals("Bengali"))
 		{
 			frameLabel.setText("কিয়স্ক লগইন");
 			useridLabel.setText("ইউসার-আইডি: ");
@@ -136,8 +141,8 @@ class loginApplet extends JFrame
 			languageSaveButton.setFont(Constants.BENGALIBUTTONFONT);
 			languageLabel.setFont(Constants.BENGALILABELFONT);
 
-			confirmMessage="আপনি কি নিশ্চিত?";
-			networkErrorMessage="নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
+			confirmMessage = "আপনি কি নিশ্চিত?";
+			networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
 		}
 		else if(language.equals("English"))
 		{
@@ -160,8 +165,8 @@ class loginApplet extends JFrame
 			languageSaveButton.setFont(Constants.SMALLBUTTONFONT);
 			languageLabel.setFont(Constants.SMALLLABELFONT);
 
-			confirmMessage="Are you sure?";
-			networkErrorMessage="Connection error! Try again later!";
+			confirmMessage = "Are you sure?";
+			networkErrorMessage = "Connection error! Try again later!";
 		}
 	}
 
@@ -173,7 +178,7 @@ class loginApplet extends JFrame
 	public loginApplet()
 	{
 		/*set frame*/
-		final JFrame jframe=this;
+		final JFrame jframe = this;
 		setTitle("KIOSK LOGIN");
 		setSize(Constants.SIZE_X,Constants.SIZE_Y);
 		setResizable(false);
@@ -184,7 +189,7 @@ class loginApplet extends JFrame
 			@Override
 			public void windowClosing(WindowEvent we)
 			{
-				if(JOptionPane.showConfirmDialog(jframe,confirmMessage)==JOptionPane.OK_OPTION)
+				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
                     System.exit(0);
 					dispose();
@@ -192,23 +197,23 @@ class loginApplet extends JFrame
 			}
 		});
 
-		frameLabel=new JLabel();
-		useridBox=new JTextField();
-		passwordBox=new JPasswordField();
-		useridLabel=new JLabel();
-		passwordLabel=new JLabel();
-		showPassword=new JCheckBox();
-		showPasswordLabel=new JLabel();
-		errorLabel=new JLabel();
-		signinButton=new JButton();
-		languageSaveButton=new JButton();
-		signupLabel=new JLabel();
-		languageLabel=new JLabel();
+		frameLabel = new JLabel();
+		useridBox = new JTextField();
+		passwordBox = new JPasswordField();
+		useridLabel = new JLabel();
+		passwordLabel = new JLabel();
+		showPassword = new JCheckBox();
+		showPasswordLabel = new JLabel();
+		errorLabel = new JLabel();
+		signinButton = new JButton();
+		languageSaveButton = new JButton();
+		signupLabel = new JLabel();
+		languageLabel = new JLabel();
 
-		String str[]={"বাংলা","English"};
-		languageComboBox=new JComboBox(str);
+		String str[] = {"বাংলা","English"};
+		languageComboBox = new JComboBox(str);
 
-		setLanguage(language=Constants.readCurrentLanguage());
+		setLanguage(Constants.language);
 
 
 		frameLabel.setBounds(350,10,400,100);
@@ -230,9 +235,6 @@ class loginApplet extends JFrame
 
 		frameLabel.setFont(Constants.HEADERFONT);
 		passwordBox.setEchoChar('*');
-		// showPasswordLabel.setFont(new Font(showPasswordLabel.getFont().getName(),Font.BOLD,11));
-		// errorLabel.setFont(new Font(errorLabel.getFont().getName(),Font.PLAIN,11));
-		// signupLabel.setFont(new Font(signupLabel.getFont().getName(),Font.PLAIN,11));
 
 		frameLabel.setForeground(Constants.HEADERCOLOR1);
 		useridLabel.setForeground(Constants.LABELCOLOR1);
@@ -252,7 +254,7 @@ class loginApplet extends JFrame
 		{
 			public void itemStateChanged(ItemEvent ie)
 			{
-				if(ie.getStateChange()==ItemEvent.SELECTED)
+				if(ie.getStateChange() == ItemEvent.SELECTED)
 					passwordBox.setEchoChar((char)0);
 				else passwordBox.setEchoChar('*');
 			}
@@ -262,15 +264,14 @@ class loginApplet extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				connection=createNewConnection();
-				String username=useridBox.getText();
-				String password=new String(passwordBox.getPassword());
+				connection = createNewConnection();
+				String username = useridBox.getText();
+				String password = new String(passwordBox.getPassword());
 
-				if(connection!=null && connection.login(username,password))
+				if(connection != null && connection.login(username,password))
 				{
 					if(check(username,password))
 					{
-						String filename="tempFolder/tempEmployee.xml";
 						errorLabel.setVisible(false);
 						new PatientLogin(connection,emp);
 						dispose();
@@ -279,8 +280,6 @@ class loginApplet extends JFrame
 					{
 						errorLabel.setText("Invalid user-ID or password*");
 						errorLabel.setVisible(true);
-						useridBox.setText(null);
-						passwordBox.setText(null);
 						connection.disconnect();
 					}
 				}
@@ -318,9 +317,9 @@ class loginApplet extends JFrame
 				languageLabel.setVisible(false);
 				languageComboBox.setVisible(true);
 				languageSaveButton.setVisible(true);
-				if(language.equals("বাংলা"))
+				if(Constants.language.equals("Bengali"))
 					languageComboBox.setSelectedIndex(0);
-				else if(language.equals("English"))
+				else if(Constants.language.equals("English"))
 					languageComboBox.setSelectedIndex(1);
 			}
 
@@ -342,23 +341,13 @@ class loginApplet extends JFrame
 				languageComboBox.setVisible(false);
 				languageLabel.setVisible(true);
 
-				language=(String)languageComboBox.getSelectedItem();
-				try
-				{
-					File file=new File("tempFolder/Language.abc");
-					if(!file.isFile())
-						file.createNewFile();
-					FileOutputStream fout=new FileOutputStream(file);
-					PrintWriter pwriter=new PrintWriter(fout);
-					pwriter.println(language);
-					pwriter.close();
-					fout.close();
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-				setLanguage(language);
+				if(languageComboBox.getSelectedIndex() == 0)
+					Constants.language = "Bengali";
+				else Constants.language = "English";
+
+				changeKioskLanguage();
+
+				setLanguage(Constants.language);
 			}
 		});
 
@@ -380,6 +369,45 @@ class loginApplet extends JFrame
 		add(Constants.JPANEL1);
 	}
 
+	private void changeKioskLanguage()
+	{
+		File tempFile = new File("tempData.cfg");
+		try
+		{
+			FileReader fReader = new FileReader(new File("DeviceMetadata.cfg"));
+			BufferedReader bReader = new BufferedReader(fReader);
+			System.out.println("Kiosk Information reading....");
+
+			tempFile.createNewFile();
+			FileWriter fWriter = new FileWriter(tempFile);
+			PrintWriter pWriter = new PrintWriter(fWriter);
+
+			String line;
+			while((line = bReader.readLine()) != null)
+			{
+				String[] tokens = line.split("=");
+				if(!tokens[0].equals("LANGUAGE"))
+					pWriter.println(line);
+			}
+			pWriter.print("LANGUAGE=" + Constants.language);
+
+			bReader.close();
+			fReader.close();
+
+			fWriter.close();
+			pWriter.close();
+
+			moveFile("tempData.cfg","DeviceMetadata.cfg");
+
+		}
+		catch(Exception ioe)
+		{
+			ioe.printStackTrace();
+			if(tempFile.isFile())
+				tempFile.delete();
+		}
+	}
+
 	/**
 	*Creates new connection
 	*@return Connection object
@@ -388,8 +416,8 @@ class loginApplet extends JFrame
 	{
 		try
 		{
-			Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
-			Connection myCon=new Connection(mySocket);
+			Socket mySocket = new Socket(InetAddress.getByName(Constants.localServerHostName),Constants.localServerPort);
+			Connection myCon = new Connection(mySocket);
 			
 			return myCon;
 		}
@@ -412,19 +440,19 @@ class loginApplet extends JFrame
 
 	private boolean check(String user,String pw)
 	{
-		String username=user;
-		String password=pw;
-		String ServerFile=username+".xml";
-		String LocalFile="tempFolder/tempEmployee.xml";
-		File file=new File(LocalFile);
-		int response = connection.receiveFromServer(ServerFile,LocalFile);
-		if(response>=0)
+		String username = user;
+		String password = pw;
+		String serverFile = username + ".xml";
+		String localFile = Constants.dataPath + "tempEmployee.xml";
+		File file = new File(localFile);
+		int response = connection.receiveFromServer(serverFile,localFile);
+		if(response >= 0)
 		{
 			try
 			{
-				JAXBContext jc=JAXBContext.newInstance(Employee.class);
-				Unmarshaller jum=jc.createUnmarshaller();
-				emp=(Employee)jum.unmarshal(file);
+				JAXBContext jc = JAXBContext.newInstance(Employee.class);
+				Unmarshaller jum = jc.createUnmarshaller();
+				emp = (Employee)jum.unmarshal(file);
 				file.delete();
 				if(password.equals(emp.getPassword()))
 					return true;
@@ -433,9 +461,8 @@ class loginApplet extends JFrame
 			}
 			catch(JAXBException jaxbe)
 			{
-				// file.delete();
 				jaxbe.printStackTrace();
-				JOptionPane.showMessageDialog(this, networkErrorMessage);
+				JOptionPane.showMessageDialog(this, "XML parsing error");
 				return false;
 			}
 		}
@@ -443,14 +470,23 @@ class loginApplet extends JFrame
 		{
 			if(file.isFile())
 				file.delete();
-			if(response==-1)
+			if(response == -2)
 				errorLabel.setVisible(true);
-			else if(response==-2)
+			else
 			{
-				JOptionPane.showMessageDialog(this,networkErrorMessage);
+				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
 				errorLabel.setVisible(false);
 			}
 			return false;
 		}
+	}
+
+	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	{
+		Path src = Paths.get(source);
+		Path dst = Paths.get(destination);
+		Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING);
+		File copied = dst.toFile();
+		return copied;
 	}
 }

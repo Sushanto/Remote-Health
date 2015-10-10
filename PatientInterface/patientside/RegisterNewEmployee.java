@@ -48,7 +48,7 @@ public class RegisterNewEmployee
 
 class Registration extends JFrame implements ActionListener
 { 
-    private final JFrame jframe=this;
+    private final JFrame jframe = this;
     private JLabel form_label,id_label,empid_label, name_label, gender_label,address_label, pass_label, confirm_pass_label, country_label, state_label, ph_no_label;
     private JTextField name_field,country_field, state_field, ph_no_field;  
     private JTextArea address_area;
@@ -56,77 +56,78 @@ class Registration extends JFrame implements ActionListener
     private ButtonGroup bG;
     private JButton submit_button, clear_button, back_button;
     private JPasswordField pass_field, pass_confirm_field;
-    private String EmployeeId,KioskNumber;
+    private String EmployeeId;
     private int countId;
     private final Connection connection;
 
     private void IncrementEmployeeIdCount()
     {
+        File file = new File(Constants.dataPath + "EmployeeIdCount.abc");
         try
         {
-            File file=new File("tempFolder/EmployeeIdCount.abc");
             file.createNewFile();
-            BufferedWriter bout=new BufferedWriter(new FileWriter(file));
+            BufferedWriter bout = new BufferedWriter(new FileWriter(file));
             bout.write(String.valueOf(countId));
             bout.close();
-            if(connection.sendToServer("tempFolder/EmployeeIdCount.abc","Employee_"+KioskNumber+"_IdCount.abc")<0)
-            {
-                JOptionPane.showMessageDialog(jframe,"networkErrorMessage");
-                file.delete();
-                connection.disconnect();
-                new KioskLogin();
-                jframe.dispose();
-            }
-            else file.delete();
         }
         catch(IOException ioe)
         {
             ioe.printStackTrace();
         }
+        int sendResponse;
+        if((sendResponse = connection.sendToServer(Constants.dataPath + "EmployeeIdCount.abc","Employee_" + Constants.kioskNo + "_IdCount.abc")) < 0)
+        {
+            JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(sendResponse));
+            file.delete();
+            connection.disconnect();
+            new KioskLogin();
+            jframe.dispose();
+        }
+        else file.delete();
     }
 
     private void createId()
     {
-        try
+        int response;
+        if((response = connection.receiveFromServer("Employee_" + Constants.kioskNo + "_IdCount.abc",Constants.dataPath + "EmployeeIdCount.abc")) >= 0)
         {
-            if(connection.receiveFromServer("Employee_"+KioskNumber+"_IdCount.abc","tempFolder/EmployeeIdCount.abc")>=0)
+            try
             {
-                BufferedReader bin=new BufferedReader(new FileReader("tempFolder/EmployeeIdCount.abc"));
-                countId=Integer.parseInt(bin.readLine());
+                BufferedReader bin = new BufferedReader(new FileReader(Constants.dataPath + "EmployeeIdCount.abc"));
+                countId = Integer.parseInt(bin.readLine());
                 bin.close();
-                String temp="Employee_"+KioskNumber+"_"+String.format("%02d",(countId++));
-                EmployeeId=temp;
-                if((new File("tempFolder/EmployeeIdCount.abc")).isFile())
-                    (new File("tempFolder/EmployeeIdCount.abc")).delete();
             }
-            else
+            catch(IOException ioe)
             {
-                JOptionPane.showMessageDialog(jframe,"networkErrorMessage"+"createId");
+                ioe.printStackTrace();
                 connection.disconnect();
                 new KioskLogin();
                 jframe.dispose();
             }
+            String temp = "Employee_" + Constants.kioskNo + "_" + String.format("%02d",(countId++));
+            EmployeeId = temp;
+            if((new File(Constants.dataPath + "EmployeeIdCount.abc")).isFile())
+                (new File(Constants.dataPath + "EmployeeIdCount.abc")).delete();
         }
-        catch(IOException ioe)
+        else
         {
-            ioe.printStackTrace();
-            JOptionPane.showMessageDialog(jframe,"networkErrorMessage");
+            JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
             connection.disconnect();
             new KioskLogin();
             jframe.dispose();
-        }   
+        } 
     }
 
     public Registration()
     {
-        connection=createNewConnection();
-        if(connection==null)
+        connection = createNewConnection();
+        if(connection == null)
         {
             dispose();
             connection.disconnect();
             new KioskLogin();
         }
-        KioskNumber=Constants.getKioskNumber();
+
         createId();
         setVisible(true);
         setSize(Constants.SIZE_X,Constants.SIZE_Y);
@@ -137,10 +138,8 @@ class Registration extends JFrame implements ActionListener
             @Override
             public void windowClosing(WindowEvent we)
             {
-                if(JOptionPane.showConfirmDialog(jframe,"Are you sure?")==JOptionPane.OK_OPTION)
+                if(JOptionPane.showConfirmDialog(jframe,"Are you sure?") == JOptionPane.OK_OPTION)
                 {
-                    if(!(new File("tempFolder")).exists())
-                        (new File("tempFolder")).delete();
                     dispose();
                 }
             }
@@ -156,18 +155,18 @@ class Registration extends JFrame implements ActionListener
         id_label = new JLabel("Employee ID: ");
         empid_label = new JLabel(EmployeeId);
         name_label = new JLabel("Name:");
-        gender_label=new JLabel("Gender:");
-        address_label=new JLabel("Address:");
+        gender_label = new JLabel("Gender:");
+        address_label = new JLabel("Address:");
         pass_label = new JLabel("Create Passowrd:");
         confirm_pass_label = new JLabel("Confirm Password:");
         country_label = new JLabel("Country:");
         state_label = new JLabel("State:");
         ph_no_label = new JLabel("Phone No:"); 
-        name_field= new JTextField();
-        female_check=new JRadioButton("FEMALE");
-        male_check=new JRadioButton("MALE");
+        name_field = new JTextField();
+        female_check = new JRadioButton("FEMALE");
+        male_check = new JRadioButton("MALE");
 	
-    	bG=new ButtonGroup();
+    	bG = new ButtonGroup();
     	bG.add(female_check);
     	bG.add(male_check);
 
@@ -175,7 +174,7 @@ class Registration extends JFrame implements ActionListener
         male_check.setBackground(Constants.JPANELCOLOR1);
         female_check.setBackground(Constants.JPANELCOLOR1);
 
-    	address_area=new JTextArea();
+    	address_area = new JTextArea();
     	address_area.setBorder(BorderFactory.createLineBorder(Color.black));
 	
         pass_field = new JPasswordField();
@@ -256,14 +255,14 @@ class Registration extends JFrame implements ActionListener
             int x = 0;
             String s1 = name_field.getText();
             String s2 = empid_label.getText();
-            String gen="";
+            String gen = "";
             if(female_check.isSelected())
-            gen="FEMALE";
+            gen = "FEMALE";
             if(male_check.isSelected())
-            gen="MALE";
+            gen = "MALE";
             
             
-            String addr=address_area.getText();
+            String addr = address_area.getText();
             char[] s3 = pass_field.getPassword();
             char[] s4 = pass_confirm_field.getPassword(); 
             String s8 = new String(s3);
@@ -272,9 +271,9 @@ class Registration extends JFrame implements ActionListener
             String s5 = country_field.getText();
             String s6 = state_field.getText();
             String s7 = ph_no_field.getText();
-            if (s8.equals(s9) && notNumber(s1) && ((female_check.isSelected() && !male_check.isSelected() ) ||(!female_check.isSelected() && male_check.isSelected() ) ) && addr.length()!=0 && s5.length()!=0 && notNumber(s5) && s6.length()!=0 && notNumber(s6) && s7.length()==10 && onlyNumber(s7))
+            if (s8.equals(s9) && notNumber(s1) && ((female_check.isSelected() && !male_check.isSelected() ) ||(!female_check.isSelected() && male_check.isSelected() ) ) && addr.length() != 0 && s5.length() != 0 && notNumber(s5) && s6.length() != 0 && notNumber(s6) && s7.length() == 10 && onlyNumber(s7))
            {
-    			Employee emp=new Employee();
+    			Employee emp = new Employee();
     			emp.setName(s1);
     			emp.setEmployeeId(EmployeeId);
     			emp.setGender(gen);
@@ -286,12 +285,12 @@ class Registration extends JFrame implements ActionListener
 			
     			try
     			{
-    				File file=new File("tempFolder/tempEmployee.xml");
-    				JAXBContext jc=JAXBContext.newInstance(Employee.class);
-    				Marshaller jm=jc.createMarshaller();
+    				File file = new File(Constants.dataPath + "tempEmployee.xml");
+    				JAXBContext jc = JAXBContext.newInstance(Employee.class);
+    				Marshaller jm = jc.createMarshaller();
                     jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
     				jm.marshal(emp,file);
-    				if(connection.sendToServer("tempFolder/tempEmployee.xml",EmployeeId+".xml")>=0)
+    				if(connection.sendToServer(Constants.dataPath + "tempEmployee.xml",EmployeeId + ".xml") >= 0)
     				{
     					JOptionPane.showMessageDialog(jframe, "Data Saved Successfully");
     					IncrementEmployeeIdCount();
@@ -320,13 +319,13 @@ class Registration extends JFrame implements ActionListener
                     JOptionPane.showMessageDialog(submit_button, "Only one gender to be selected!");
         		else if(!female_check.isSelected() && !male_check.isSelected())
                     JOptionPane.showMessageDialog(submit_button, "Select Gender!");
-        		else if(s5.length()==0 || !notNumber(s5))
+        		else if(s5.length() == 0 || !notNumber(s5))
                     JOptionPane.showMessageDialog(submit_button, "Incorrect Country Entry!");
-        		else if(s6.length()==0 || !notNumber(s6))
+        		else if(s6.length() == 0 || !notNumber(s6))
                     JOptionPane.showMessageDialog(submit_button, "Incorrect State Entry!");
         		else if(!onlyNumber(s7))
                     JOptionPane.showMessageDialog(submit_button, "Phone number should contain only numbers!");
-        		else if(s7.length()!=10 )
+        		else if(s7.length() != 10 )
                     JOptionPane.showMessageDialog(submit_button, "Incorrect Phone number!");
         		else
                     JOptionPane.showMessageDialog(submit_button, "Password Does Not Match");
@@ -348,7 +347,7 @@ class Registration extends JFrame implements ActionListener
         }
         else  if(e.getSource() == back_button)
         {
-        	(new File("tempFolder/EmployeeIdCount.abc")).delete();
+        	(new File(Constants.dataPath + "EmployeeIdCount.abc")).delete();
             connection.disconnect();
             new KioskLogin();
             dispose();
@@ -367,8 +366,8 @@ class Registration extends JFrame implements ActionListener
     {
         try
         {
-            Socket mySocket=new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
-            Connection myCon=new Connection(mySocket);
+            Socket mySocket = new Socket(InetAddress.getByName(Constants.localServerHostName),Constants.localServerPort);
+            Connection myCon = new Connection(mySocket);
             return myCon;
         }
         catch(UnknownHostException uhe)

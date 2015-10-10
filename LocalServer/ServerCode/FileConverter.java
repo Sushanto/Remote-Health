@@ -97,8 +97,8 @@ public class FileConverter {
 }
 
 
-@XmlRootElement(name="FileData")
-@XmlType(propOrder={"binaryData"})
+@XmlRootElement(name = "FileData")
+@XmlType(propOrder = {"binaryData"})
 class FileData
 {
 	String binaryData;
@@ -106,7 +106,7 @@ class FileData
 		return binaryData;
 	}
 
-	@XmlElement(name="BinaryData")
+	@XmlElement(name = "BinaryData")
 	public void setBinaryData(String binaryData) {
 		this.binaryData = binaryData;
 	}

@@ -32,7 +32,7 @@ class Connection extends Thread
 	private DataInputStream inStream;
 	private static final int FILE_SIZE=6022386;
 
-	public Connection(Socket socket)
+	protected Connection(Socket socket)
 	{
 		try
 		{
@@ -48,7 +48,7 @@ class Connection extends Thread
 		}
 	}
 
-	public Connection(String address,int port)
+	protected Connection(String address,int port)
 	{
 		try
 		{
@@ -69,7 +69,7 @@ class Connection extends Thread
 		}
 	}
 
-	public void disconnect()
+	protected void disconnect()
 	{
 		try
 		{
@@ -134,7 +134,7 @@ class Connection extends Thread
 		}
 	}
 
-	public boolean receiveFromClient()
+	private boolean receiveFromClient()
 	{
 		try
 		{
@@ -165,7 +165,7 @@ class Connection extends Thread
 		}
 	}
 
-	public boolean sendToClient()
+	private boolean sendToClient()
 	{
 		try
 		{
@@ -211,7 +211,7 @@ class Connection extends Thread
 		}
 	}
 
-	public int sendFile1(File inFile)
+	private int sendFile1(File inFile)
 	{
 		try
 		{
@@ -237,7 +237,7 @@ class Connection extends Thread
 		}
 	}
 
-	public int sendFile(File inFile)
+	private int sendFile(File inFile)
 	{
 		try {
 			FileInputStream ifStream = new FileInputStream(inFile);
@@ -256,7 +256,7 @@ class Connection extends Thread
 		}
 	}
 
-	public int receiveFile1(String outFileName, int fileLength)
+	private int receiveFile1(String outFileName, int fileLength)
 	{
 		try
 		{
@@ -285,7 +285,7 @@ class Connection extends Thread
 		}
 	}
 
-	public int receiveFile(String outFileName, int fileLength)
+	private int receiveFile(String outFileName, int fileLength)
 	{
 		try {
 			int origFileLength = fileLength;
@@ -318,13 +318,13 @@ class Connection extends Thread
 		}
 	}
 
-	public void sendString(String str)
+	private void sendString(String str)
 	{
 		strWriter.println(str);
 		return;
 	}
 
-	public String receiveString()
+	protected String receiveString()
 	throws IOException
 	{
 		String str=strReader.readLine();
@@ -338,7 +338,7 @@ class Connection extends Thread
 		System.out.println("Garbage Collected: Connection");
 	}
 
-	public boolean login()
+	protected boolean login()
 	{
 		try
 		{
@@ -358,7 +358,7 @@ class Connection extends Thread
 		}
 	}
 
-	public int sendInt(int val)
+	protected int sendInt(int val)
 	{
 		sendString(Integer.toString(val));
 		return 0;
@@ -369,7 +369,7 @@ class Connection extends Thread
 	* @return the received int or error number
 	* @throws Exception if a null string was received
 	*/
-	public int receiveInt() throws Exception {
+	protected int receiveInt() throws Exception {
 		int val = RHErrors.RHE_GENERAL;
 		try {
 			String str = receiveString();

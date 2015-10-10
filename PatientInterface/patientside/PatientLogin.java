@@ -29,8 +29,8 @@ public class PatientLogin extends JFrame
 {
 	PatientLogin(Connection myCon,Employee emp)
 	{
-		final Connection connection=myCon;
-		final Employee employee=emp;
+		final Connection connection = myCon;
+		final Employee employee = emp;
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
@@ -50,13 +50,13 @@ class PatientLoginApplet extends JFrame
 	private JPanel patientInformationPanel;
 	private Font font;
 	private PatientReport patientReport;
-	private String language,confirmMessage,networkErrorMessage,textFieldInfoMessage;
+	private String confirmMessage,networkErrorMessage,textFieldInfoMessage;
 	private final Connection connection;
 	private final Employee employee;
 	
 	private void setLanguage(String str)
 	{
-		if(str.equals("বাংলা"))
+		if(str.equals("Bengali"))
 		{
 			frameLabel.setText("রোগীর লগইন");
 			warningLabel.setText("অবৈধ রেজিস্ট্রেশন নম্বর*");
@@ -73,9 +73,9 @@ class PatientLoginApplet extends JFrame
 			confirmButton.setFont(Constants.BENGALIBUTTONFONT);
 			submitButton.setFont(Constants.BENGALIBUTTONFONT);
 
-			confirmMessage="আপনি কি নিশ্চিত?";
-			networkErrorMessage="নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
-			textFieldInfoMessage="এখানে রোগীর রেজিস্ট্রেশন নম্বর লিখুন";
+			confirmMessage = "আপনি কি নিশ্চিত?";
+			networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
+			textFieldInfoMessage = "এখানে রোগীর রেজিস্ট্রেশন নম্বর লিখুন";
 		}
 		else if(str.equals("English"))
 		{
@@ -94,9 +94,9 @@ class PatientLoginApplet extends JFrame
 			confirmButton.setFont(Constants.SMALLBUTTONFONT);
 			submitButton.setFont(Constants.SMALLBUTTONFONT);
 
-			confirmMessage="Are you sure?";
-			networkErrorMessage="Connection error! Try again later!";
-			textFieldInfoMessage="Enter registration no.";
+			confirmMessage = "Are you sure?";
+			networkErrorMessage = "Connection error! Try again later!";
+			textFieldInfoMessage = "Enter registration no.";
 		}
 	}
 
@@ -105,11 +105,11 @@ class PatientLoginApplet extends JFrame
 
 	public PatientLoginApplet(Connection myCon,Employee emp)
 	{
-		connection=myCon;
-		employee=emp;
-		final JFrame jframe=this;
+		connection = myCon;
+		employee = emp;
+		final JFrame jframe = this;
 		
-		font=new Font("Monotype Corsiva",Font.BOLD,15);
+		font = new Font("Monotype Corsiva",Font.BOLD,15);
 		setSize(Constants.SIZE_X,Constants.SIZE_Y);
 		setResizable(false);
 		setTitle("PATIENT LOGIN");
@@ -120,7 +120,7 @@ class PatientLoginApplet extends JFrame
 			@Override
 			public void windowClosing(WindowEvent we)
 			{
-				if(JOptionPane.showConfirmDialog(jframe,confirmMessage)==JOptionPane.OK_OPTION)
+				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
                     System.exit(0);
 					dispose();
@@ -128,30 +128,19 @@ class PatientLoginApplet extends JFrame
 			}
 		});
 
-		patientInformationPanel=new JPanel();
-		frameLabel=new JLabel();
-		warningLabel=new JLabel();
-		patientIdField= new JTextField();
-		newPatient=new JButton();
-		existingPatient=new JButton();
-		backButton=new JButton();
-		confirmButton=new JButton();
-		submitButton=new JButton();
+		patientInformationPanel = new JPanel();
+		frameLabel = new JLabel();
+		warningLabel = new JLabel();
+		patientIdField =  new JTextField();
+		newPatient = new JButton();
+		existingPatient = new JButton();
+		backButton = new JButton();
+		confirmButton = new JButton();
+		submitButton = new JButton();
 
-		
+		nameValue = new JLabel("");
 
-		// nameLabel=new JLabel("Name :");
-		// dob_label=new JLabel("Date of Birth : ");
-		// phone_label=new JLabel("Phone no. : ");
-		// address_label=new JLabel("Address : ");
-		// gender_label=new JLabel("Gender : ");
-
-		nameValue=new JLabel("");
-		// dob_value=new JLabel("");
-		// phone_value=new JLabel("");
-		// address_value=new JLabel("");
-		// gender_value=new JLabel("");
-		setLanguage(language=Constants.readCurrentLanguage());
+		setLanguage(Constants.language);
 
 		patientInformationPanel.setBounds(300,500,300,30);
 		frameLabel.setBounds(350,10,400,100);
@@ -260,24 +249,24 @@ class PatientLoginApplet extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String patientId=patientIdField.getText();
-				String filename="tempFolder/tempPatientReport.xml";
-				int response=connection.receiveFromServer(patientId+".xml",filename);
-				File file=new File(filename);
-				if(response>=0)
+				String patientId = patientIdField.getText();
+				String filename = Constants.dataPath + "tempPatientReport.xml";
+				int response = connection.receiveFromServer(patientId + ".xml",filename);
+				File file = new File(filename);
+				if(response >= 0)
 				{
 					try
 					{
-						JAXBContext jc=JAXBContext.newInstance(PatientReport.class);
-						Unmarshaller jum=jc.createUnmarshaller();
-						patientReport=(PatientReport)jum.unmarshal(file);
+						JAXBContext jc = JAXBContext.newInstance(PatientReport.class);
+						Unmarshaller jum = jc.createUnmarshaller();
+						patientReport = (PatientReport)jum.unmarshal(file);
 					}
 					catch(JAXBException jaxbe)
 					{
 						jaxbe.printStackTrace();
 					}
 					file.delete();
-					nameValue.setText(patientReport.patientBasicData.getName()+"/ "+patientReport.patientBasicData.getAge()+" yrs");
+					nameValue.setText(patientReport.patientBasicData.getName() + "/ " + patientReport.patientBasicData.getAge() + " yrs");
 
 					setPatientBasicDataVisible(true);
 					warningLabel.setVisible(false);
@@ -287,12 +276,12 @@ class PatientLoginApplet extends JFrame
 					setPatientBasicDataVisible(false);
 					if(file.isFile())
 						file.delete();
-					if(response==-1)
+					if(response == -2)
 						warningLabel.setVisible(true);
-					else if(response==-2)
+					else
 					{
 						warningLabel.setVisible(false);
-						JOptionPane.showMessageDialog(jframe,networkErrorMessage);
+						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
 						new KioskLogin();
 						dispose();
 					}
