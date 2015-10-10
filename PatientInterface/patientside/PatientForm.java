@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
+import javax.swing.Icon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -40,9 +41,6 @@ import java.util.Date;
 import javax.swing.text.Utilities;
 import java.text.SimpleDateFormat;
 import javax.swing.text.View;
-import sun.misc.BASE64Encoder;
-import sun.misc.BASE64Decoder;
-import sun.awt.image.ToolkitImage;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.BorderLayout;
@@ -91,7 +89,7 @@ class Form extends JFrame //implements ActionListener
 	private JTextArea address_area,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, filename_area,advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area,  kiosk_coordinator_area, doctor_area;
 	
 	private JScrollPane address_pane,family_history_pane, medical_history_pane, complaint_of_pane,  on_examination_pane,filename_pane, advice_pane, medication_pane, diagnostic_test_pane, provisional_diagnosis_pane, final_diagnosis_pane, referral_pane;
-	private JButton refresh_button,back_button,back2_button,submit_button,next_button,prev_button,newcomplaint_button,choose_button,print_button,patientBasicDataEdit_button,patientBasicDataSave_button,patientBasicDataCancel_button,changePicture_button,addFile_button,cancelFile_button,patientComplaintEdit_button,patientComplaintSave_button,patientComplaintCancel_button;
+	private JButton refresh_button,back_button,back2_button,submit_button,next_button,prev_button,newcomplaint_button,choose_button,print_button,patientBasicDataEdit_button,patientBasicDataSave_button,patientBasicDataCancel_button,changePicture_button,pictureDownloadButton,addFile_button,cancelFile_button,patientComplaintEdit_button,patientComplaintSave_button,patientComplaintCancel_button;
 	private JCheckBox emergency_box,anemia_box,edema_box,jaundice_box;
 	private JPanel BasicDataPanel,HealthInfoPanel,DoctorPrescriptionPanel,KioskCoordinatorPanel,DoctorPanel,ButtonPanel,CommunicationPanel;
 	private PatientReport patientReport;
@@ -99,7 +97,6 @@ class Form extends JFrame //implements ActionListener
 	private Font font;
 	private int current_report_count = -1;
 	private boolean PatientBasicDataEditMode = false;
-	private int imageSet = 0;
 	private String imgstr;
 	private String confirmMessage,networkErrorMessage,newComplaintErrorMessage,imageString = null;
 	private ArrayList < File >  selectedFiles = new ArrayList < File > ();
@@ -229,6 +226,7 @@ class Form extends JFrame //implements ActionListener
 	        patientBasicDataSave_button.setText("নিশ্চিত");
 	        patientBasicDataCancel_button.setText("বাতিল");
 	        changePicture_button.setText("ছবি পরিবর্তন");
+	        pictureDownloadButton.setText("Download");
 	        addFile_button.setText("ফাইল আপলোড");
 	        cancelFile_button.setText("বাতিল");
 	        patientComplaintEdit_button.setText("লিখুন");
@@ -248,6 +246,7 @@ class Form extends JFrame //implements ActionListener
             patientBasicDataSave_button.setFont(Constants.BENGALIBUTTONFONT);
             patientBasicDataCancel_button.setFont(Constants.BENGALIBUTTONFONT);
             changePicture_button.setFont(Constants.BENGALIBUTTONFONT);
+            pictureDownloadButton.setFont(Constants.BENGALIBUTTONFONT);
             addFile_button.setFont(Constants.BENGALIBUTTONFONT);
             cancelFile_button.setFont(Constants.BENGALIBUTTONFONT);
             patientComplaintEdit_button.setFont(Constants.BENGALIBUTTONFONT);
@@ -368,6 +367,7 @@ class Form extends JFrame //implements ActionListener
 	        patientBasicDataSave_button.setText("Save");
 	        patientBasicDataCancel_button.setText("Cancel");
 	        changePicture_button.setText("Change picture");
+	        pictureDownloadButton.setText("Download");
 	        addFile_button.setText("Add File");
 	        cancelFile_button.setText("Cancel File");
 	        patientComplaintEdit_button.setText("Edit");
@@ -388,6 +388,7 @@ class Form extends JFrame //implements ActionListener
             patientBasicDataSave_button.setFont(Constants.SMALLBUTTONFONT);
             patientBasicDataCancel_button.setFont(Constants.SMALLBUTTONFONT);
             changePicture_button.setFont(Constants.SMALLBUTTONFONT);
+            pictureDownloadButton.setFont(Constants.SMALLBUTTONFONT);
             addFile_button.setFont(Constants.SMALLBUTTONFONT);
             cancelFile_button.setFont(Constants.SMALLBUTTONFONT);
             patientComplaintEdit_button.setFont(Constants.SMALLBUTTONFONT);
@@ -557,6 +558,7 @@ class Form extends JFrame //implements ActionListener
         patientBasicDataSave_button = new JButton("নিশ্চিত");
         patientBasicDataCancel_button = new JButton("বাতিল");
         changePicture_button = new JButton("ছবি পরিবর্তন");
+        pictureDownloadButton = new JButton();
         addFile_button = new JButton();
         cancelFile_button = new JButton();
         patientComplaintEdit_button = new JButton();
@@ -614,6 +616,7 @@ class Form extends JFrame //implements ActionListener
 		patientBasicDataSave_button.setVisible(false);
 		patientBasicDataCancel_button.setVisible(false);
 		changePicture_button.setVisible(false);
+		// pictureDownloadButton.setVisible(false);
 		patientComplaintEdit_button.setVisible(false);
 		patientComplaintSave_button.setVisible(false);
 		patientComplaintCancel_button.setVisible(false);
@@ -793,6 +796,7 @@ class Form extends JFrame //implements ActionListener
 		patientBasicDataSave_button.setBounds(670,60,60,25);
 		patientBasicDataCancel_button.setBounds(730,60,80,25);
 		changePicture_button.setBounds(12,170,135,25);
+		pictureDownloadButton.setBounds(12,170,135,25);
 		patientComplaintEdit_button.setBounds(680,310,100,25);
 		patientComplaintSave_button.setBounds(630,310,70,25);
 		patientComplaintCancel_button.setBounds(700,310,80,25);
@@ -942,7 +946,7 @@ class Form extends JFrame //implements ActionListener
 				Information info = new Information();
 				info.date = doctor_date_field.getText();
 				info.doctor_name = doctor_name_field.getText();
-				info.patient_image = ((ImageIcon)picture.getIcon()).getImage();
+				info.patient_image = picture.getIcon();
 				// info.doctor_degree = 
 				// info.doctor_hospital = 
 				info.patient_regno = reg_no_field.getText();
@@ -1092,6 +1096,7 @@ class Form extends JFrame //implements ActionListener
 				patientBasicDataSave_button.setVisible(true);
 				patientBasicDataCancel_button.setVisible(true);
 				changePicture_button.setVisible(true);
+				pictureDownloadButton.setVisible(false);
 
 				back_button.setVisible(false);
 				refresh_button.setVisible(false);
@@ -1100,7 +1105,6 @@ class Form extends JFrame //implements ActionListener
 				newcomplaint_button.setVisible(false);
 				print_button.setVisible(false);
 				patientComplaintEdit_button.setVisible(false);
-				imageSet = 0;
 			}
 		});
 
@@ -1161,7 +1165,6 @@ class Form extends JFrame //implements ActionListener
 							e.printStackTrace();
 						}
 
-						encodeToString();
 						patientReport.patientBasicData.setName(name_field.getText());
 						patientReport.patientBasicData.setReference(sdw_of_field.getText());
 						patientReport.patientBasicData.setOccupation(occupation_field.getText());
@@ -1171,8 +1174,6 @@ class Form extends JFrame //implements ActionListener
 						patientReport.patientBasicData.setHeight(height_field.getText());
 						patientReport.patientBasicData.setFamilyhistory(family_history_area.getText());
 						patientReport.patientBasicData.setMedicalhistory(medical_history_area.getText());
-						if(imageString != null)
-							patientReport.patientBasicData.setImage(imageString);
 					}
 					else
 					{
@@ -1193,6 +1194,19 @@ class Form extends JFrame //implements ActionListener
 						jaxbe.printStackTrace();
 						file.delete();
 					}
+					String imageFileName = reg_no_field.getText() + "_image.jpg";
+					if(new File(Constants.dataPath + imageFileName).isFile())
+					{
+						int sendResponse;
+						if((sendResponse = connection.sendToServer(Constants.dataPath + imageFileName,Constants.finalDataPath + imageFileName)) < 0)
+						{
+							JOptionPane.showMessageDialog(jframe,"Error in changing picture! Try again later!");
+							picture.setIcon(null);
+						}
+						else patientReport.patientBasicData.setImage(imageFileName);
+						if(new File(Constants.dataPath + imageFileName).isFile())
+							new File(Constants.dataPath + imageFileName).delete();
+					}
 					response = connection.sendToServer(Constants.dataPath + "tempPatientReport.xml",Constants.finalDataPath + reg_no_field.getText() + ".xml");
 					if(response < 0)
 					{
@@ -1201,11 +1215,7 @@ class Form extends JFrame //implements ActionListener
 					if(file.isFile())
 						file.delete();
 
-					// getPatientReport(patientReport.patientBasicData.getId());
 					setPatientReport();
-					imageSet = 0;
-					if(new File("patient_Picture.jpg").isFile())
-						new File("patient_Picture.jpg").delete();
 				}
 			}
 		});
@@ -1214,7 +1224,6 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				imageSet = 0;
 				reg_no.setForeground(Color.BLACK);
 				status.setForeground(Color.BLACK);
 				date.setForeground(Color.BLACK);
@@ -1239,6 +1248,8 @@ class Form extends JFrame //implements ActionListener
 				patientBasicDataSave_button.setVisible(false);
 				patientBasicDataCancel_button.setVisible(false);
 				changePicture_button.setVisible(false);
+				if(picture.getIcon() == null && patientReport.patientBasicData.getImage() != null)
+					pictureDownloadButton.setVisible(true);
 
 
 				back_button.setVisible(true);
@@ -1252,9 +1263,11 @@ class Form extends JFrame //implements ActionListener
 				
 				getPatientReport(patientReport.patientBasicData.getId());
 				setPatientReport();
-				imageSet = 0;
-				if(new File("patient_Picture.jpg").isFile())
-					new File("patient_Picture.jpg").delete();
+
+				String imageFileName = reg_no_field.getText() + "_image.jpg";
+
+				if(new File(Constants.dataPath + imageFileName).isFile())
+					new File(Constants.dataPath + imageFileName).delete();
 			}
 		});
 		
@@ -1262,9 +1275,10 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				String imageFileName = reg_no_field.getText() + "_image.jpg";
 				try
 				{
-					Process ps = Runtime.getRuntime().exec("java"/* -cp PatientApp.jar */ + " webTake.myCam");
+					Process ps = Runtime.getRuntime().exec("java "/*-cp PatientApp.jar*/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
 					ps.waitFor();
 				}
 				catch(IOException ioe)
@@ -1275,10 +1289,10 @@ class Form extends JFrame //implements ActionListener
 				{
 					ie.printStackTrace();
 				}
-				if(new File("patient_Picture.jpg").exists())
+				if(new File(Constants.dataPath + imageFileName).exists())
 				{
 					
-					ImageIcon imageIcon = new ImageIcon("patient_Picture.jpg"); // load the image to a imageIcon
+					ImageIcon imageIcon = new ImageIcon(Constants.dataPath + imageFileName); // load the image to a imageIcon
 					int h = picture.getHeight();
 					int w = picture.getWidth();
 				
@@ -1289,10 +1303,37 @@ class Form extends JFrame //implements ActionListener
 
 				
 					picture.setIcon(imageIcon);
-					imageSet = 1;
-					// deleteImage();
 				}
-				else System.out.println("no image");
+			}
+		});
+
+		pictureDownloadButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent ae)
+			{
+				String imageFileName = patientReport.patientBasicData.getImage();
+				System.out.println("imageFileName : " + imageFileName);
+				int response = connection.receiveFromServer(imageFileName , Constants.dataPath + imageFileName);
+				File imageFile = new File(Constants.dataPath + imageFileName);
+				if(response >= 0)
+				{
+					ImageIcon imageIcon = new ImageIcon(Constants.dataPath + imageFileName); // load the image to a imageIcon
+					int h = picture.getHeight();
+					int w = picture.getWidth();
+
+					Image image = imageIcon.getImage(); // transform it 
+					Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+					imageIcon = new ImageIcon(newimg);
+					picture.setIcon(imageIcon);
+					imageFile.delete();
+					pictureDownloadButton.setVisible(false);
+				}
+				else
+				{
+					if(imageFile.isFile())
+						imageFile.delete();
+					JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
+				}
 			}
 		});
 
@@ -1633,6 +1674,7 @@ class Form extends JFrame //implements ActionListener
 		add(patientComplaintEdit_button);
 		add(patientComplaintSave_button);
 		add(patientComplaintCancel_button);
+		add(pictureDownloadButton);
 		// getContentPane().add(address_pane);
 
 	//initialize JScrollPane
@@ -1800,43 +1842,6 @@ class Form extends JFrame //implements ActionListener
 
 		return (nameCheck & sdwCheck & occupationCheck & genderCheck & phoneCheck & ageCheck & heightCheck);
 	}
-
-	private  void encodeToString() {
-
-		BufferedImage image = null;
-        try
-        {
-            image = ImageIO.read(new File("patient_Picture.jpg"));
-        }
-        catch(IOException e)
-        {
-
-        }
-        
-        String type = "jpg";
-
-        imageString = null;
-        if(imageSet != 0)
-        {
-	        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-	        try
-	        {
-	            ImageIO.write(image, type, bos);
-	            byte[] imageBytes = bos.toByteArray();
-
-	            BASE64Encoder encoder = new BASE64Encoder();
-	            imageString = encoder.encode(imageBytes);
-
-	            bos.close();
-	        }
-	        catch (IOException e)
-	        {
-	           e.printStackTrace();
-	        }
-	    }
-	}
-
 //neccessary methods
 
 	private void SetPatientBasicDataEditable(boolean EDITABLE)
@@ -1852,27 +1857,6 @@ class Form extends JFrame //implements ActionListener
 		family_history_area.setEditable(EDITABLE);
 		medical_history_area.setEditable(EDITABLE);
 	}
-
-
-	private BufferedImage decodeToImage(String imageString)
-	{
-
-        BufferedImage image = null;
-        byte[] imageByte;
-        try
-        {
-            BASE64Decoder decoder = new BASE64Decoder();
-            imageByte = decoder.decodeBuffer(imageString);
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-            image = ImageIO.read(bis);
-            bis.close();
-        }
-        catch (IOException ioe)
-        {
-            ioe.printStackTrace();
-        }
-        return image;
-    }
 
     private String CheckNullString(String str)
     {
@@ -1941,6 +1925,35 @@ class Form extends JFrame //implements ActionListener
 			Thread.sleep(2000);
 
 			int sendResponse;
+
+			if(patientReport.patientBasicData.getStatus().equals("New"))
+			{
+				String imageFileName = patientReport.patientBasicData.getImage();
+				if(imageFileName != null)
+				{
+					File imageFile = new File(Constants.dataPath + imageFileName);
+					int receiveResponse = connection.receiveFromServer(imageFileName,Constants.dataPath + imageFileName);
+					if(receiveResponse >= 0)
+					{
+						if((sendResponse = connection.sendToServer(Constants.dataPath + imageFileName,Constants.finalDataPath + imageFileName)) < 0)
+						{
+							JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(sendResponse));
+							(new File(Constants.dataPath + imageFileName)).delete();
+							new PatientLogin(connection,employee);
+							dispose();
+						}
+						else
+							(new File(Constants.dataPath + imageFileName)).delete();
+					}
+					else
+					{
+						if(imageFile.isFile())
+							imageFile.delete();
+						JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(receiveResponse));
+					}
+				}
+			}
+
 			if((sendResponse = connection.sendToServer(Constants.dataPath + "tempPatientReport.xml",Constants.finalDataPath + reg_no_field.getText() + ".xml")) < 0)
 			{
 				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(sendResponse));
@@ -2123,61 +2136,67 @@ class Form extends JFrame //implements ActionListener
 
 	private void setPatientReport()
 	{
-		try
+		reg_no_field.setText(patientReport.patientBasicData.getId());
+		name_field.setText(patientReport.patientBasicData.getName());
+		sdw_of_field.setText(patientReport.patientBasicData.getReference());
+		occupation_field.setText(patientReport.patientBasicData.getOccupation());
+
+		status_field.setText(patientReport.patientBasicData.getStatus());
+
+		String imageFileName = patientReport.patientBasicData.getImage();
+
+		if(status_field.getText().equals("New"))
 		{
-			reg_no_field.setText(patientReport.patientBasicData.getId());
-			name_field.setText(patientReport.patientBasicData.getName());
-			sdw_of_field.setText(patientReport.patientBasicData.getReference());
-			occupation_field.setText(patientReport.patientBasicData.getOccupation());
-
-			//image
-			if(patientReport.patientBasicData.getImage() != null && patientReport.patientBasicData.getImage() != "")
+			if(imageFileName != null)
 			{
-				imgstr = patientReport.patientBasicData.getImage();
-				BufferedImage newImg;
-				newImg = this.decodeToImage(imgstr);
-				(new File(Constants.dataPath + "patient_Picture.jpg")).createNewFile();
-	    		ImageIO.write(newImg, "jpg", new File(Constants.dataPath + "patient_Picture.jpg"));
-	    		ImageIcon imageIcon = new ImageIcon(Constants.dataPath + "patient_Picture.jpg"); // load the image to a imageIcon
-				int h = picture.getHeight();
-				int w = picture.getWidth();
-				Image image = imageIcon.getImage(); // transform it 
-				Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-				imageIcon = new ImageIcon(newimg);
-				picture.setIcon(imageIcon);
-				(new File(Constants.dataPath + "patient_Picture.jpg")).delete();
-			}
-
-			status_field.setText(patientReport.patientBasicData.getStatus());
-			date_field.setText(patientReport.patientBasicData.getDate());
-			address_area.setText(patientReport.patientBasicData.getAddress());
-			age_field.setText(patientReport.patientBasicData.getAge());
-			ph_no_field.setText(patientReport.patientBasicData.getPhone());
-			gender_field.setText(patientReport.patientBasicData.getGender());
-			height_field.setText(patientReport.patientBasicData.getHeight());
-			family_history_area.setText(patientReport.patientBasicData.getFamilyhistory());
-			medical_history_area.setText(patientReport.patientBasicData.getMedicalhistory());
-
-			if(!patientReport.Reports.isEmpty())
-			{
-				current_report_count = patientReport.Reports.size()-1;
-				next_button.setEnabled(false);
-				status_field.setText("Review");
-				if(current_report_count == 0)
+				int response = connection.receiveFromServer(imageFileName , Constants.dataPath + imageFileName);
+				File imageFile = new File(Constants.dataPath + imageFileName);
+				if(response >= 0)
 				{
-					prev_button.setEnabled(false);
+					ImageIcon imageIcon = new ImageIcon(Constants.dataPath + imageFileName); // load the image to a imageIcon
+					int h = picture.getHeight();
+					int w = picture.getWidth();
+
+					Image image = imageIcon.getImage(); // transform it 
+					Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+					imageIcon = new ImageIcon(newimg);
+					picture.setIcon(imageIcon);
+					imageFile.delete();
 				}
-				setReport(current_report_count);
-			}
-			else
-			{
-				next_button.setEnabled(false);
-				prev_button.setEnabled(false);
+				else
+				{
+					if(imageFile.isFile())
+						imageFile.delete();
+					JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+				}
 			}
 		}
-		catch(IOException ioe)
+		else if(picture.getIcon() == null && imageFileName != null)
+			pictureDownloadButton.setVisible(true);
+		date_field.setText(patientReport.patientBasicData.getDate());
+		address_area.setText(patientReport.patientBasicData.getAddress());
+		age_field.setText(patientReport.patientBasicData.getAge());
+		ph_no_field.setText(patientReport.patientBasicData.getPhone());
+		gender_field.setText(patientReport.patientBasicData.getGender());
+		height_field.setText(patientReport.patientBasicData.getHeight());
+		family_history_area.setText(patientReport.patientBasicData.getFamilyhistory());
+		medical_history_area.setText(patientReport.patientBasicData.getMedicalhistory());
+
+		if(!patientReport.Reports.isEmpty())
 		{
-			ioe.printStackTrace();
+			current_report_count = patientReport.Reports.size()-1;
+			next_button.setEnabled(false);
+			status_field.setText("Review");
+			if(current_report_count == 0)
+			{
+				prev_button.setEnabled(false);
+			}
+			setReport(current_report_count);
+		}
+		else
+		{
+			next_button.setEnabled(false);
+			prev_button.setEnabled(false);
 		}
 	}
 
@@ -2565,7 +2584,7 @@ class Information
 	public String complaint,provisional_diagnosis,final_diagnosis;
 	public String doctor_advice,doctor_medication,doctor_diagnostic,doctor_referal;
 	public String kiosk_coordinator_name;
-	public Image patient_image;
+	public Icon patient_image;
 }
 
 class Printer implements Printable
@@ -2786,26 +2805,26 @@ class Prescription_applet extends JFrame
 		patient_picture_label.setBorder(new LineBorder(Color.black, 1));
 
 
-		try
-		{
-			BufferedImage newImg = ((ToolkitImage)(info.patient_image)).getBufferedImage();
-			(new File(Constants.dataPath + "patient_Picture.jpg")).createNewFile();
-			ImageIO.write(newImg, "jpg", new File(Constants.dataPath + "patient_Picture.jpg"));
-			ImageIcon imageIcon = new ImageIcon(Constants.dataPath + "patient_Picture.jpg"); // load the image to a imageIcon
-			int h = patient_picture_label.getHeight();
-			int w = patient_picture_label.getWidth();
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);
-			patient_picture_label.setIcon(imageIcon);
-			(new File(Constants.dataPath + "patient_Picture.jpg")).delete();
-		}
-		catch(IOException ioe)
-		{
-			ioe.printStackTrace();
-		}
+		// try
+		// {
+		// 	BufferedImage newImg = ((ToolkitImage)(info.patient_image)).getBufferedImage();
+		// 	(new File(Constants.dataPath + "patient_Picture.jpg")).createNewFile();
+		// 	ImageIO.write(newImg, "jpg", new File(Constants.dataPath + "patient_Picture.jpg"));
+		// 	ImageIcon imageIcon = new ImageIcon(Constants.dataPath + "patient_Picture.jpg"); // load the image to a imageIcon
+		// 	int h = patient_picture_label.getHeight();
+		// 	int w = patient_picture_label.getWidth();
+		// 	Image image = imageIcon.getImage(); // transform it 
+		// 	Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+		// 	imageIcon = new ImageIcon(newimg);
+		// 	patient_picture_label.setIcon(imageIcon);
+		// 	(new File(Constants.dataPath + "patient_Picture.jpg")).delete();
+		// }
+		// catch(IOException ioe)
+		// {
+		// 	ioe.printStackTrace();
+		// }
 
-		// patient_picture_label.setIcon(new ImageIcon(info.patient_image));
+		patient_picture_label.setIcon(info.patient_image);
 		date2.setText(info.date);
 		regno_label.setText(info.patient_regno);
 		doctor_name2.setText(info.doctor_name);

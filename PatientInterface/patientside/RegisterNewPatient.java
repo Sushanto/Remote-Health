@@ -33,8 +33,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import sun.misc.BASE64Encoder;
-import sun.misc.BASE64Decoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.xml.bind.JAXBContext;
@@ -77,9 +75,10 @@ class BasicInformation
 	private Font LABELFONT = new Font("Serif",Font.BOLD,16);
 
 	private String patientId,fileDirectory,confirmMessage = "আপনি কি নিশ্চিত?",networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
-	private String imagePath,imageString;
+	private String submissionConfirmMessage = "তথ্য সংরক্ষিত করা হয়েছে";
+	private String imageFileName;
 
-	private int countId,imageSet;
+	private int countId;
 
 	private String nameVar,reNameVar,dateVar,referenceVar,genVar,ageVar,phoneVar,addressVar,occuVar,statusVar,heightVar,familyVar,medicalVar;
 	private final Connection connection;
@@ -127,63 +126,13 @@ class BasicInformation
 		return (emptyCheck & nameCheck & sdwCheck & occupationCheck & phoneCheck & ageCheck & heightCheck);
 	}
 
-	private  void encodeToString()
-	{
-		BufferedImage image = null;
-        try
-        {
-            image = ImageIO.read(new File(imagePath + "patient_Picture.jpg"));
-        }
-        catch(IOException e)
-        {
-
-        }
-        
-        String type = "jpg";
-
-        imageString = null;
-        if(imageSet != 0)
-        {
-	        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-	        try
-	        {
-	            ImageIO.write(image, type, bos);
-	            byte[] imageBytes = bos.toByteArray();
-
-	            BASE64Encoder encoder = new BASE64Encoder();
-	            imageString = encoder.encode(imageBytes);
-
-	            bos.close();
-	        }
-	        catch (IOException e)
-	        {
-	           e.printStackTrace();
-	        }
-	    }
-	}
-
-	private String CheckNullString(String str)
+	private String checkNullString(String str)
 	{
 		if(str.equals(""))
 			return null;
 		else return str;
 	}
 
-	private void  deleteImage(){
-		File f = new File(imagePath + "patient_Picture.jpg");
-		f.delete();
-	}      	
-
-	private void takeCare(){
-		this.IncrementPatientIdCount();
-
-		encodeToString();
-		createPatientBasicData();
-		deleteImage();
-		new PatientForm(connection,patientReport,emp);
-		frame.dispose();
-	}
 
 	private void getValues(){
 		nameVar = nameField.getText();
@@ -206,8 +155,8 @@ class BasicInformation
 		statusVar = "New";
 		heightVar = heightField.getText();
 		// weightVar = weightField.getText();
-		familyVar = CheckNullString(familyHisArea.getText());
-		medicalVar = CheckNullString(medicalHisArea.getText());
+		familyVar = checkNullString(familyHisArea.getText());
+		medicalVar = checkNullString(medicalHisArea.getText());
 		
 
 	}
@@ -224,13 +173,13 @@ class BasicInformation
 		familyHisArea.setText("");
 		medicalHisArea.setText("");
 		warnField.setVisible(false);
-		imageSet = 0;
-		deleteImage();
+		if(new File(Constants.dataPath + imageFileName).exists())
+			new File(Constants.dataPath + imageFileName).delete();
 		lblImage.setIcon(null);
 	}
 
 
-	private void IncrementPatientIdCount()
+	private void incrementPatientIdCount()
 	{
 		try
 		{
@@ -283,7 +232,7 @@ class BasicInformation
 		else
 		{
 			if(response == -2)
-				JOptionPane.showMessageDialog(frame,"File does not exist");
+				JOptionPane.showMessageDialog(frame,"File does not exist");    
 			else
 			{
 				JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(response));
@@ -297,7 +246,7 @@ class BasicInformation
 	{
 		try
 		{
-			Process ps = Runtime.getRuntime().exec("java "/*-cp PatientApp.jar*/ + "webTake.myCam");
+			Process ps = Runtime.getRuntime().exec("java "/*-cp PatientApp.jar*/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
 			ps.waitFor();
 		}
 		catch(InterruptedException ie)
@@ -312,13 +261,11 @@ class BasicInformation
 	}
 
 
-	private void setImage(){
-
-		
-		if(new File(imagePath + "patient_Picture.jpg").exists())
+	private void setImage()
+	{
+		if(new File(Constants.dataPath + imageFileName).exists())
 		{
-			
-			ImageIcon imageIcon = new ImageIcon(imagePath + "patient_Picture.jpg"); // load the image to a imageIcon
+			ImageIcon imageIcon = new ImageIcon(Constants.dataPath + imageFileName); // load the image to a imageIcon
 			int h = lblImage.getHeight();
 			int w = lblImage.getWidth();
 		
@@ -326,13 +273,8 @@ class BasicInformation
 			Image image = imageIcon.getImage(); // transform it 
 			Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
 			imageIcon = new ImageIcon(newimg);
-
-		
 			lblImage.setIcon(imageIcon);
-			imageSet = 1;
-			// deleteImage();
 		}
-		else System.out.println("no image");
 	}
 
 	private void setLanguage(String str)
@@ -394,6 +336,7 @@ class BasicInformation
 
 			confirmMessage = "আপনি কি নিশ্চিত?";
 			networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
+			submissionConfirmMessage = "তথ্য সংরক্ষিত করা হয়েছে";
 
 			lblBasicInformation.setBounds(380, 12, 500, 43);
 		}
@@ -453,6 +396,7 @@ class BasicInformation
 
 			confirmMessage = "Are you sure?";
 			networkErrorMessage = "Connection error! Try again later!";
+			submissionConfirmMessage = "Data Saved";
 
 
 			lblBasicInformation.setBounds(220, 12, 500, 43);
@@ -467,8 +411,6 @@ class BasicInformation
 		frame = new JFrame();
 		frame.setVisible(true);
 		
-		imagePath = "";
-		imageSet = 0;
 
 		frame.setResizable(false);
 		frame.setTitle("KIOSK ENTERPRISE");
@@ -484,13 +426,15 @@ class BasicInformation
 
 				if(JOptionPane.showConfirmDialog(frame,confirmMessage) == JOptionPane.YES_OPTION)
 				{
-					deleteImage();
+					if(new File(Constants.dataPath + imageFileName).exists())
+						new File(Constants.dataPath + imageFileName).delete();
 					frame.dispose();
                     System.exit(0);
 				}
 			}
 		});
 		createId();
+		imageFileName = "Patient_" + Constants.kioskNo + "_" + patientId + "_image.jpg";
 
 
 		//patient id
@@ -765,8 +709,12 @@ class BasicInformation
 				if(checkField())
 				{
 					warnField.setVisible(false);
-					JOptionPane.showMessageDialog(frame,"তথ্য সংরক্ষিত করা হয়েছে");
-					takeCare();
+					
+					incrementPatientIdCount();
+					createPatientBasicData();
+					JOptionPane.showMessageDialog(frame,submissionConfirmMessage);
+					new PatientForm(connection,patientReport,emp);
+					frame.dispose();
 				}
 				else{
 					warnField.setVisible(true);
@@ -784,7 +732,8 @@ class BasicInformation
 		
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				deleteImage();
+				if(new File(Constants.dataPath + imageFileName).exists())
+					new File(Constants.dataPath + imageFileName).delete();
 				new PatientLogin(connection,emp);
 				frame.dispose();
 			}
@@ -839,7 +788,10 @@ class BasicInformation
 		patientReport.patientBasicData.setOccupation(occuVar);
 		patientReport.patientBasicData.setStatus(statusVar);
 		patientReport.patientBasicData.setHeight(heightVar);
-		patientReport.patientBasicData.setImage(imageString);
+		if(new File(Constants.dataPath + imageFileName).exists())
+			patientReport.patientBasicData.setImage(imageFileName);
+		else			
+			patientReport.patientBasicData.setImage(null);
 
 		patientReport.patientBasicData.setFamilyhistory(familyVar);
 		patientReport.patientBasicData.setMedicalhistory(medicalVar);
@@ -859,6 +811,15 @@ class BasicInformation
 			frame.dispose();
 		}
 	    int sendResponse;
+
+	    if((sendResponse = connection.sendToServer(Constants.dataPath + imageFileName,Constants.tempDataPath + imageFileName)) < 0)
+	    {
+	    	JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
+	    	new PatientLogin(connection,emp);
+	    	frame.dispose();
+	    }
+	    (new File(Constants.dataPath + imageFileName)).delete();
+
 	    if((sendResponse = connection.sendToServer(Constants.dataPath + "tempPatient.xml",Constants.tempDataPath + patientId + ".xml")) < 0)
 	    {
 	    	JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));

@@ -4,6 +4,7 @@
         <id>Patient_01_01</id>
         <date>20-06-2015</date>
         <name>Sushanto Halder</name>
+        <image>Patient_01_01_image.jpg</image>
         <reference>Son of Mr Halder</reference>
         <gender>MALE</gender>
         <age>20</age>
