@@ -454,7 +454,40 @@ Tablet: GENTALENE - C, 2 time(s) in a day(1.00AM/5.00AM) X 4 Day(s)</medication>
                 <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
                 <prevDiagnosis>hthth</prevDiagnosis>
             </patientComplaint>
-            <doctorPrescription/>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>11-10-2015</prescription_date>
+                <provisionalDiagnosis>hyt</provisionalDiagnosis>
+                <finalDiagnosis>hthththt</finalDiagnosis>
+                <advice>hth</advice>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>fggh</complaint>
+                <complaint_date>11-10-2015</complaint_date>
+                <weight>20</weight>
+                <bmi>12</bmi>
+                <bp>52</bp>
+                <pulse>65</pulse>
+                <temperature>25</temperature>
+                <spo2>12</spo2>
+                <otherResults>ththth</otherResults>
+                <fileNames>Patient_01_01_15_10_11_18_27_45_0.pdf
+Patient_01_01_15_10_11_18_28_39_0.png
+Patient_01_01_15_10_11_18_29_28_0.jpg
+Patient_01_01_15_10_11_18_29_29_1.jpg
+Patient_01_01_15_10_11_18_29_32_2.jpg</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>htht</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>11-10-2015</prescription_date>
+                <provisionalDiagnosis>rgrgrg</provisionalDiagnosis>
+                <finalDiagnosis>rg</finalDiagnosis>
+                <advice>r</advice>
+            </doctorPrescription>
         </Report>
     </Reports>
 </PatientReport>

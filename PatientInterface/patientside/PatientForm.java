@@ -982,7 +982,10 @@ class Form extends JFrame //implements ActionListener
 					File[] tempFiles = fileChooser.getSelectedFiles();
 					for(int i = 0;i < tempFiles.length;i++)
 					{
-						filename_area.setText(filename_area.getText() + tempFiles[i].getName() + "\n");
+						if(filename_area.getText().equals(""))
+							filename_area.setText(tempFiles[i].getName());
+						else
+							filename_area.setText(filename_area.getText() + "\n" + tempFiles[i].getName());
 						selectedFiles.add(tempFiles[i]);
 					}
 				}
@@ -993,8 +996,9 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				selectedFiles = null;
-				selectedFiles = new ArrayList < File > ();
+				// selectedFiles = null;
+				// selectedFiles = new ArrayList < File > ();
+				selectedFiles.removeAll(selectedFiles);
 				filename_area.setText("");
 			}
 		});
@@ -1434,20 +1438,33 @@ class Form extends JFrame //implements ActionListener
 					report.patientComplaint.setSpo2(spO2_field.getText());
 					report.patientComplaint.setOtherResults(on_examination_area.getText());
 
+					SimpleDateFormat fileDate = new SimpleDateFormat("yy_MM_dd_HH_mm_ss");
+
 					boolean FileSendingComplete = true;
+					String tempFileNames = "";
 					for(int i = 0;i < selectedFiles.size();i++)
 					{
-						if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + selectedFiles.get(i).getName()) < 0)
+						String[] fileNameParts = selectedFiles.get(i).getName().split("\\.");
+						String fileExtension = fileNameParts[fileNameParts.length - 1];
+						String fileName = reg_no_field.getText() + "_" + fileDate.format(new Date()) + "_" + i + "." + fileExtension;
+						if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + fileName) < 0)
 						{
 							FileSendingComplete = false;
 							JOptionPane.showMessageDialog(jframe,"File upload failed : " + selectedFiles.get(i).getName());
 						}
+						else if(tempFileNames.equals(""))
+							tempFileNames = fileName;
+						else 
+							tempFileNames += "\n" + fileName;
 					}
-					selectedFiles = null;
-					selectedFiles = new ArrayList < File > ();
-
-					if(FileSendingComplete)
-						report.patientComplaint.setFileNames(filename_area.getText());
+					// selectedFiles = null;
+					// selectedFiles = new ArrayList < File > ();
+					selectedFiles.removeAll(selectedFiles);
+					String prevFileNames = report.patientComplaint.getFileNames();
+					if(CheckNullString(prevFileNames) == null)
+						report.patientComplaint.setFileNames(tempFileNames);
+					else
+						report.patientComplaint.setFileNames(prevFileNames + "\n" + tempFileNames);
 
 					patientReport.Reports.set(current_report_count,report);
 
@@ -1563,8 +1580,9 @@ class Form extends JFrame //implements ActionListener
 				patientComplaintSave_button.setVisible(false);
 				patientComplaintCancel_button.setVisible(false);
 
-				selectedFiles = null;
-				selectedFiles = new ArrayList < File > ();
+				// selectedFiles = null;
+				// selectedFiles = new ArrayList < File > ();
+				selectedFiles.removeAll(selectedFiles);
 
 				setReport(current_report_count);
 			}
@@ -1862,6 +1880,8 @@ class Form extends JFrame //implements ActionListener
 
     private String CheckNullString(String str)
     {
+    	if(str == null)
+    		return null;
     	if(str.equals(""))
     		return null;
     	else return str;
@@ -1888,7 +1908,12 @@ class Form extends JFrame //implements ActionListener
 		patientComplaint.KioskCoordinatorName = CheckNullString(kiosk_coordinator_name_field.getText());
 		patientComplaint.PrevDiagnosis = CheckNullString(prev_diagnosis_field.getText());
 
+
+
+		SimpleDateFormat fileDate = new SimpleDateFormat("yy_MM_dd_HH_mm_ss");
+
 		boolean FileSendingComplete = true;
+		String tempFileNames = "";
 		for(int i = 0;i < selectedFiles.size();i++)
 		{
 			try
@@ -1899,18 +1924,25 @@ class Form extends JFrame //implements ActionListener
 			{
 				e.printStackTrace();
 			}
-			if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + selectedFiles.get(i).getName()) < 0)
+			String[] fileNameParts = selectedFiles.get(i).getName().split("\\.");
+			String fileExtension = fileNameParts[fileNameParts.length - 1];
+			String fileName = reg_no_field.getText() + "_" + fileDate.format(new Date()) + "_" + i + "." + fileExtension;
+			if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + fileName) < 0)
 			{
 				FileSendingComplete = false;
 				JOptionPane.showMessageDialog(this,"File upload failed : " + selectedFiles.get(i).getName());
 			}
-			else System.out.println("File sent: " + selectedFiles.get(i).getPath());
+			else if(tempFileNames.equals(""))
+				tempFileNames = fileName;
+			else
+				tempFileNames += "\n" + fileName;
 		}
-		selectedFiles = null;
-		selectedFiles = new ArrayList < File > ();
+		// selectedFiles = null;
+		// selectedFiles = new ArrayList < File > ();
+		selectedFiles.removeAll(selectedFiles);
 
-		if(FileSendingComplete)
-			patientComplaint.FileNames = CheckNullString(filename_area.getText());
+		patientComplaint.setFileNames(CheckNullString(tempFileNames));
+		filename_area.setText(patientComplaint.getFileNames());
 
 		Report report = new Report();
 		report.patientComplaint = patientComplaint;

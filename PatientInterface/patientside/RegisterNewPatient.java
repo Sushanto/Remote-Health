@@ -434,7 +434,7 @@ class BasicInformation
 			}
 		});
 		createId();
-		imageFileName = "Patient_" + Constants.kioskNo + "_" + patientId + "_image.jpg";
+		imageFileName = patientId + "_image.jpg";
 
 
 		//patient id

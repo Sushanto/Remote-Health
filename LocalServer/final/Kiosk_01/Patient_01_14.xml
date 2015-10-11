@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_14</id>
+        <date>11-10-2015</date>
+        <name>fhgh</name>
+        <image>Patient_01_14_image.jpg</image>
+        <reference>Son of hfhfh</reference>
+        <gender>Male</gender>
+        <age>452</age>
+        <phone>45</phone>
+        <address>fgfg</address>
+        <occupation>fgfg</occupation>
+        <status>Review</status>
+        <height>45</height>
+        <familyhistory>gfg</familyhistory>
+        <medicalhistory>fgf</medicalhistory>
+    </PatientBasicData>
+    <Reports>
+        <Report>
+            <patientComplaint>
+                <complaint>fgjkjk</complaint>
+                <complaint_date>11-10-2015</complaint_date>
+                <weight>45</weight>
+                <bmi>45454</bmi>
+                <bp>545454</bp>
+                <pulse>545454545</pulse>
+                <temperature>545</temperature>
+                <spo2>45</spo2>
+                <otherResults>kjkjAnemia
+Edema
+</otherResults>
+                <fileNames>Patient_01_14_15_10_11_19_02_19_0.jpg
+Patient_01_14_15_10_11_19_02_22_1.jpg
+Patient_01_14_15_10_11_19_02_25_2.jpg
+Patient_01_14_15_10_11_19_02_30_3.jpg
+Patient_01_14_15_10_11_19_02_34_4.jpg
+Patient_01_14_15_10_11_19_02_37_5.jpg
+Patient_01_14_15_10_11_19_02_41_6.jpg</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>jkjkj</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>11-10-2015</prescription_date>
+                <provisionalDiagnosis>jhj</provisionalDiagnosis>
+                <finalDiagnosis>hj</finalDiagnosis>
+                <advice>hjhj</advice>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>rfgrgr</complaint>
+                <complaint_date>11-10-2015</complaint_date>
+                <weight>45</weight>
+                <bmi>45454</bmi>
+                <bp>545454</bp>
+                <pulse>545454545</pulse>
+                <temperature>545</temperature>
+                <spo2>45</spo2>
+                <otherResults>grg</otherResults>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>grgr</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription/>
+        </Report>
+    </Reports>
+</PatientReport>
