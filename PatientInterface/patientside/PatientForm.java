@@ -26,6 +26,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import sun.awt.image.ToolkitImage;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
@@ -2825,7 +2826,7 @@ class Prescription_applet extends JFrame
 			ioe.printStackTrace();
 		}
 
-		patient_picture_label.setIcon(info.patient_image);
+		// patient_picture_label.setIcon(info.patient_image);
 		date2.setText(info.date);
 		regno_label.setText(info.patient_regno);
 		doctor_name2.setText(info.doctor_name);

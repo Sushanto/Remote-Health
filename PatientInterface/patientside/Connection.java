@@ -102,7 +102,7 @@ public class Connection
 			sendString(serverFileName + " " + localFile.length());
 			localFile = checkAndEncode(localFileName);
 			sendFile(localFile);
-			// localFile.delete();
+			localFile.delete();
 			int response = receiveInt();
 			return response;
 		}

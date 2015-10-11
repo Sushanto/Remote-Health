@@ -177,7 +177,7 @@ class Connection extends Thread
 				sendInt((int)tempFile.length());
 				tempFile = checkAndEncode(LocalServer.tempDataPath+"/"+localFileName);
 				sendFile1(tempFile);
-				// tempFile.delete();
+				tempFile.delete();
 				System.out.println("File sent: "+localFileName);
 				return true;
 			}
@@ -193,7 +193,7 @@ class Connection extends Thread
 					sendInt(response);
 					finalFile = checkAndEncode(LocalServer.finalDataPath+"/"+localFileName);
 					sendFile1(finalFile);
-					// finalFile.delete();
+					finalFile.delete();
 					System.out.println("File sent: "+localFileName);
 					return true;
 				}
