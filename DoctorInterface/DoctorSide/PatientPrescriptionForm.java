@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -40,8 +41,6 @@ import java.util.Date;
 import javax.swing.text.Utilities;
 import java.text.SimpleDateFormat;
 import javax.swing.text.View;
-import sun.misc.BASE64Encoder;
-import sun.misc.BASE64Decoder;
 import sun.awt.image.ToolkitImage;
 import java.awt.Color;
 import java.awt.Font;
@@ -81,7 +80,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	private JTextArea address_area,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area,  kiosk_coordinator_area, doctor_area;
 	
 	private JScrollPane address_pane,family_history_pane, medical_history_pane, complaint_of_pane,  on_examination_pane, advice_pane, medication_pane, diagnostic_test_pane, provisional_diagnosis_pane, final_diagnosis_pane, referral_pane;
-	private JButton refresh_button,back_button,back2_button,submit_button,next_button,prev_button,prescribeButton,prescriptionButton;
+	private JButton refresh_button,pictureDownloadButton,back_button,back2_button,submit_button,next_button,prev_button,prescribeButton,prescriptionButton;
 	private JPanel BasicDataPanel,HealthInfoPanel,DoctorPrescriptionPanel,KioskCoordinatorPanel,DoctorPanel,ButtonPanel,CommunicationPanel;
 	private JLabel medicationTypeLabel,medicationNameLabel,medicationDoseLabel,medicationDurationLabel,additionalReportsLabel;
 	private JComboBox<String> additionalReportsComboBox,medicationTypeComboBox,medicationNameComboBox,medicationDoseComboBox,medicationInstructionComboBox1,medicationInstructionComboBox2,medicationTimeComboBox1,medicationTimeComboBox2,medicationDurationComboBox1,medicationDurationComboBox2;
@@ -231,6 +230,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
         back_button.setText("Back");
         refresh_button.setText("Refresh");
+        pictureDownloadButton.setText("Download");
         back2_button.setText("Back");
         submit_button.setText("Submit");
         next_button.setText("Next");
@@ -242,6 +242,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
         back_button.setFont(Constants.SMALLBUTTONFONT);
         refresh_button.setFont(Constants.SMALLBUTTONFONT);
+        pictureDownloadButton.setFont(Constants.SMALLBUTTONFONT);
         back2_button.setFont(Constants.SMALLBUTTONFONT);
         submit_button.setFont(Constants.SMALLBUTTONFONT);
         next_button.setFont(Constants.SMALLBUTTONFONT);
@@ -364,6 +365,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
     //initialize JButtons
         back_button = new JButton();
         refresh_button = new JButton();
+        pictureDownloadButton = new JButton();
         back2_button = new JButton();
         submit_button = new JButton();
         next_button = new JButton();
@@ -602,6 +604,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		doctor_date_field.setBounds(450,670,100,23);
 		
 		back_button.setBounds(10,15,80,25);
+		pictureDownloadButton.setBounds(12,170,135,25);
 		refresh_button.setBounds(100,15,100,25);
 		back2_button.setBounds(10,15,80,25);
 		next_button.setBounds(690,710,100,25);
@@ -635,6 +638,44 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			{
 				getPatientReport(patientReport.patientBasicData.getId());
 				setPatientReport();
+			}
+		});
+
+		pictureDownloadButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent ae)
+			{
+				String imageFileName = patientReport.patientBasicData.getImage();
+				System.out.println("imageFileName : " + imageFileName);
+				int response = 0;
+				try
+				{
+					response = connection.getRequest(imageFileName , Constants.dataFolder + imageFileName);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				File imageFile = new File(Constants.dataFolder + imageFileName);
+				if(response >= 0)
+				{
+					ImageIcon imageIcon = new ImageIcon(Constants.dataFolder + imageFileName); // load the image to a imageIcon
+					int h = picture.getHeight();
+					int w = picture.getWidth();
+
+					Image image = imageIcon.getImage(); // transform it 
+					Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+					imageIcon = new ImageIcon(newimg);
+					picture.setIcon(imageIcon);
+					imageFile.delete();
+					pictureDownloadButton.setVisible(false);
+				}
+				else
+				{
+					if(imageFile.isFile())
+						imageFile.delete();
+					JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
+				}
 			}
 		});
 
@@ -794,7 +835,8 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 				Information info = new Information();
 				info.date = doctor_date_field.getText();
 				info.doctor_name = doctor_name_field.getText();
-				info.patient_image = ((ImageIcon)picture.getIcon()).getImage();
+				info.patient_image=((ImageIcon)picture.getIcon()).getImage();
+				// info.patient_image = picture.getIcon();
 				// info.doctor_degree = 
 				// info.doctor_hospital = 
 				info.patient_regno = reg_no_field.getText();
@@ -1003,6 +1045,7 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		add(prev_button);
 		add(prescribeButton);
 		add(submit_button);
+		add(pictureDownloadButton);
 		add(prescriptionButton);
 
 		medicationButtonGroup.add(medicationTimeRadioButton);
@@ -1204,43 +1247,6 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		medicationInstructionField.setEnabled(!enable);
 	}
 
-	private  void encodeToString()
-	{
-
-		BufferedImage image = null;
-        try
-        {
-            image  =  ImageIO.read(new File("patient_Picture.jpg"));
-        }
-        catch(IOException e)
-        {
-
-        }
-        
-        String type = "jpg";
-
-        imageString  =  null;
-        if(imageSet != 0)
-        {
-	        ByteArrayOutputStream bos  =  new ByteArrayOutputStream();
-
-	        try
-	        {
-	            ImageIO.write(image, type, bos);
-	            byte[] imageBytes  =  bos.toByteArray();
-
-	            BASE64Encoder encoder  =  new BASE64Encoder();
-	            imageString  =  encoder.encode(imageBytes);
-
-	            bos.close();
-	        }
-	        catch (IOException e)
-	        {
-	           e.printStackTrace();
-	        }
-	    }
-	}
-
 //neccessary methods
 
 	private void setDoctorPrescriptionEditable(boolean edit)
@@ -1300,26 +1306,6 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		}
 	}
 
-
-	private BufferedImage decodeToImage(String imageString)
-	{
-
-        BufferedImage image  =  null;
-        byte[] imageByte;
-        try
-        {
-            BASE64Decoder decoder  =  new BASE64Decoder();
-            imageByte  =  decoder.decodeBuffer(imageString);
-            ByteArrayInputStream bis  =  new ByteArrayInputStream(imageByte);
-            image  =  ImageIO.read(bis);
-            bis.close();
-        }
-        catch (IOException ioe)
-        {
-            ioe.printStackTrace();
-        }
-        return image;
-    }
 
     private String CheckNullString(String str)
     {
@@ -1572,61 +1558,75 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 
 	private void setPatientReport()
 	{
-		try
+		reg_no_field.setText(patientReport.patientBasicData.getId());
+		name_field.setText(patientReport.patientBasicData.getName());
+		sdw_of_field.setText(patientReport.patientBasicData.getReference());
+		occupation_field.setText(patientReport.patientBasicData.getOccupation());
+
+		status_field.setText(patientReport.patientBasicData.getStatus());
+
+		String imageFileName = patientReport.patientBasicData.getImage();
+
+		if(status_field.getText().equals("New"))
 		{
-			reg_no_field.setText(patientReport.patientBasicData.getId());
-			name_field.setText(patientReport.patientBasicData.getName());
-			sdw_of_field.setText(patientReport.patientBasicData.getReference());
-			occupation_field.setText(patientReport.patientBasicData.getOccupation());
-
-			//image
-			if(patientReport.patientBasicData.getImage() != null && patientReport.patientBasicData.getImage() != "")
+			if(imageFileName != null)
 			{
-				imgstr = patientReport.patientBasicData.getImage();
-				BufferedImage newImg;
-				newImg  =  this.decodeToImage(imgstr);
-				(new File(Constants.dataFolder + "patient_Picture.jpg")).createNewFile();
-	    		ImageIO.write(newImg, "jpg", new File(Constants.dataFolder + "patient_Picture.jpg"));
-	    		ImageIcon imageIcon  =  new ImageIcon(Constants.dataFolder + "patient_Picture.jpg"); // load the image to a imageIcon
-				int h = picture.getHeight();
-				int w = picture.getWidth();
-				Image image  =  imageIcon.getImage(); // transform it 
-				Image newimg  =  image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-				imageIcon  =  new ImageIcon(newimg);
-				picture.setIcon(imageIcon);
-				(new File(Constants.dataFolder + "patient_Picture.jpg")).delete();
-			}
-
-			status_field.setText(patientReport.patientBasicData.getStatus());
-			date_field.setText(patientReport.patientBasicData.getDate());
-			address_area.setText(patientReport.patientBasicData.getAddress());
-			age_field.setText(patientReport.patientBasicData.getAge());
-			ph_no_field.setText(patientReport.patientBasicData.getPhone());
-			gender_field.setText(patientReport.patientBasicData.getGender());
-			height_field.setText(patientReport.patientBasicData.getHeight());
-			family_history_area.setText(patientReport.patientBasicData.getFamilyhistory());
-			medical_history_area.setText(patientReport.patientBasicData.getMedicalhistory());
-
-			if(!patientReport.Reports.isEmpty())
-			{
-				current_report_count = patientReport.Reports.size()-1;
-				next_button.setEnabled(false);
-				status_field.setText("Review");
-				if(current_report_count == 0)
+				int response = 0;
+				try
 				{
-					prev_button.setEnabled(false);
+					response = connection.getRequest(imageFileName , Constants.dataFolder + imageFileName);
 				}
-				setReport(current_report_count);
-			}
-			else
-			{
-				next_button.setEnabled(false);
-				prev_button.setEnabled(false);
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				File imageFile = new File(Constants.dataFolder + imageFileName);
+				if(response >= 0)
+				{
+					ImageIcon imageIcon = new ImageIcon(Constants.dataFolder + imageFileName); // load the image to a imageIcon
+					int h = picture.getHeight();
+					int w = picture.getWidth();
+
+					Image image = imageIcon.getImage(); // transform it 
+					Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+					imageIcon = new ImageIcon(newimg);
+					picture.setIcon(imageIcon);
+					imageFile.delete();
+				}
+				else
+				{
+					if(imageFile.isFile())
+						imageFile.delete();
+					JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+				}
 			}
 		}
-		catch(IOException ioe)
+		else if(picture.getIcon() == null && imageFileName != null)
+			pictureDownloadButton.setVisible(true);
+		date_field.setText(patientReport.patientBasicData.getDate());
+		address_area.setText(patientReport.patientBasicData.getAddress());
+		age_field.setText(patientReport.patientBasicData.getAge());
+		ph_no_field.setText(patientReport.patientBasicData.getPhone());
+		gender_field.setText(patientReport.patientBasicData.getGender());
+		height_field.setText(patientReport.patientBasicData.getHeight());
+		family_history_area.setText(patientReport.patientBasicData.getFamilyhistory());
+		medical_history_area.setText(patientReport.patientBasicData.getMedicalhistory());
+
+		if(!patientReport.Reports.isEmpty())
 		{
-			ioe.printStackTrace();
+			current_report_count = patientReport.Reports.size()-1;
+			next_button.setEnabled(false);
+			status_field.setText("Review");
+			if(current_report_count == 0)
+			{
+				prev_button.setEnabled(false);
+			}
+			setReport(current_report_count);
+		}
+		else
+		{
+			next_button.setEnabled(false);
+			prev_button.setEnabled(false);
 		}
 	}
 
@@ -2314,6 +2314,7 @@ class Prescription_applet extends JFrame
 		{
 			ioe.printStackTrace();
 		}
+		// patient_picture_label.setIcon(info.patient_image);
 
 		// patient_picture_label.setIcon(new ImageIcon(info.patient_image));
 		date2.setText(info.date);

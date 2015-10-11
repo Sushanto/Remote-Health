@@ -946,7 +946,8 @@ class Form extends JFrame //implements ActionListener
 				Information info = new Information();
 				info.date = doctor_date_field.getText();
 				info.doctor_name = doctor_name_field.getText();
-				info.patient_image = picture.getIcon();
+				info.patient_image=((ImageIcon)picture.getIcon()).getImage();
+				// info.patient_image = picture.getIcon();
 				// info.doctor_degree = 
 				// info.doctor_hospital = 
 				info.patient_regno = reg_no_field.getText();
@@ -2584,7 +2585,7 @@ class Information
 	public String complaint,provisional_diagnosis,final_diagnosis;
 	public String doctor_advice,doctor_medication,doctor_diagnostic,doctor_referal;
 	public String kiosk_coordinator_name;
-	public Icon patient_image;
+	public Image patient_image;
 }
 
 class Printer implements Printable
@@ -2805,24 +2806,24 @@ class Prescription_applet extends JFrame
 		patient_picture_label.setBorder(new LineBorder(Color.black, 1));
 
 
-		// try
-		// {
-		// 	BufferedImage newImg = ((ToolkitImage)(info.patient_image)).getBufferedImage();
-		// 	(new File(Constants.dataPath + "patient_Picture.jpg")).createNewFile();
-		// 	ImageIO.write(newImg, "jpg", new File(Constants.dataPath + "patient_Picture.jpg"));
-		// 	ImageIcon imageIcon = new ImageIcon(Constants.dataPath + "patient_Picture.jpg"); // load the image to a imageIcon
-		// 	int h = patient_picture_label.getHeight();
-		// 	int w = patient_picture_label.getWidth();
-		// 	Image image = imageIcon.getImage(); // transform it 
-		// 	Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-		// 	imageIcon = new ImageIcon(newimg);
-		// 	patient_picture_label.setIcon(imageIcon);
-		// 	(new File(Constants.dataPath + "patient_Picture.jpg")).delete();
-		// }
-		// catch(IOException ioe)
-		// {
-		// 	ioe.printStackTrace();
-		// }
+		try
+		{
+			BufferedImage newImg = ((ToolkitImage)(info.patient_image)).getBufferedImage();
+			(new File(Constants.dataPath + "patient_Picture.jpg")).createNewFile();
+			ImageIO.write(newImg, "jpg", new File(Constants.dataPath + "patient_Picture.jpg"));
+			ImageIcon imageIcon = new ImageIcon(Constants.dataPath + "patient_Picture.jpg"); // load the image to a imageIcon
+			int h = patient_picture_label.getHeight();
+			int w = patient_picture_label.getWidth();
+			Image image = imageIcon.getImage(); // transform it 
+			Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			imageIcon = new ImageIcon(newimg);
+			patient_picture_label.setIcon(imageIcon);
+			(new File(Constants.dataPath + "patient_Picture.jpg")).delete();
+		}
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
 
 		patient_picture_label.setIcon(info.patient_image);
 		date2.setText(info.date);
