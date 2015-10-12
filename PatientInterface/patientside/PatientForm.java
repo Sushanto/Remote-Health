@@ -827,6 +827,8 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				connection.unlockFile(reg_no_field.getText() + ".xml");
+
 				setReport(current_report_count);
 				prev_button.setVisible(true);
 				next_button.setVisible(true);
@@ -888,10 +890,21 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				int size = patientReport.Reports.size();
-				if(size == 0 || patientReport.Reports.get(size-1).doctorPrescription.getdoctorName() != null)
-					newComplaintAction();
-				else JOptionPane.showMessageDialog(jframe,newComplaintErrorMessage);
+				int lockResponse = connection.lockFile(reg_no_field.getText() + ".xml");
+				if(lockResponse >= 0)
+				{
+					getPatientReport(reg_no_field.getText());
+					setPatientReport();
+					int size = patientReport.Reports.size();
+					if(size == 0 || patientReport.Reports.get(size-1).doctorPrescription.getdoctorName() != null)
+						newComplaintAction();
+					else
+					{
+						connection.unlockFile(reg_no_field.getText() + ".xml");
+						JOptionPane.showMessageDialog(jframe,newComplaintErrorMessage);
+					}
+				}
+				else JOptionPane.showMessageDialog(jframe, RHErrors.getErrorDescription(lockResponse));
 			}
 		});
 
@@ -947,7 +960,14 @@ class Form extends JFrame //implements ActionListener
 				Information info = new Information();
 				info.date = doctor_date_field.getText();
 				info.doctor_name = doctor_name_field.getText();
-				info.patient_image=((ImageIcon)picture.getIcon()).getImage();
+				try
+				{
+					info.patient_image=((ImageIcon)picture.getIcon()).getImage();
+				}
+				catch(NullPointerException npe)
+				{
+					npe.printStackTrace();
+				}
 				// info.patient_image = picture.getIcon();
 				// info.doctor_degree = 
 				// info.doctor_hospital = 
@@ -1012,6 +1032,7 @@ class Form extends JFrame //implements ActionListener
 					if(update_log())
 					{
 						addComplaintToFile();
+						connection.unlockFile(reg_no_field.getText() + ".xml");
 						current_report_count = patientReport.Reports.size()-1;
 						next_button.setEnabled(false);
 						if(current_report_count == 0)
@@ -1078,6 +1099,13 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				int lockResponse = connection.lockFile(reg_no_field.getText() + ".xml");
+				if(lockResponse < 0)
+				{
+					JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(lockResponse));
+					return;
+				}
+				getPatientReport(reg_no_field.getText());
 				reg_no.setForeground(Color.WHITE);
 				status.setForeground(Color.WHITE);
 				date.setForeground(Color.WHITE);
@@ -1153,40 +1181,17 @@ class Form extends JFrame //implements ActionListener
 					print_button.setVisible(true);
 					patientComplaintEdit_button.setVisible(true);
 
-					int response = connection.receiveFromServer(patientReport.patientBasicData.getId() + ".xml",Constants.dataPath + "tempPatientReport.xml");
-					File file = new File(Constants.dataPath + "tempPatientReport.xml");
-					if(response  >= 0)
-					{
-						try
-						{
-							JAXBContext jc = JAXBContext.newInstance(PatientReport.class);
-							Unmarshaller um = jc.createUnmarshaller();
-							patientReport = (PatientReport)um.unmarshal(file);
-							file.delete();
-						}
-						catch(Exception e)
-						{
-							if(file.isFile())
-								file.delete();
-							e.printStackTrace();
-						}
+					patientReport.patientBasicData.setName(name_field.getText());
+					patientReport.patientBasicData.setReference(sdw_of_field.getText());
+					patientReport.patientBasicData.setOccupation(occupation_field.getText());
+					patientReport.patientBasicData.setPhone(ph_no_field.getText());
+					patientReport.patientBasicData.setAddress(address_area.getText());
+					patientReport.patientBasicData.setAge(age_field.getText());
+					patientReport.patientBasicData.setHeight(height_field.getText());
+					patientReport.patientBasicData.setFamilyhistory(family_history_area.getText());
+					patientReport.patientBasicData.setMedicalhistory(medical_history_area.getText());
 
-						patientReport.patientBasicData.setName(name_field.getText());
-						patientReport.patientBasicData.setReference(sdw_of_field.getText());
-						patientReport.patientBasicData.setOccupation(occupation_field.getText());
-						patientReport.patientBasicData.setPhone(ph_no_field.getText());
-						patientReport.patientBasicData.setAddress(address_area.getText());
-						patientReport.patientBasicData.setAge(age_field.getText());
-						patientReport.patientBasicData.setHeight(height_field.getText());
-						patientReport.patientBasicData.setFamilyhistory(family_history_area.getText());
-						patientReport.patientBasicData.setMedicalhistory(medical_history_area.getText());
-					}
-					else
-					{
-						if(file.isFile())
-							file.delete();
-						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
-					}
+					File file = new File(Constants.dataPath + "tempPatientReport.xml");
 
 					try
 					{
@@ -1213,14 +1218,14 @@ class Form extends JFrame //implements ActionListener
 						if(new File(Constants.dataPath + imageFileName).isFile())
 							new File(Constants.dataPath + imageFileName).delete();
 					}
-					response = connection.sendToServer(Constants.dataPath + "tempPatientReport.xml",Constants.finalDataPath + reg_no_field.getText() + ".xml");
+					int response = connection.sendToServer(Constants.dataPath + "tempPatientReport.xml",Constants.finalDataPath + reg_no_field.getText() + ".xml");
 					if(response < 0)
 					{
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
 					}
 					if(file.isFile())
 						file.delete();
-
+					connection.unlockFile(reg_no_field.getText() + ".xml");
 					setPatientReport();
 				}
 			}
@@ -1230,6 +1235,7 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				connection.unlockFile(reg_no_field.getText() + ".xml");
 				reg_no.setForeground(Color.BLACK);
 				status.setForeground(Color.BLACK);
 				date.setForeground(Color.BLACK);
@@ -1347,6 +1353,20 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+
+				int lockResponse = connection.lockFile(reg_no_field.getText() + ".xml");
+				if(lockResponse < 0)
+				{
+					JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(lockResponse));
+					return;
+				}
+				getPatientReport(reg_no_field.getText());
+				setPatientReport();
+				if(!doctor_name_field.getText().equals(""))
+				{
+					connection.unlockFile(reg_no_field.getText() + ".xml");
+					return;
+				}
 				HealthInfoPanel.setBackground(Color.GREEN.darker().darker());
 				weight.setForeground(Color.WHITE);
 				kg.setForeground(Color.WHITE);
@@ -1397,35 +1417,7 @@ class Form extends JFrame //implements ActionListener
 			{
 				if(validatePatientComplaint())
 				{
-					int response = connection.receiveFromServer(patientReport.patientBasicData.getId() + ".xml",Constants.dataPath + "tempPatientReport.xml");
 					File file = new File(Constants.dataPath + "tempPatientReport.xml");
-					if(response >= 0)
-					{
-						try
-						{
-							JAXBContext jc = JAXBContext.newInstance(PatientReport.class);
-							Unmarshaller um = jc.createUnmarshaller();
-							patientReport = (PatientReport)um.unmarshal(file);
-						}
-						catch(Exception e)
-						{
-							e.printStackTrace();
-						}
-						file.delete();
-					}
-					else 
-					{
-						if(file.isFile())
-							file.delete();
-						if(response == -2)
-							JOptionPane.showMessageDialog(jframe,"File does not exist");
-						else
-						{
-							JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
-							new KioskLogin();
-							dispose();
-						}
-					}
 
 					Report report = patientReport.Reports.get(current_report_count);
 					report.patientComplaint.setcomplaint(complaint_of_area.getText());
@@ -1489,7 +1481,7 @@ class Form extends JFrame //implements ActionListener
 						dispose();
 					}
 					file.delete();
-
+					connection.unlockFile(reg_no_field.getText() + ".xml");
 
 					HealthInfoPanel.setBackground(Constants.JPANELCOLOR1);
 					weight.setForeground(Color.BLACK);
@@ -1540,6 +1532,7 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				connection.unlockFile(reg_no_field.getText() + ".xml");
 				HealthInfoPanel.setBackground(Constants.JPANELCOLOR1);
 				weight.setForeground(Color.BLACK);
 				kg.setForeground(Color.BLACK);
@@ -2093,6 +2086,9 @@ class Form extends JFrame //implements ActionListener
 
 	private boolean update_log()
 	{
+		int lockResponse = connection.lockFile("Patient_" + Constants.kioskNo + "_Log.xml");
+		if(lockResponse < 0)
+			return false;
 		int response = connection.receiveFromServer("Patient_" + Constants.kioskNo + "_Log.xml",Constants.dataPath + "log.xml");
 		File file = new File(Constants.dataPath + "log.xml");
 		if(response  >= 0)
@@ -2114,14 +2110,17 @@ class Form extends JFrame //implements ActionListener
 				{
 					file.delete();
 					JOptionPane.showMessageDialog(this,networkErrorMessage);
+					connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
 					return false;
 				}
 				file.delete();
+				connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
 				return true;
 			}
 			catch(Exception e)
 			{
 				e.printStackTrace();
+				connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
 				return false;
 			}
 			
@@ -2131,6 +2130,7 @@ class Form extends JFrame //implements ActionListener
 			if(file.isFile())
 				file.delete();
 			JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+			connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
 			return false;
 		}
 	}
@@ -2856,6 +2856,11 @@ class Prescription_applet extends JFrame
 		catch(IOException ioe)
 		{
 			ioe.printStackTrace();
+		}
+		catch(NullPointerException npe)
+		{
+			npe.printStackTrace();
+			patient_picture_label.setText("No Image");
 		}
 
 		// patient_picture_label.setIcon(info.patient_image);

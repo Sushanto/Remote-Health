@@ -21,7 +21,7 @@ public class Constants
 	protected static Font HEADERFONT,SMALLLABELFONT,SMALLBUTTONFONT,BENGALILABELFONT,BENGALIBUTTONFONT;
 	protected static String tempDataPath = "temp/", finalDataPath = "final/Kiosk_01/", dataPath = "tempFolder/";
 	protected static String localServerHostName = "127.0.0.1";
-	protected static String kioskNo = "0x";
+	protected static String kioskNo = "0x",deviceId;
 	protected static int localServerPort = 36698;
 	protected static String language = "Bengali";
 
@@ -61,6 +61,7 @@ public class Constants
 		NAME_LABEL.setBounds(20,20,150,50);
 		NAME_LABEL.setForeground(LABELCOLOR4);
 		NAME_LABEL.setFont(new Font(NAME_LABEL.getFont().getName(),Font.BOLD,14));
+		deviceId = System.getProperty("user.name");
 
 		readInfo();
 
@@ -81,6 +82,9 @@ public class Constants
 				String[] tokens = line.split("=");
 				switch(tokens[0])
 				{
+					case "DEVICE_ID":
+						deviceId = tokens[1];
+						break;
 					case "KIOSK_NO":
 						kioskNo = tokens[1];
 						break;

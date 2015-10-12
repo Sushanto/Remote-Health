@@ -11,7 +11,7 @@
         <phone>454545</phone>
         <address>fgfgfgf</address>
         <occupation>fgfgf</occupation>
-        <status>New</status>
+        <status>Review</status>
         <height>454</height>
         <familyhistory>gfg</familyhistory>
         <medicalhistory>gfgf</medicalhistory>
@@ -36,6 +36,32 @@ Patient_01_12_15_10_11_18_45_52_1.jpg
 Patient_01_12_15_10_11_18_45_55_2.txt</fileNames>
                 <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
                 <prevDiagnosis>thth</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>12-10-2015</prescription_date>
+                <provisionalDiagnosis>fghf</provisionalDiagnosis>
+                <finalDiagnosis>fgf</finalDiagnosis>
+                <advice>gfg</advice>
+                <medication>gf</medication>
+                <diagnosis>fgfgfgf</diagnosis>
+                <referral>gf</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>tytytyty</complaint>
+                <complaint_date>12-10-2015</complaint_date>
+                <weight>45</weight>
+                <bmi>45</bmi>
+                <bp>545</bp>
+                <pulse>45</pulse>
+                <temperature>45</temperature>
+                <spo2>4545</spo2>
+                <otherResults>yty</otherResults>
+                <fileNames>Patient_01_12_15_10_12_19_00_57_0.gif</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>tyt</prevDiagnosis>
             </patientComplaint>
             <doctorPrescription/>
         </Report>

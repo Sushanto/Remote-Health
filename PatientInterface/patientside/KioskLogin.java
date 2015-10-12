@@ -268,7 +268,7 @@ class loginApplet extends JFrame
 				String username = useridBox.getText();
 				String password = new String(passwordBox.getPassword());
 
-				if(connection != null && connection.login(username,password))
+				if(connection != null && connection.login(Constants.deviceId,password))
 				{
 					if(check(username,password))
 					{

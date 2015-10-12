@@ -4,6 +4,9 @@ import java.io.*;
 import java.nio.file.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Collections;
+
 
 public class LocalServer
 {
@@ -13,6 +16,8 @@ public class LocalServer
 	// {
 
 	// }
+
+	protected static HashMap<String, String> filelocks;
 
 	private String clientHostName;
 	private int clientPort;
@@ -43,6 +48,7 @@ public class LocalServer
 		{
 			serverSocket = new ServerSocket(clientPort,1,InetAddress.getByName(clientHostName));
 			connections = new ArrayList<Connection>();
+			filelocks = new HashMap<String , String>();
 			// client=new KioskClientSync(kioskId,serverHostName,serverPort,syncFolder);
 			client = new KioskClient(kioskId,serverHostName,serverPort,syncFolder);
 			client.loginRequest(loginUsername,loginPassword);
@@ -52,6 +58,85 @@ public class LocalServer
 		{
 			e.printStackTrace();
 		}
+	}
+
+
+	/**
+	* Lock a file for getting/editing so that some edit operation can finish
+	* @param filename The name of the file to lock
+	*/
+	protected static synchronized int lockFile(String filename, String conId)
+	{
+
+		String lockerID = getLockerID(filename);
+		if (lockerID != null && !conId.equals(lockerID))
+			return RHErrors.RHE_OP_LOCKED;
+		int response = -1;
+		try
+		{
+			response = client.lockRequest(filename);
+		}
+		catch(Exception e)
+		{
+			return response;
+		}
+		if(response >= 0)
+			filelocks.put(filename, conId);
+		return response;
+	}
+
+	/**
+	* Unlock a previously locked file so that edit operations can continue
+	* @param filename the file to unlock
+	*/
+	protected static synchronized int unlockFile(String filename,String conId)
+	{
+		String lockerID = getLockerID(filename);
+		if (lockerID != null && !conId.equals(lockerID))
+			return RHErrors.RHE_OP_LOCKED;
+		int response = -1;
+		try
+		{
+			response = client.unlockRequest(filename);
+		}
+		catch(Exception e)
+		{
+			return response;
+		}
+		if(response >= 0)
+			filelocks.remove(filename);
+		return response;
+	}
+
+	/**
+	* Remove all locks belonging to a connection given by ID
+	* @param conId The ID of the connection
+	*/
+	protected static synchronized void removeLocks(String conId)
+	{
+		/* remove all entries that have conId as value */
+		filelocks.values().removeAll(Collections.singleton(conId));
+		for(HashMap.Entry<String,String> entry : filelocks.entrySet())
+		{
+			if(entry.getValue().equals(conId))
+			{
+				filelocks.remove(entry.getKey());
+				try
+				{
+					client.unlockRequest(entry.getKey());
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		return;
+	}
+
+	protected static synchronized String getLockerID(String filename)
+	{
+		return filelocks.get(filename);
 	}
 
 	private void readInfo()

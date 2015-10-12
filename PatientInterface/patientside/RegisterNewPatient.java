@@ -193,14 +193,17 @@ class BasicInformation
 			{
 				JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
 				file.delete();
+				connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");
 				new PatientLogin(connection,emp);
 				frame.dispose();
 			}
 			else file.delete();
+			connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");	
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
+			connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");	
 		}
 	}
 
@@ -211,6 +214,13 @@ class BasicInformation
 		this.dateVar = ft.format(date);
 		this.fileDirectory = Constants.dataPath + "";
 		// Thread.sleep(100);
+		int lockResponse = connection.lockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");
+		if(lockResponse < 0)
+		{
+			JOptionPane.showMessageDialog(this, RHErrors.getErrorDescription(lockResponse));
+			new KioskLogin();
+			frame.dispose();
+		}
 		int response = connection.receiveFromServer("Patient_" + Constants.kioskNo + "_IdCount.txt",Constants.dataPath + "PatientIdCount.txt");
 		if(response >= 0)
 		{

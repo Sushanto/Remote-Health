@@ -16,6 +16,8 @@ public class RHErrors {
 	public static final int RHE_NULL = -9;
 	public static final int RHE_NOPERM = -10;
 	public static final int RHE_BADARG = -11;
+	public static final int RHE_LOCKED = -12;
+	public static final int RHE_OP_LOCKED = -13;
 
 	/**
 	* Get a description of the error from an error number
@@ -57,6 +59,12 @@ public class RHErrors {
 			break;
 		case RHE_BADARG:
 			desc = "Wrong arguments";
+			break;
+		case RHE_LOCKED:
+			desc = "File locked by Someone";
+			break;
+		case RHE_OP_LOCKED:
+			desc = "File locked by Someone";
 			break;
 		default:
 			desc = "Error";

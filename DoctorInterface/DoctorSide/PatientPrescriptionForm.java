@@ -707,6 +707,27 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 				refresh_button.setVisible(true);
 				back2_button.setVisible(false);
 				submit_button.setVisible(false);
+
+				int unlockResponse = 0;
+				try
+				{
+					unlockResponse = connection.unlockRequest(reg_no_field.getText() + ".xml");
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(unlockResponse));
+					try
+					{
+						connection.logoutRequest();
+					}
+					catch(Exception ex)
+					{
+						e.printStackTrace();
+					}
+					new DoctorLogin();
+					dispose();
+				}
 			}
 		});
 
@@ -775,40 +796,79 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				if(patientReport.Reports.get(patientReport.Reports.size()-1).doctorPrescription.doctorName == null)
+				int lockResponse = 0;
+				try
 				{
-					current_report_count = patientReport.Reports.size()-1;
-					next_button.setEnabled(false);
-					if(current_report_count == 0)
-					{
-						prev_button.setEnabled(false);
-					}
-					setReport(current_report_count);
-
-					setDoctorPrescriptionEditable(true);
-					provisional_diagnosis_area.setText("");
-					final_diagnosis_area.setText("");
-					advice_area.setText("");
-					medication_area.setText("");
-					diagnostic_test_area.setText("");
-					referral_area.setText("");
-
-					doctor_name_field.setText(doctor.getDoctorName());
-					SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");
-					doctor_date_field.setText(date.format(new Date()));
-
-					back_button.setVisible(false);
-					refresh_button.setVisible(false);
-
-					back2_button.setVisible(true);
-					prev_button.setVisible(false);
-					next_button.setVisible(false);
-					submit_button.setVisible(true);
-					prescribeButton.setVisible(false);
-					prescriptionButton.setVisible(false);
+					lockResponse = connection.lockRequest(reg_no_field.getText() + ".xml");
 				}
-				else
-					JOptionPane.showMessageDialog(jframe,"Patient is already prescribed");
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(jframe,"Error");
+					return;
+				}
+				if(lockResponse >= 0)
+				{
+					getPatientReport(reg_no_field.getText());
+					setPatientReport();
+					if(patientReport.Reports.get(patientReport.Reports.size()-1).doctorPrescription.doctorName == null)
+					{
+						current_report_count = patientReport.Reports.size()-1;
+						next_button.setEnabled(false);
+						if(current_report_count == 0)
+						{
+							prev_button.setEnabled(false);
+						}
+						setReport(current_report_count);
+
+						setDoctorPrescriptionEditable(true);
+						provisional_diagnosis_area.setText("");
+						final_diagnosis_area.setText("");
+						advice_area.setText("");
+						medication_area.setText("");
+						diagnostic_test_area.setText("");
+						referral_area.setText("");
+
+						doctor_name_field.setText(doctor.getDoctorName());
+						SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");
+						doctor_date_field.setText(date.format(new Date()));
+
+						back_button.setVisible(false);
+						refresh_button.setVisible(false);
+
+						back2_button.setVisible(true);
+						prev_button.setVisible(false);
+						next_button.setVisible(false);
+						submit_button.setVisible(true);
+						prescribeButton.setVisible(false);
+						prescriptionButton.setVisible(false);
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(jframe,"Patient is already prescribed");
+						int unlockResponse = 0;
+						try
+						{
+							unlockResponse = connection.unlockRequest(reg_no_field.getText() + ".xml");
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+							JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(unlockResponse));
+							try
+							{
+								connection.logoutRequest();
+							}
+							catch(Exception ex)
+							{
+								e.printStackTrace();
+							}
+							new DoctorLogin();
+							dispose();
+						}
+					}
+				}
+				else JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(lockResponse));
 			}
 		});
 
@@ -1268,6 +1328,26 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		}
 		else
 			file.delete();
+		int unlockResponse = 0;
+		try
+		{
+			unlockResponse = connection.unlockRequest(reg_no_field.getText() + ".xml");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(unlockResponse));
+			try
+			{
+				connection.logoutRequest();
+			}
+			catch(Exception ex)
+			{
+				e.printStackTrace();
+			}
+			new DoctorLogin();
+			dispose();
+		}
 	}
 
 	private void setMedicationTimeButtonsEnabled(boolean enable)
@@ -1419,75 +1499,110 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	private boolean updatePatientLog()
 	{
 		String localFileName = Constants.dataFolder + "log.xml",serverFileName = "Patient_"+kioskNumber+"_Log.xml";
-		File localFile = new File(localFileName);
-		int receiveResponse = 0;
+		int lockResponse = 0;
 		try
 		{
-			receiveResponse = connection.getRequest(serverFileName,localFileName);
+			lockResponse = connection.lockRequest(serverFileName);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(this,"Error in locking");
 		}
-		if(receiveResponse >= 0)
+		if(lockResponse >= 0)
 		{
+			File localFile = new File(localFileName);
+			int receiveResponse = 0;
 			try
 			{
-				JAXBContext jc = JAXBContext.newInstance(PatientLog.class);
-				Unmarshaller um = jc.createUnmarshaller();
-				PatientLog patientLog = (PatientLog)um.unmarshal(localFile);
-
-				if(patientLog.Normal.indexOf(reg_no_field.getText()) != -1)
-					patientLog.Normal.remove(reg_no_field.getText());
-				else if(patientLog.Emergency.indexOf(reg_no_field.getText()) != -1)
-					patientLog.Emergency.remove(reg_no_field.getText());
-
-				Marshaller jm = jc.createMarshaller();
-				jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-				jm.marshal(patientLog,localFile);
-			}
-			catch(JAXBException jaxbe)
-			{
-				jaxbe.printStackTrace();
-			}
-			int sendResponse = 0;
-			try
-			{
-				sendResponse = connection.putRequest(localFileName,serverFileName);
+				receiveResponse = connection.getRequest(serverFileName,localFileName);
 			}
 			catch(Exception e)
 			{
 				e.printStackTrace();
 			}
-			if(sendResponse < 0)
+			if(receiveResponse >= 0)
 			{
-				localFile.delete();
-				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(sendResponse));
 				try
 				{
-					connection.logoutRequest();
+					JAXBContext jc = JAXBContext.newInstance(PatientLog.class);
+					Unmarshaller um = jc.createUnmarshaller();
+					PatientLog patientLog = (PatientLog)um.unmarshal(localFile);
+
+					if(patientLog.Normal.indexOf(reg_no_field.getText()) != -1)
+						patientLog.Normal.remove(reg_no_field.getText());
+					else if(patientLog.Emergency.indexOf(reg_no_field.getText()) != -1)
+						patientLog.Emergency.remove(reg_no_field.getText());
+
+					Marshaller jm = jc.createMarshaller();
+					jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+					jm.marshal(patientLog,localFile);
+				}
+				catch(JAXBException jaxbe)
+				{
+					jaxbe.printStackTrace();
+				}
+				int sendResponse = 0;
+				try
+				{
+					sendResponse = connection.putRequest(localFileName,serverFileName);
 				}
 				catch(Exception e)
 				{
 					e.printStackTrace();
 				}
-				for(File tempFile: new File(Constants.dataFolder).listFiles())
-					tempFile.delete();
-				new DoctorLogin();
-				dispose();
-				return false;
+				if(sendResponse < 0)
+				{
+					localFile.delete();
+					JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(sendResponse));
+					try
+					{
+						connection.logoutRequest();
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+					for(File tempFile: new File(Constants.dataFolder).listFiles())
+						tempFile.delete();
+					new DoctorLogin();
+					dispose();
+					return false;
+				}
+				localFile.delete();
+				try
+				{
+					connection.unlockRequest(serverFileName);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				return true;
 			}
-			localFile.delete();
-			return true;
+			else
+			{
+				if(localFile.isFile())
+					localFile.delete();
+				if(receiveResponse == -2)
+					JOptionPane.showMessageDialog(this,"File does not exists");
+				else
+					JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(receiveResponse));
+				try
+				{
+					connection.unlockRequest(serverFileName);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				return false;
+
+			}
 		}
 		else
 		{
-			if(localFile.isFile())
-				localFile.delete();
-			if(receiveResponse == -2)
-				JOptionPane.showMessageDialog(this,"File does not exists");
-			else
-				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(receiveResponse));
+			JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(lockResponse));
 			return false;
 		}
 	}

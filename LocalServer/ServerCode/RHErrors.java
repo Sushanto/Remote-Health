@@ -1,9 +1,10 @@
 package ServerCode;
-
 /**
-*Defines error numbers used throught the system
+*	Defines error numbers used throught the system
+*	error numbers are all negative, starting from -1
 **/
 public class RHErrors {
+	/* Error number definitions */
 	public static final int RHE_GENERAL = -1;
 	public static final int RHE_FNF = -2;
 	public static final int RHE_BADCOM = -3;
@@ -15,7 +16,14 @@ public class RHErrors {
 	public static final int RHE_NULL = -9;
 	public static final int RHE_NOPERM = -10;
 	public static final int RHE_BADARG = -11;
+	public static final int RHE_LOCKED = -12;
+	public static final int RHE_OP_LOCKED = -13;
 
+	/**
+	* Get a description of the error from an error number
+	* @param errorNum The error number
+	* @return String The description of the error
+	*/
 	public static synchronized String getErrorDescription(int errorNum) {
 		if (errorNum >= 0)
 			return "No error";
@@ -51,6 +59,12 @@ public class RHErrors {
 			break;
 		case RHE_BADARG:
 			desc = "Wrong arguments";
+			break;
+		case RHE_LOCKED:
+			desc = "File locked by Doctor";
+			break;
+		case RHE_OP_LOCKED:
+			desc = "File locked by Operator";
 			break;
 		default:
 			desc = "Error";

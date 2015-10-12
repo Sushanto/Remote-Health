@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_16</id>
+        <date>13-10-2015</date>
+        <name>jyjyjyjyj</name>
+        <image>Patient_01_16_image.jpg</image>
+        <reference>Son of yjyjy</reference>
+        <gender>Male</gender>
+        <age>54</age>
+        <phone>45</phone>
+        <address>yjy</address>
+        <occupation>yjyj</occupation>
+        <status>Review</status>
+        <height>45</height>
+        <familyhistory>jyj</familyhistory>
+        <medicalhistory>jyjy</medicalhistory>
+    </PatientBasicData>
+    <Reports>
+        <Report>
+            <patientComplaint>
+                <complaint>rgrgr</complaint>
+                <complaint_date>13-10-2015</complaint_date>
+                <weight>45</weight>
+                <bmi>45</bmi>
+                <bp>45</bp>
+                <pulse>45</pulse>
+                <temperature>45</temperature>
+                <spo2>45</spo2>
+                <otherResults>rfgrg</otherResults>
+                <fileNames>Patient_01_16_15_10_13_00_55_13_0.pdf</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>yj</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>13-10-2015</prescription_date>
+                <provisionalDiagnosis>fe</provisionalDiagnosis>
+                <finalDiagnosis>fefefefe</finalDiagnosis>
+                <advice>fef</advice>
+                <medication>fefef</medication>
+                <diagnosis>efef</diagnosis>
+                <referral>efe</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>hthth</complaint>
+                <complaint_date>13-10-2015</complaint_date>
+                <weight>45</weight>
+                <bmi>45</bmi>
+                <bp>45</bp>
+                <pulse>45</pulse>
+                <temperature>45</temperature>
+                <spo2>45</spo2>
+                <otherResults>thththAnemia
+Edema
+</otherResults>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>ht</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>13-10-2015</prescription_date>
+                <provisionalDiagnosis>dfdf</provisionalDiagnosis>
+                <finalDiagnosis>dfd</finalDiagnosis>
+                <advice>fdf</advice>
+                <medication>f</medication>
+                <diagnosis>dfdf</diagnosis>
+                <referral>dfd</referral>
+            </doctorPrescription>
+        </Report>
+    </Reports>
+</PatientReport>

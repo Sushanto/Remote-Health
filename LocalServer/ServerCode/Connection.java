@@ -31,6 +31,7 @@ class Connection extends Thread
 	private DataOutputStream outStream;
 	private DataInputStream inStream;
 	private static final int FILE_SIZE=6022386;
+	private String connectionId;
 
 	protected Connection(Socket socket)
 	{
@@ -123,6 +124,12 @@ class Connection extends Thread
 					case "RECEIVE_FILE":
 						receiveFromClient();
 						break;
+					case "LOCK_FILE":
+						lockFile();
+						break;
+					case "UNLOCK_FILE":
+						unlockFile();
+						break;
 				}
 			}
 		}
@@ -131,6 +138,41 @@ class Connection extends Thread
 			// e.printStackTrace();
 			disconnect();
 			LocalServer.remove(this);
+			LocalServer.removeLocks(connectionId);
+		}
+	}
+
+	private boolean lockFile()
+	{
+		try
+		{
+			String fileName = receiveString();
+			System.out.println("Lock request: " + fileName);
+			int response = LocalServer.lockFile(fileName , connectionId);
+			sendInt(response);
+			return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private boolean unlockFile()
+	{
+		try
+		{
+			String fileName = receiveString();
+			System.out.println("Unlock request: " + fileName);
+			int response = LocalServer.unlockFile(fileName , connectionId);
+			sendInt(response);
+			return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
 		}
 	}
 
@@ -142,18 +184,28 @@ class Connection extends Thread
 			String[] fileInfo=localFileName.split(" ");
 			String[] folders=fileInfo[0].split("/");
 			System.out.println("Requested file: "+localFileName);
+
+			String lockerID = LocalServer.getLockerID(folders[folders.length - 1]);
+			if (lockerID != null && !connectionId.equals(lockerID))
+			{
+				sendInt(RHErrors.RHE_OP_LOCKED);
+				System.out.println(RHErrors.RHE_OP_LOCKED);
+				return false;
+			}
+			else sendInt(0);
+
 			receiveFile1(fileInfo[0],Integer.parseInt(fileInfo[1]));
 			checkAndDecode(fileInfo[0]);
 			System.out.println("File received: "+localFileName);
 			sendInt(0);
 			if((folders[0]+"/"+folders[1]).equals(LocalServer.finalDataPath))
 			{
-				File file=new File(LocalServer.tempDataPath+"/"+folders[2]);
+				File file=new File(LocalServer.tempDataPath+"/"+folders[folders.length - 1]);
 				if(file.isFile())
 					file.delete();
 				Thread.sleep(3000);
 				System.out.println("Syncing...");
-				LocalServer.client.putRequest(fileInfo[0],folders[2]);
+				LocalServer.client.putRequest(fileInfo[0],folders[folders.length - 1]);
 				System.out.println("Sync complete...");
 			}
 			return true;
@@ -171,6 +223,16 @@ class Connection extends Thread
 		{
 			String localFileName=receiveString();
 			System.out.println("Requested file: "+localFileName);
+
+			String lockerID = LocalServer.getLockerID(localFileName);
+			if (lockerID != null && !connectionId.equals(lockerID))
+			{
+				sendInt(RHErrors.RHE_OP_LOCKED);
+				System.out.println(RHErrors.RHE_OP_LOCKED);
+				return false;
+			}
+			else sendInt(0);
+
 			File tempFile = new File(LocalServer.tempDataPath+"/"+localFileName);
 			if(tempFile.isFile())
 			{
@@ -344,7 +406,7 @@ class Connection extends Thread
 		{
 			if(receiveString().equals("LOGIN"))
 			{
-				String username=receiveString();
+				connectionId=receiveString();
 				String password=receiveString();
 				sendString("LOGGED_IN");
 				return true;

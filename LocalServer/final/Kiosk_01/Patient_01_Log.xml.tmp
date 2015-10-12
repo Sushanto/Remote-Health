@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <patientLog>
-    <Emergency>Patient_01_12</Emergency>
+    <Emergency>Patient_01_16</Emergency>
     <Normal>Patient_01_11</Normal>
-    <Normal>Patient_01_14</Normal>
 </patientLog>

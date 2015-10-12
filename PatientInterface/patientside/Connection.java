@@ -71,12 +71,47 @@ public class Connection
 		}
 	}
 
+	protected int lockFile(String fileName)
+	{
+		try
+		{
+			sendString("LOCK_FILE");
+			sendString(fileName);
+			int response = receiveInt();
+			return response;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	protected int unlockFile(String fileName)
+	{
+		try
+		{
+			sendString("UNLOCK_FILE");
+			sendString(fileName);
+			int response = receiveInt();
+			return response;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
 	protected int receiveFromServer(String serverFileName,String localFileName)
 	{
 		try
 		{
 			sendString("SEND_FILE");
 			sendString(serverFileName);
+			int lockResponse = receiveInt();
+			if(lockResponse < 0)
+				return lockResponse;
 			int response = receiveInt();
 			if(response >= 0)
 			{
@@ -100,6 +135,9 @@ public class Connection
 			sendString("RECEIVE_FILE");
 			File localFile = new File(localFileName);
 			sendString(serverFileName + " " + localFile.length());
+			int lockResponse = receiveInt();
+			if(lockResponse < 0)
+				return lockResponse;
 			localFile = checkAndEncode(localFileName);
 			sendFile(localFile);
 			localFile.delete();
