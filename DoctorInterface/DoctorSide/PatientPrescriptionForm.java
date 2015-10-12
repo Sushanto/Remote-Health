@@ -82,10 +82,10 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	private JScrollPane address_pane,family_history_pane, medical_history_pane, complaint_of_pane,  on_examination_pane, advice_pane, medication_pane, diagnostic_test_pane, provisional_diagnosis_pane, final_diagnosis_pane, referral_pane;
 	private JButton refresh_button,pictureDownloadButton,back_button,back2_button,submit_button,next_button,prev_button,prescribeButton,prescriptionButton;
 	private JPanel BasicDataPanel,HealthInfoPanel,DoctorPrescriptionPanel,KioskCoordinatorPanel,DoctorPanel,ButtonPanel,CommunicationPanel;
-	private JLabel medicationTypeLabel,medicationNameLabel,medicationDoseLabel,medicationDurationLabel,additionalReportsLabel;
-	private JComboBox<String> additionalReportsComboBox,medicationTypeComboBox,medicationNameComboBox,medicationDoseComboBox,medicationInstructionComboBox1,medicationInstructionComboBox2,medicationTimeComboBox1,medicationTimeComboBox2,medicationDurationComboBox1,medicationDurationComboBox2;
+	private JLabel medicationTypeLabel,medicationNameLabel,medicationDoseLabel,medicationDurationLabel,additionalReportsLabel,prevDateLabel;
+	private JComboBox<String> prevDateComboBox,additionalReportsComboBox,medicationTypeComboBox,medicationNameComboBox,medicationDoseComboBox,medicationInstructionComboBox1,medicationInstructionComboBox2,medicationTimeComboBox1,medicationTimeComboBox2,medicationDurationComboBox1,medicationDurationComboBox2;
 	private JTextField medicationTimeField,medicationInstructionField;
-	private JButton medicationTimeButton,medicationInstructionButton,medicationSelectButton,medicationResetButton,additionalReportsButton;
+	private JButton prevDateButton,medicationTimeButton,medicationInstructionButton,medicationSelectButton,medicationResetButton,additionalReportsButton;
 	private JRadioButton medicationTimeRadioButton,medicationInstructionRadioButton;
 	private ButtonGroup medicationButtonGroup;
 	private PatientReport patientReport;
@@ -160,6 +160,9 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	    medicationDoseLabel.setText("Dose :");
 	    medicationDurationLabel.setText("Duration :");
 
+	    prevDateLabel.setText("Previous prescription : ");
+	    prevDateButton.setText("Select");
+
 	    medicationTimeRadioButton.setText("Timing :");
 	    medicationInstructionRadioButton.setText("Instruction:");
 
@@ -227,6 +230,9 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	    medicationInstructionButton.setFont(Constants.SMALLBUTTONFONT);
 	    medicationSelectButton.setFont(Constants.SMALLBUTTONFONT);
 	    medicationResetButton.setFont(Constants.SMALLBUTTONFONT);
+
+	    prevDateLabel.setFont(Constants.SMALLBUTTONFONT);
+	    prevDateButton.setFont(Constants.SMALLBUTTONFONT);
 
         back_button.setText("Back");
         refresh_button.setText("Refresh");
@@ -386,6 +392,10 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 	    medicationInstructionButton  =  new JButton();
 	    medicationSelectButton  =  new JButton();
 	    medicationResetButton  =  new JButton();
+
+	    prevDateLabel = new JLabel();
+	    prevDateComboBox = new JComboBox<String>();
+	    prevDateButton = new JButton();
 
 	    medicationTimeField  =  new JTextField();
 	    medicationInstructionField  =  new JTextField();
@@ -613,6 +623,10 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		submit_button.setBounds(1200,15,150,25);
 		prescriptionButton.setBounds(240,710,250,25);
 
+		prevDateLabel.setBounds(835,710,170,25);
+		prevDateComboBox.setBounds(1005,710,150,25);
+		prevDateButton.setBounds(1155,710,100,25);
+
 		medicationTypeLabel.setForeground(Color.WHITE);
 		medicationNameLabel.setForeground(Color.WHITE);
 		medicationTimeRadioButton.setForeground(Color.WHITE);
@@ -835,7 +849,14 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 				Information info = new Information();
 				info.date = doctor_date_field.getText();
 				info.doctor_name = doctor_name_field.getText();
-				info.patient_image=((ImageIcon)picture.getIcon()).getImage();
+				try
+				{
+					info.patient_image=((ImageIcon)picture.getIcon()).getImage();
+				}
+				catch(NullPointerException npe)
+				{
+					npe.printStackTrace();
+				}
 				// info.patient_image = picture.getIcon();
 				// info.doctor_degree = 
 				// info.doctor_hospital = 
@@ -959,6 +980,17 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			}
 		});
 
+		prevDateButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent ae)
+			{
+				current_report_count = prevDateComboBox.getSelectedIndex();
+				setReport(current_report_count);
+				prev_button.setEnabled(current_report_count != 0);
+				next_button.setEnabled(current_report_count != (patientReport.Reports.size() -1));
+			}
+		});
+
 		
 
 		add(form_label);
@@ -1047,6 +1079,10 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		add(submit_button);
 		add(pictureDownloadButton);
 		add(prescriptionButton);
+
+		add(prevDateLabel);
+		add(prevDateComboBox);
+		add(prevDateButton);
 
 		medicationButtonGroup.add(medicationTimeRadioButton);
 		medicationButtonGroup.add(medicationInstructionRadioButton);
@@ -1616,10 +1652,23 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 		{
 			current_report_count = patientReport.Reports.size()-1;
 			next_button.setEnabled(false);
-			status_field.setText("Review");
+			// if(patientReport.Reports.size() > 1)
+			// 	status_field.setText("Review");
 			if(current_report_count == 0)
 			{
 				prev_button.setEnabled(false);
+				prevDateLabel.setEnabled(false);
+				prevDateComboBox.setEnabled(false);
+				prevDateButton.setEnabled(false);
+			}
+			else
+			{
+				for(int i = 0; i < patientReport.Reports.size(); i++)
+				{
+					Report tempReport = patientReport.Reports.get(i);
+					if(tempReport.doctorPrescription.Prescription_Date != null)
+						prevDateComboBox.addItem(tempReport.doctorPrescription.Prescription_Date);
+				}
 			}
 			setReport(current_report_count);
 		}
@@ -1628,6 +1677,8 @@ public class PatientPrescriptionForm extends JFrame //implements ActionListener
 			next_button.setEnabled(false);
 			prev_button.setEnabled(false);
 		}
+		if(prevDateComboBox.getItemCount() > 0)
+			prevDateComboBox.setSelectedIndex(prevDateComboBox.getItemCount() - 1);
 	}
 
 	private String[] getMedicineNameList()
@@ -2313,6 +2364,12 @@ class Prescription_applet extends JFrame
 		catch(IOException ioe)
 		{
 			ioe.printStackTrace();
+			patient_picture_label.setText("No Image");
+		}
+		catch(NullPointerException npe)
+		{
+			npe.printStackTrace();
+			patient_picture_label.setText("No Image");
 		}
 		// patient_picture_label.setIcon(info.patient_image);
 
