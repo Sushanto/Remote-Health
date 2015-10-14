@@ -1,4 +1,8 @@
 package DoctorSide;
+/**
+* @author Sushanto Halder
+*/
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -96,7 +100,9 @@ public class FileConverter {
 	}
 }
 
-
+/**
+* XML annotated class for binary files
+*/
 @XmlRootElement(name="FileData")
 @XmlType(propOrder={"binaryData"})
 class FileData

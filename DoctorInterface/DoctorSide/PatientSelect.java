@@ -1,4 +1,7 @@
 package DoctorSide;
+/**
+* @author Sushanto Halder
+*/
 
 import java.io.File;
 import javax.swing.JFrame;
@@ -30,8 +33,12 @@ import javax.xml.bind.JAXBException;
 import java.util.Collections;
 import java.util.ArrayList;
 
-public class PatientSelect extends JFrame
+/**
+* Select a patient from waiting list, visited list or search by name
+*/
+public class PatientSelect
 {
+	private JFrame patientSelectFrame;
 	private JButton group2KioskSelectButton,group2PatientSelectButton,group1PatientSelectButton,group3PatientSelectButton,backButton,confirmButton;
 	private JTextField group3PatientIdField,group1PatientNameField;
 	private JLabel group2KioskSelectLabel,group2PatientSelectLabel,group1PatientSelectLabel,frameLabel,group3WarningLabel;
@@ -47,6 +54,9 @@ public class PatientSelect extends JFrame
 	private final Doctor doctor;
 	private boolean isGroup2ListFilled = false;
 	
+	/**
+	* Set text of all labels and buttons
+	*/
 	private void setLanguage()
 	{
 		frameLabel.setText("PATIENT SELECT");
@@ -57,7 +67,8 @@ public class PatientSelect extends JFrame
 		group1RadioButton.setText("Recently Visited Patient :");
 		group1PatientSelectLabel.setText("Select Patient :");
 		group1PatientSelectButton.setText("Select");
-		group1PatientNameField.setText(doctor.patientNameList.get(doctor.patientNameList.size()-1));
+		if(doctor.getPatientNameList().size() > 0)
+			group1PatientNameField.setText(doctor.getPatientNameList().get(doctor.getPatientNameList().size()-1));
 
 		group2RadioButton.setText("Waiting Patients :");
 		group2KioskSelectLabel.setText("Select Kiosk :");
@@ -93,22 +104,25 @@ public class PatientSelect extends JFrame
 		textFieldInfoMessage = "Enter registration no.";
 	}
 
-
-
-
+	/**
+	* Creates the GUI
+	* @param myCon DoctorClient object, used for file transfer between server and client
+	* @param doc Doctor object, information of doctor
+	*/
 	protected PatientSelect(DoctorClient myCon,Doctor doc)
 	{
+		patientSelectFrame = new JFrame();
 		connection = myCon;
 		doctor = doc;
-		final JFrame jframe = this;
+		final JFrame jframe = patientSelectFrame;
 		
 		font = new Font("Monotype Corsiva",Font.BOLD,15);
-		setSize(Constants.SIZE_X,Constants.SIZE_Y);
-		setResizable(false);
-		setTitle("PATIENT SELECT");
-		setVisible(true);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
+		patientSelectFrame.setSize(Constants.SIZE_X,Constants.SIZE_Y);
+		patientSelectFrame.setResizable(false);
+		patientSelectFrame.setTitle("PATIENT SELECT");
+		patientSelectFrame.setVisible(true);
+		patientSelectFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		patientSelectFrame.addWindowListener(new WindowAdapter()
 		{
 			@Override
 			public void windowClosing(WindowEvent we)
@@ -116,7 +130,7 @@ public class PatientSelect extends JFrame
 				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
                     System.exit(0);
-					dispose();
+					patientSelectFrame.dispose();
 				}
 			}
 		});
@@ -154,9 +168,9 @@ public class PatientSelect extends JFrame
 
 		groupSelect = new ButtonGroup();
 
-		Collections.reverse(doctor.patientIdList);
-		group1PatientSelectComboBox.setModel(getDefaultComboBoxModel(doctor.patientIdList));
-		Collections.reverse(doctor.patientIdList);
+		Collections.reverse(doctor.getPatientIdList());
+		group1PatientSelectComboBox.setModel(getDefaultComboBoxModel(doctor.getPatientIdList()));
+		Collections.reverse(doctor.getPatientIdList());
 
 		// nameLabel = new JLabel("Name :");
 		// dob_label = new JLabel("Date of Birth : ");
@@ -235,7 +249,7 @@ public class PatientSelect extends JFrame
 					e.printStackTrace();
 				}
 				new DoctorLogin();
-				dispose();
+				patientSelectFrame.dispose();
 			}
 		});
 
@@ -274,8 +288,8 @@ public class PatientSelect extends JFrame
 			public void itemStateChanged(ItemEvent ie)
 			{
 				int reverseIdIndex = group1PatientSelectComboBox.getSelectedIndex();
-				int nameIndex = doctor.patientNameList.size()-reverseIdIndex-1;
-				group1PatientNameField.setText(doctor.patientNameList.get(nameIndex));
+				int nameIndex = doctor.getPatientNameList().size()-reverseIdIndex-1;
+				group1PatientNameField.setText(doctor.getPatientNameList().get(nameIndex));
 			}
 		});
 
@@ -292,6 +306,11 @@ public class PatientSelect extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				/*
+				* Get patient log from that partculat Kiosk
+				* Set it to combobox
+				* If no patient log found show error message
+				*/
 				String fileName = Constants.dataFolder+"tempLog.xml";
 				File file = new File(fileName);
 				int response=0;
@@ -358,7 +377,7 @@ public class PatientSelect extends JFrame
 							e.printStackTrace();
 						}
 						new DoctorLogin();
-						dispose();
+						patientSelectFrame.dispose();
 					}
 				}
 			}
@@ -423,50 +442,50 @@ public class PatientSelect extends JFrame
 				String[] tempArray = patientReport.patientBasicData.getId().split("_");
 				String kioskNumber = tempArray[1];
 				new PatientPrescriptionForm(connection,doctor,patientReport,kioskNumber);
-				dispose();
+				patientSelectFrame.dispose();
 			}
 		});
 
 		Constants.NAME_LABEL.setText(doctor.getDoctorName());
 		// Constants.JPANEL1.setBounds(0,550,900,400);
 
-		add(frameLabel);
-		add(group3WarningLabel);
-		add(backButton);
-		add(confirmButton);
+		patientSelectFrame.add(frameLabel);
+		patientSelectFrame.add(group3WarningLabel);
+		patientSelectFrame.add(backButton);
+		patientSelectFrame.add(confirmButton);
 
 		groupSelect.add(group1RadioButton);
-		add(group1PatientSelectLabel);
-		add(group1PatientSelectComboBox);
-		add(group1PatientNameField);
-		add(group1PatientSelectButton);
+		patientSelectFrame.add(group1PatientSelectLabel);
+		patientSelectFrame.add(group1PatientSelectComboBox);
+		patientSelectFrame.add(group1PatientNameField);
+		patientSelectFrame.add(group1PatientSelectButton);
 
 		groupSelect.add(group2RadioButton);
-		add(group2KioskSelectLabel);
-		add(group2KioskSelectComboBox);
-		add(group2KioskSelectButton);
-		add(group2PatientSelectLabel);
-		add(group2PatientSelectComboBox);
-		add(group2PatientSelectButton);
+		patientSelectFrame.add(group2KioskSelectLabel);
+		patientSelectFrame.add(group2KioskSelectComboBox);
+		patientSelectFrame.add(group2KioskSelectButton);
+		patientSelectFrame.add(group2PatientSelectLabel);
+		patientSelectFrame.add(group2PatientSelectComboBox);
+		patientSelectFrame.add(group2PatientSelectButton);
 
 
 		groupSelect.add(group3RadioButton);
-		add(group3PatientSelectLabel);
-		add(group3PatientIdField);
-		add(group3PatientSelectButton);
+		patientSelectFrame.add(group3PatientSelectLabel);
+		patientSelectFrame.add(group3PatientIdField);
+		patientSelectFrame.add(group3PatientSelectButton);
 
-		add(group2RadioButton);
-		add(group1RadioButton);
-		add(group3RadioButton);
-		add(nameValue);
-		add(Constants.NAME_LABEL);
+		patientSelectFrame.add(group2RadioButton);
+		patientSelectFrame.add(group1RadioButton);
+		patientSelectFrame.add(group3RadioButton);
+		patientSelectFrame.add(nameValue);
+		patientSelectFrame.add(Constants.NAME_LABEL);
 
-		add(patientInformationPanel);
-		add(group1Panel);
-		add(group2Panel);
-		add(group3Panel);
-		add(Constants.JPANEL2);
-		add(Constants.JPANEL1);
+		patientSelectFrame.add(patientInformationPanel);
+		patientSelectFrame.add(group1Panel);
+		patientSelectFrame.add(group2Panel);
+		patientSelectFrame.add(group3Panel);
+		patientSelectFrame.add(Constants.JPANEL2);
+		patientSelectFrame.add(Constants.JPANEL1);
 
 		setGroup1Enabled(false);
 		setGroup2Enabled(true);
@@ -475,6 +494,10 @@ public class PatientSelect extends JFrame
 		confirmButton.setVisible(false);
 	}
 
+	/**
+	* Set patient name and age visible or non-visible
+	* @param visible if true, set visible else set non-visible
+	*/
 	private void setPatientBasicDataVisible(boolean visible)
 	{
 		patientInformationPanel.setVisible(visible);
@@ -483,6 +506,10 @@ public class PatientSelect extends JFrame
 		group3WarningLabel.setVisible(!visible);
 	}
 
+	/**
+	* Let group1 labels and buttons enable
+	* @param enable If true, set enable else disable
+	*/
 	private void setGroup1Enabled(boolean enable)
 	{
 		group1PatientSelectLabel.setEnabled(enable);
@@ -492,6 +519,10 @@ public class PatientSelect extends JFrame
 		// group1Panel.setEnabled(enable);
 	}
 
+	/**
+	* Let group2 labels and buttons enable
+	* @param enable If true, set enable else disable
+	*/
 	private void setGroup2Enabled(boolean enable)
 	{
 		group2KioskSelectLabel.setEnabled(enable);
@@ -503,6 +534,10 @@ public class PatientSelect extends JFrame
 		// group2Panel.setEnabled(enable);
 	}
 
+	/**
+	* Let group3 labels and buttons enable
+	* @param enable If true, set enable else disable
+	*/
 	private void setGroup3Enabled(boolean enable)
 	{
 		group3PatientSelectLabel.setEnabled(enable);
@@ -512,6 +547,11 @@ public class PatientSelect extends JFrame
 		// group3Panel.setEnabled(enable);
 	}
 
+	/**
+	* Change combobox options
+	* @param list List of new choices
+	* @return New set of choices in combobox
+	*/
 	private DefaultComboBoxModel<String> getDefaultComboBoxModel(ArrayList<String> list)
 	{
 		String []array = new String[list.size()];
@@ -519,6 +559,10 @@ public class PatientSelect extends JFrame
 		return new DefaultComboBoxModel<String>(array);
 	}
 
+	/**
+	* Download the patient file specified by patientId, and set name and age
+	* @param patientId Id of patient choosed by doctor
+	*/
 	private void selectButtonAction(String patientId)
 	{
 		String fileName = Constants.dataFolder+"tempPatientReport.xml";
@@ -562,7 +606,7 @@ public class PatientSelect extends JFrame
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+				JOptionPane.showMessageDialog(patientSelectFrame,RHErrors.getErrorDescription(response));
 				try
 				{
 					connection.logoutRequest();
@@ -572,7 +616,7 @@ public class PatientSelect extends JFrame
 					e.printStackTrace();
 				}
 				new DoctorLogin();
-				dispose();
+				patientSelectFrame.dispose();
 			}
 		}
 	}

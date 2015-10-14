@@ -1,4 +1,8 @@
 package DoctorSide;
+/**
+* @author Sushanto Halder
+*/
+
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
@@ -6,7 +10,9 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 
-
+/**
+* PatientReport class, stores all the reports of a patient, XML annotated
+*/
 @XmlRootElement(name="PatientReport")
 @XmlType(propOrder={"patientBasicData","reports"})
 public class PatientReport

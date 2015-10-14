@@ -1,11 +1,19 @@
 package DoctorSide;
 
+/**
+* @author Sushanto Halder
+*/
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
+/**
+* PatientComplaint class, stores patient's complaint, XML annotated
+*/
 @XmlRootElement
 @XmlType(propOrder={"complaint","complaint_date",
 	"weight","bmi","bp","pulse","temperature","spo2","otherResults","fileNames",
@@ -14,7 +22,6 @@ import java.util.Date;
 	})
 public class PatientComplaint
 {
-	// String complaint;
 	String complaint, complaint_date;
 	String Weight,Bmi,Bp,Pulse,Temperature,Spo2,OtherResults,FileNames;
 	String KioskCoordinatorName;

@@ -1,10 +1,16 @@
 package DoctorSide;
+/**
+* @author Sushanto Halder
+*/
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
+/**
+* PatientBasicData class, stores patient's basic data, XML annotated
+*/
 @XmlRootElement(name="PatientBasicData")
 @XmlType(propOrder={"id","date","name","image","reference","gender","age","phone","address","occupation","status","height",
 "familyhistory","medicalhistory"})

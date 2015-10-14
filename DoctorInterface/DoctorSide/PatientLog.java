@@ -1,14 +1,20 @@
 package DoctorSide;
 
+/**
+* @author Sushanto Halder
+*/
+
 import java.util.ArrayList;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
+/**
+* PatientLog class, stores list of visited and waiting patient, XML annotated
+*/
 @XmlRootElement
 @XmlType(propOrder={"Emergency","Normal"})
-class PatientLog
+public class PatientLog
 {
 	@XmlElement
 	ArrayList<String> Emergency=new ArrayList<String>();

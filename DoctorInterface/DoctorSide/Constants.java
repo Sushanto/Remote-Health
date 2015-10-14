@@ -1,5 +1,9 @@
 package DoctorSide;
 
+/**
+* @author Sushanto Halder
+*/
+
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.BorderFactory;
@@ -13,6 +17,9 @@ import java.io.FileReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+* Constants class to store constant values as static members
+*/
 public class Constants
 {
 	protected static final int SIZE_X = 900,SIZE_Y = 700,PANEL2_HEIGHT = 100;
@@ -62,12 +69,18 @@ public class Constants
 		NAME_LABEL.setForeground(LABELCOLOR4);
 		NAME_LABEL.setFont(new Font(NAME_LABEL.getFont().getName(),Font.BOLD,14));
 
+		/*
+		* Get system username as default doctor id
+		*/
 		doctorId = System.getProperty("user.name");
 		dataFolder = "tempFolder/";
 		readInfo();
 
 	}
 
+	/**
+	* Reads information such as Ip address, port etc. from DoctorMetadata.cfg file
+	*/
 	private static void readInfo()
 	{
 		try
@@ -79,6 +92,9 @@ public class Constants
 			String line;
 			while((line = bReader.readLine()) != null)
 			{
+				/*
+				* Split the line and check for token
+				*/
 				String[] tokens = line.split("=");
 				switch(tokens[0])
 				{

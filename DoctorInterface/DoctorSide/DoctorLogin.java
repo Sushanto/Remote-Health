@@ -1,61 +1,32 @@
 package DoctorSide;
 
-import java.io.*;
-import java.net.*;
-import javax.swing.*;
-import java.awt.event.*;
-import javax.xml.bind.*;
-
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JCheckBox;
+import javax.swing.JPasswordField;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.JAXBException;
+import java.io.File;
+/**
+* First frame for Doctor's login
+*/
 public class DoctorLogin
 {
-	public static void main(String args[])
-	{
-		if(!(new File(Constants.dataFolder)).exists())
-			(new File(Constants.dataFolder)).mkdir();
-		new DoctorLogin();
-	}
-
-	public DoctorLogin()
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-            		for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            		{
-                		if ("Nimbus".equals(info.getName()))
-                		{
-							javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    		break;
-                		}
-            		}
-        		}
-        		catch (ClassNotFoundException ex)
-        		{
-            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-        		catch (InstantiationException ex)
-        		{
-            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-        		catch (IllegalAccessException ex)
-        		{
-            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-        		catch (javax.swing.UnsupportedLookAndFeelException ex)
-        		{
-            		java.util.logging.Logger.getLogger(DoctorLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-				new DoctorLoginApplet();
-			}
-		});
-	}
-}
-
-class DoctorLoginApplet extends JFrame
-{
+	private JFrame doctorLoginFrame;
 	private JTextField useridBox;
 	private JPasswordField passwordBox;
 	private JLabel useridLabel,passwordLabel,errorLabel,signupLabel,showPasswordLabel,frameLabel;
@@ -66,8 +37,7 @@ class DoctorLoginApplet extends JFrame
 	private DoctorClient connection;
 
 	/**
-	*Set language specified by language
-	*@param language Bengali/English
+	* Sets all texts
 	*/
 	private void setLanguage()
 	{
@@ -91,20 +61,20 @@ class DoctorLoginApplet extends JFrame
 	}
 
 	/**
-	*Constructor of the login interface
+	* Creates the doctor login GUI
 	*/
-
 	@SuppressWarnings("unchecked")
-	protected DoctorLoginApplet()
+	protected DoctorLogin()
 	{
 		/*set frame*/
-		final JFrame jframe = this;
-		setTitle("DOCTOR LOGIN");
-		setSize(Constants.SIZE_X,Constants.SIZE_Y);
-		setResizable(false);
-		setVisible(true);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
+		doctorLoginFrame = new JFrame();
+		final JFrame jframe = doctorLoginFrame;
+		doctorLoginFrame.setTitle("DOCTOR LOGIN");
+		doctorLoginFrame.setSize(Constants.SIZE_X,Constants.SIZE_Y);
+		doctorLoginFrame.setResizable(false);
+		doctorLoginFrame.setVisible(true);
+		doctorLoginFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		doctorLoginFrame.addWindowListener(new WindowAdapter()
 		{
 			@Override
 			public void windowClosing(WindowEvent we)
@@ -112,11 +82,14 @@ class DoctorLoginApplet extends JFrame
 				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
                     System.exit(0);
-					dispose();
+					doctorLoginFrame.dispose();
 				}
 			}
 		});
 
+		/*
+		* Initialize all labels, buttons etc.
+		*/
 		frameLabel = new JLabel();
 		useridBox = new JTextField();
 		passwordBox = new JPasswordField();
@@ -132,6 +105,9 @@ class DoctorLoginApplet extends JFrame
 		setLanguage();
 
 
+		/*
+		* Set positions
+		*/
 		frameLabel.setBounds(325,10,400,100);
 		useridBox.setBounds(350,260,200,30);
 		passwordBox.setBounds(350,320,200,30);
@@ -144,14 +120,11 @@ class DoctorLoginApplet extends JFrame
 		signupLabel.setBounds(350,425,310,15);
 
 
-		
-
+		/*
+		* Set fonts and colors
+		*/
 		frameLabel.setFont(Constants.HEADERFONT);
 		passwordBox.setEchoChar('*');
-		// showPasswordLabel.setFont(new Font(showPasswordLabel.getFont().getName(),Font.BOLD,11));
-		// errorLabel.setFont(new Font(errorLabel.getFont().getName(),Font.PLAIN,11));
-		// signupLabel.setFont(new Font(signupLabel.getFont().getName(),Font.PLAIN,11));
-
 		frameLabel.setForeground(Constants.HEADERCOLOR1);
 		useridLabel.setForeground(Constants.LABELCOLOR1);
 		passwordLabel.setForeground(Constants.LABELCOLOR1);
@@ -163,6 +136,9 @@ class DoctorLoginApplet extends JFrame
 		errorLabel.setVisible(false);
 
 
+		/*
+		* Add action listeners
+		*/
 		showPassword.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent ie)
@@ -177,6 +153,17 @@ class DoctorLoginApplet extends JFrame
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				/*
+				* create new connection,
+				* send login request to server
+				* if username and password correct then
+				*	get doctor's information
+				*	go to PatientSelect frame
+				* else
+				* 	show error message
+				*	send logout request to server
+				* end if
+				*/
 				connection = createNewDoctorClient();
 				String username = useridBox.getText();
 				String password = new String(passwordBox.getPassword());
@@ -186,7 +173,7 @@ class DoctorLoginApplet extends JFrame
 					{
 						String filename = Constants.dataFolder+"tempEmployee.xml";
 						errorLabel.setVisible(false);
-						Doctor doctor = getDoctor(username);
+						final Doctor doctor = getDoctor(username);
 						if(doctor != null)
 						{
 							SwingUtilities.invokeLater(new Runnable()
@@ -197,7 +184,7 @@ class DoctorLoginApplet extends JFrame
 								}
 							});
 							System.out.println("Success");
-							dispose();
+							doctorLoginFrame.dispose();
 						}
 					}
 					else
@@ -226,11 +213,14 @@ class DoctorLoginApplet extends JFrame
 
 		signupLabel.addMouseListener(new MouseAdapter()
 		{
+			/*
+			* Not added yet
+			*/
 			public void mouseClicked(MouseEvent ae)
 			{
 
 				// new RegisterNewEmployee();
-				// dispose();
+				// doctorLoginFrame.dispose();
 			}
 
 			public void mouseEntered(MouseEvent ae)
@@ -243,28 +233,34 @@ class DoctorLoginApplet extends JFrame
 			}
 		});
 
-		add(frameLabel);
-		add(useridBox);
-		add(passwordBox);
-		add(useridLabel);
-		add(passwordLabel);
-		add(showPassword);
-		add(showPasswordLabel);
-		add(errorLabel);
-		add(signinButton);
-		add(signupLabel);
+		/*
+		* Add button, labels to frame
+		*/
+		doctorLoginFrame.add(frameLabel);
+		doctorLoginFrame.add(useridBox);
+		doctorLoginFrame.add(passwordBox);
+		doctorLoginFrame.add(useridLabel);
+		doctorLoginFrame.add(passwordLabel);
+		doctorLoginFrame.add(showPassword);
+		doctorLoginFrame.add(showPasswordLabel);
+		doctorLoginFrame.add(errorLabel);
+		doctorLoginFrame.add(signinButton);
+		doctorLoginFrame.add(signupLabel);
 
-		add(Constants.JPANEL2);
-		add(Constants.JPANEL1);
+		doctorLoginFrame.add(Constants.JPANEL2);
+		doctorLoginFrame.add(Constants.JPANEL1);
 	}
 
 	/**
-	*Creates new DoctorClient
-	*@return DoctorClient object
+	* Get Doctor's information
+	* @param username Doctor's username
+	* @return Doctor object, in case of any error return null
 	*/
-
 	private Doctor getDoctor(String username)
 	{
+		/*
+		* Temporary doctor file name
+		*/
 		String doctorFileName = Constants.dataFolder+"tempDoctor.xml";
 		File doctorFile = new File(doctorFileName);
 		int response;
@@ -281,6 +277,9 @@ class DoctorLoginApplet extends JFrame
 		{
 			try
 			{
+				/*
+				* Parse with JAXB parser
+				*/
 				JAXBContext jc = JAXBContext.newInstance(Doctor.class);
 				Unmarshaller jum = jc.createUnmarshaller();
 				Doctor doctor = (Doctor)jum.unmarshal(doctorFile);
@@ -312,12 +311,17 @@ class DoctorLoginApplet extends JFrame
 			else
 			{
 				errorLabel.setVisible(false);
-				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+				JOptionPane.showMessageDialog(doctorLoginFrame,RHErrors.getErrorDescription(response));
 			}
 			return null;
 		}
 	}
 
+
+	/**
+	*Creates new DoctorClient
+	*@return DoctorClient object
+	*/
 	private DoctorClient createNewDoctorClient()
 	{
 		try
@@ -338,7 +342,6 @@ class DoctorLoginApplet extends JFrame
 	*@param pw Password provided in the password textfield
 	*@return boolean If username and password correct or not
 	*/
-
 	private boolean check(String user,String pw)
 	{
 		try
@@ -346,7 +349,7 @@ class DoctorLoginApplet extends JFrame
 			int response = connection.loginRequest(user,pw);
 			if(response >= 0)
 				return true;
-			else JOptionPane.showMessageDialog(this, RHErrors.getErrorDescription(response));
+			else JOptionPane.showMessageDialog(doctorLoginFrame, RHErrors.getErrorDescription(response));
 			return false;
 		}
 		catch(Exception e)

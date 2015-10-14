@@ -13,7 +13,6 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.util.Scanner;
 
 import java.io.File;
-// import commons.RHErrors;
 
 import java.io.IOException;
 

@@ -14,14 +14,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 
-//import RHErrors;
 
 import java.io.IOException;
 import java.io.EOFException;
 
 
 /**
-	ClientConnection, a Connection object in the client for maintainig a connection to the server
+*	ClientConnection, a Connection object in the client for maintainig a connection to the server
 */
 public class ClientConnection
 {
@@ -36,6 +35,7 @@ public class ClientConnection
 	/**
 	* Intialize a ClientConnection with this socket
 	* @param socket The clients socket object
+	* @param id Id of the ClientConnection object
 	*/
 	public ClientConnection(Socket socket, String id)
 	{
@@ -140,6 +140,7 @@ public class ClientConnection
 	/**
 	* Receive a file from the server
 	* @param outFileName The name of the file in the server (to save as)
+	* @param fileLength Length of the file
 	* @return int The length of the received file, otherwise error number
 	*/
 	public int receiveFile(String outFileName, int fileLength)
