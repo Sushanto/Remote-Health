@@ -1,7 +1,4 @@
 package DoctorSide;
-/**
-* @author Sushanto Halder
-*/
 
 import java.io.File;
 import javax.swing.JFrame;
@@ -35,6 +32,7 @@ import java.util.ArrayList;
 
 /**
 * Select a patient from waiting list, visited list or search by name
+* @author Sushanto Halder
 */
 public class PatientSelect
 {
@@ -340,10 +338,10 @@ public class PatientSelect
 							isGroup2ListFilled = true;
 
 							group2PatientSelectComboBox.removeAllItems();
-							for(int i = 0;i < patientLog.Emergency.size();i++)
-								group2PatientSelectComboBox.addItem("E-"+patientLog.Emergency.get(i));
-							for(int i = 0;i < patientLog.Normal.size();i++)
-								group2PatientSelectComboBox.addItem("N-"+patientLog.Normal.get(i));
+							for(int i = 0;i < patientLog.getEmergency().size();i++)
+								group2PatientSelectComboBox.addItem("E-"+patientLog.getEmergency().get(i));
+							for(int i = 0;i < patientLog.getNormal().size();i++)
+								group2PatientSelectComboBox.addItem("N-"+patientLog.getNormal().get(i));
 						}
 						else
 						{
@@ -439,7 +437,7 @@ public class PatientSelect
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String[] tempArray = patientReport.patientBasicData.getId().split("_");
+				String[] tempArray = patientReport.getPatientBasicData().getId().split("_");
 				String kioskNumber = tempArray[1];
 				new PatientPrescriptionForm(connection,doctor,patientReport,kioskNumber);
 				patientSelectFrame.dispose();
@@ -584,7 +582,7 @@ public class PatientSelect
 				Unmarshaller jum = jc.createUnmarshaller();
 				patientReport = (PatientReport)jum.unmarshal(file);
 				nameValue.setVisible(true);
-				nameValue.setText(patientReport.patientBasicData.getName()+"/ "+patientReport.patientBasicData.getAge()+" yrs");
+				nameValue.setText(patientReport.getPatientBasicData().getName()+"/ "+patientReport.getPatientBasicData().getAge()+" yrs");
 				confirmButton.setVisible(true);
 			}
 			catch(Exception e)

@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 
 /**
-* Stores Doctor's information, XML annotated
+* Doctor: Stores Doctor's information, XML annotated
 * @author Sushanto Halder
 */
 @XmlRootElement(name="Doctor")

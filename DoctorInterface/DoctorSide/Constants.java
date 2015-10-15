@@ -14,7 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
-* Constants class to store constant values as static members
+* Constants: To store constant values as static members
 * @author Sushanto Halder
 */
 public class Constants

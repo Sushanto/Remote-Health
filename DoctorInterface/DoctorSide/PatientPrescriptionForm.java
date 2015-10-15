@@ -1,7 +1,5 @@
 package DoctorSide;
-/**
-* @author Sushanto Halder
-*/
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -49,7 +47,8 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 
 /**
-* PatientPrescriptionForm, frame to see patient complaint and prescription
+* PatientPrescriptionForm: Frame to see patient complaint and prescription
+* @author Sushanto Halder
 */
 public class PatientPrescriptionForm
 {
@@ -657,7 +656,7 @@ public class PatientPrescriptionForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				getPatientReport(patientReport.patientBasicData.getId());
+				getPatientReport(patientReport.getPatientBasicData().getId());
 				setPatientReport();
 			}
 		});
@@ -666,7 +665,7 @@ public class PatientPrescriptionForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String imageFileName = patientReport.patientBasicData.getImage();
+				String imageFileName = patientReport.getPatientBasicData().getImage();
 				System.out.println("imageFileName : " + imageFileName);
 				int response = 0;
 				try
@@ -839,9 +838,9 @@ public class PatientPrescriptionForm
 				{
 					getPatientReport(reg_no_field.getText());
 					setPatientReport();
-					if(patientReport.Reports.get(patientReport.Reports.size()-1).doctorPrescription.doctorName == null)
+					if(patientReport.getReports().get(patientReport.getReports().size()-1).getDoctorPrescription().getDoctorName() == null)
 					{
-						current_report_count = patientReport.Reports.size()-1;
+						current_report_count = patientReport.getReports().size()-1;
 						next_button.setEnabled(false);
 						if(current_report_count == 0)
 						{
@@ -907,10 +906,10 @@ public class PatientPrescriptionForm
 				/*
 				* Display next report
 				*/
-				if(current_report_count<patientReport.Reports.size()-1)
+				if(current_report_count<patientReport.getReports().size()-1)
 				{
 					setReport(++current_report_count);
-					if(current_report_count == patientReport.Reports.size()-1)
+					if(current_report_count == patientReport.getReports().size()-1)
 						next_button.setEnabled(false);
 					if(current_report_count>0)
 						prev_button.setEnabled(true);
@@ -930,7 +929,7 @@ public class PatientPrescriptionForm
 					setReport(--current_report_count);
 					if(current_report_count == 0)
 						prev_button.setEnabled(false);
-					if(current_report_count<patientReport.Reports.size()-1)
+					if(current_report_count<patientReport.getReports().size()-1)
 						next_button.setEnabled(true);
 				}
 			}
@@ -998,7 +997,7 @@ public class PatientPrescriptionForm
 					if(updatePatientLog() && updateDoctorLog())
 					{
 						addPrescriptionToReport();
-						current_report_count = patientReport.Reports.size()-1;
+						current_report_count = patientReport.getReports().size()-1;
 						next_button.setEnabled(false);
 						if(current_report_count == 0)
 							prev_button.setEnabled(false);
@@ -1100,7 +1099,7 @@ public class PatientPrescriptionForm
 				current_report_count = prevDateComboBox.getSelectedIndex();
 				setReport(current_report_count);
 				prev_button.setEnabled(current_report_count != 0);
-				next_button.setEnabled(current_report_count != (patientReport.Reports.size() -1));
+				next_button.setEnabled(current_report_count != (patientReport.getReports().size() -1));
 			}
 		});
 
@@ -1347,16 +1346,16 @@ public class PatientPrescriptionForm
 		* Unlock patient file
 		*/
 		DoctorPrescription docPrescription = new DoctorPrescription();
-		docPrescription.doctorName = checkNullString(doctor_name_field.getText());
-		docPrescription.ProvisionalDiagnosis = checkNullString(provisional_diagnosis_area.getText());
-		docPrescription.FinalDiagnosis = checkNullString(final_diagnosis_area.getText());
-		docPrescription.Advice = checkNullString(advice_area.getText());
-		docPrescription.Medication = checkNullString(medication_area.getText());
-		docPrescription.Diagnosis = checkNullString(diagnostic_test_area.getText());
-		docPrescription.Referral = checkNullString(referral_area.getText());
-		docPrescription.Prescription_Date = checkNullString(doctor_date_field.getText());
+		docPrescription.setDoctorName( checkNullString(doctor_name_field.getText()) );
+		docPrescription.setProvisionalDiagnosis( checkNullString(provisional_diagnosis_area.getText()) );
+		docPrescription.setFinalDiagnosis( checkNullString(final_diagnosis_area.getText()) );
+		docPrescription.setAdvice( checkNullString(advice_area.getText()) );
+		docPrescription.setMedication( checkNullString(medication_area.getText()) );
+		docPrescription.setDiagnosis( checkNullString(diagnostic_test_area.getText()) );
+		docPrescription.setReferral( checkNullString(referral_area.getText()) );
+		docPrescription.setPrescription_date( checkNullString(doctor_date_field.getText()) );
 
-		patientReport.Reports.get(patientReport.Reports.size()-1).doctorPrescription = docPrescription;
+		patientReport.getReports().get(patientReport.getReports().size()-1).setDoctorPrescription(docPrescription);
 
 
 		String fileName = Constants.dataFolder + "tempPatientReport.xml";
@@ -1526,22 +1525,22 @@ public class PatientPrescriptionForm
 	{
 		if(reportCount != -1)
 		{
-			Report report = patientReport.Reports.get(reportCount);
-			weight_field.setText(report.patientComplaint.getWeight());
-			bmi_field.setText(report.patientComplaint.getBmi());
-			bp_field.setText(report.patientComplaint.getBp());
-			pulse_field.setText(report.patientComplaint.getPulse());
-			temperature_field.setText(report.patientComplaint.getTemperature());
-			spO2_field.setText(report.patientComplaint.getSpo2());
-			prev_diagnosis_field.setText(report.patientComplaint.getPrevDiagnosis());
-			on_examination_area.setText(report.patientComplaint.getOtherResults());
-			complaint_of_area.setText(report.patientComplaint.getcomplaint());
-			kiosk_coordinator_name_field.setText(report.patientComplaint.getKioskCoordinatorName());
-			kiosk_coordinator_date_field.setText(report.patientComplaint.getcomplaint_date());
+			Report report = patientReport.getReports().get(reportCount);
+			weight_field.setText(report.getPatientComplaint().getWeight());
+			bmi_field.setText(report.getPatientComplaint().getBmi());
+			bp_field.setText(report.getPatientComplaint().getBp());
+			pulse_field.setText(report.getPatientComplaint().getPulse());
+			temperature_field.setText(report.getPatientComplaint().getTemperature());
+			spO2_field.setText(report.getPatientComplaint().getSpo2());
+			prev_diagnosis_field.setText(report.getPatientComplaint().getPrevDiagnosis());
+			on_examination_area.setText(report.getPatientComplaint().getOtherResults());
+			complaint_of_area.setText(report.getPatientComplaint().getcomplaint());
+			kiosk_coordinator_name_field.setText(report.getPatientComplaint().getKioskCoordinatorName());
+			kiosk_coordinator_date_field.setText(report.getPatientComplaint().getcomplaint_date());
 
-			if(report.patientComplaint.getFileNames() != null)
+			if(report.getPatientComplaint().getFileNames() != null)
 			{
-				DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<String>(report.patientComplaint.getFileNames().split("\n"));
+				DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<String>(report.getPatientComplaint().getFileNames().split("\n"));
 				additionalReportsComboBox.setModel(defaultComboBoxModel);
 				additionalReportsButton.setEnabled(true);
 				additionalReportsComboBox.setEnabled(true);
@@ -1555,16 +1554,16 @@ public class PatientPrescriptionForm
 				additionalReportsLabel.setEnabled(false);
 			}
 
-			if(report.doctorPrescription != null)
+			if(report.getDoctorPrescription() != null)
 			{
-				doctor_name_field.setText(report.doctorPrescription.getdoctorName());
-				doctor_date_field.setText(report.doctorPrescription.getPrescription_date());
-				provisional_diagnosis_area.setText(report.doctorPrescription.getProvisionalDiagnosis());
-				final_diagnosis_area.setText(report.doctorPrescription.getFinalDiagnosis());
-				advice_area.setText(report.doctorPrescription.getAdvice());
-				medication_area.setText(report.doctorPrescription.getMedication());
-				diagnostic_test_area.setText(report.doctorPrescription.getDiagnosis());
-				referral_area.setText(report.doctorPrescription.getReferral());
+				doctor_name_field.setText(report.getDoctorPrescription().getDoctorName());
+				doctor_date_field.setText(report.getDoctorPrescription().getPrescription_date());
+				provisional_diagnosis_area.setText(report.getDoctorPrescription().getProvisionalDiagnosis());
+				final_diagnosis_area.setText(report.getDoctorPrescription().getFinalDiagnosis());
+				advice_area.setText(report.getDoctorPrescription().getAdvice());
+				medication_area.setText(report.getDoctorPrescription().getMedication());
+				diagnostic_test_area.setText(report.getDoctorPrescription().getDiagnosis());
+				referral_area.setText(report.getDoctorPrescription().getReferral());
 			}
 			else
 			{
@@ -1590,6 +1589,7 @@ public class PatientPrescriptionForm
 
 	/**
 	* Update patient log file, i.e. remove the patient id from patient log since he/she is prescribed
+	* @return True on success else negative error value
 	*/
 	private boolean updatePatientLog()
 	{
@@ -1624,10 +1624,10 @@ public class PatientPrescriptionForm
 					Unmarshaller um = jc.createUnmarshaller();
 					PatientLog patientLog = (PatientLog)um.unmarshal(localFile);
 
-					if(patientLog.Normal.indexOf(reg_no_field.getText()) != -1)
-						patientLog.Normal.remove(reg_no_field.getText());
-					else if(patientLog.Emergency.indexOf(reg_no_field.getText()) != -1)
-						patientLog.Emergency.remove(reg_no_field.getText());
+					if(patientLog.getNormal().indexOf(reg_no_field.getText()) != -1)
+						patientLog.getNormal().remove(reg_no_field.getText());
+					else if(patientLog.getEmergency().indexOf(reg_no_field.getText()) != -1)
+						patientLog.getEmergency().remove(reg_no_field.getText());
 
 					Marshaller jm = jc.createMarshaller();
 					jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
@@ -1704,6 +1704,7 @@ public class PatientPrescriptionForm
 
 	/**
 	* Update doctor log, i.e. add the patient id to doctor's previously visited patient list.
+	* @return True on success else negative error value
 	*/
 	private boolean updateDoctorLog()
 	{
@@ -1814,14 +1815,14 @@ public class PatientPrescriptionForm
 	*/
 	private void setPatientReport()
 	{
-		reg_no_field.setText(patientReport.patientBasicData.getId());
-		name_field.setText(patientReport.patientBasicData.getName());
-		sdw_of_field.setText(patientReport.patientBasicData.getReference());
-		occupation_field.setText(patientReport.patientBasicData.getOccupation());
+		reg_no_field.setText(patientReport.getPatientBasicData().getId());
+		name_field.setText(patientReport.getPatientBasicData().getName());
+		sdw_of_field.setText(patientReport.getPatientBasicData().getReference());
+		occupation_field.setText(patientReport.getPatientBasicData().getOccupation());
 
-		status_field.setText(patientReport.patientBasicData.getStatus());
+		status_field.setText(patientReport.getPatientBasicData().getStatus());
 
-		String imageFileName = patientReport.patientBasicData.getImage();
+		String imageFileName = patientReport.getPatientBasicData().getImage();
 
 		if(status_field.getText().equals("New"))
 		{
@@ -1859,20 +1860,20 @@ public class PatientPrescriptionForm
 		}
 		else if(picture.getIcon() == null && imageFileName != null)
 			pictureDownloadButton.setVisible(true);
-		date_field.setText(patientReport.patientBasicData.getDate());
-		address_area.setText(patientReport.patientBasicData.getAddress());
-		age_field.setText(patientReport.patientBasicData.getAge());
-		ph_no_field.setText(patientReport.patientBasicData.getPhone());
-		gender_field.setText(patientReport.patientBasicData.getGender());
-		height_field.setText(patientReport.patientBasicData.getHeight());
-		family_history_area.setText(patientReport.patientBasicData.getFamilyhistory());
-		medical_history_area.setText(patientReport.patientBasicData.getMedicalhistory());
+		date_field.setText(patientReport.getPatientBasicData().getDate());
+		address_area.setText(patientReport.getPatientBasicData().getAddress());
+		age_field.setText(patientReport.getPatientBasicData().getAge());
+		ph_no_field.setText(patientReport.getPatientBasicData().getPhone());
+		gender_field.setText(patientReport.getPatientBasicData().getGender());
+		height_field.setText(patientReport.getPatientBasicData().getHeight());
+		family_history_area.setText(patientReport.getPatientBasicData().getFamilyhistory());
+		medical_history_area.setText(patientReport.getPatientBasicData().getMedicalhistory());
 
-		if(!patientReport.Reports.isEmpty())
+		if(!patientReport.getReports().isEmpty())
 		{
-			current_report_count = patientReport.Reports.size()-1;
+			current_report_count = patientReport.getReports().size()-1;
 			next_button.setEnabled(false);
-			// if(patientReport.Reports.size() > 1)
+			// if(patientReport.getReports().size() > 1)
 			// 	status_field.setText("Review");
 			if(current_report_count == 0)
 			{
@@ -1883,11 +1884,11 @@ public class PatientPrescriptionForm
 			}
 			else
 			{
-				for(int i = 0; i < patientReport.Reports.size(); i++)
+				for(int i = 0; i < patientReport.getReports().size(); i++)
 				{
-					Report tempReport = patientReport.Reports.get(i);
-					if(tempReport.doctorPrescription.Prescription_Date != null)
-						prevDateComboBox.addItem(tempReport.doctorPrescription.Prescription_Date);
+					Report tempReport = patientReport.getReports().get(i);
+					if(tempReport.getDoctorPrescription().getPrescription_date() != null)
+						prevDateComboBox.addItem(tempReport.getDoctorPrescription().getPrescription_date());
 				}
 			}
 			setReport(current_report_count);

@@ -4,7 +4,7 @@ import javax.swing.SwingUtilities;
 import java.io.File;
 
 /**
-* DoctorInterface, driver class
+* DoctorInterface: Driver class
 * @author Sushanto Halder
 */
 public class DoctorInterface

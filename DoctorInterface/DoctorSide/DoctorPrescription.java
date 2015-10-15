@@ -1,128 +1,185 @@
 package DoctorSide;
-/**
-* @author Sushanto Halder
-*/
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 /**
-* DoctorPrescription class, contains prescription provided by doctor, XML annotated
+* DoctorPrescription: Contains prescription provided by doctor, XML annotated
+* @author Sushanto Halder
 */
 @XmlRootElement
 @XmlType(propOrder={"doctorName","prescription_date","provisionalDiagnosis","finalDiagnosis","advice","medication","diagnosis","referral","signature","registration_number"})
 public class DoctorPrescription
 {
-	String doctorName, ProvisionalDiagnosis,FinalDiagnosis,Advice, Medication, Diagnosis, Prescription_Date,Referral,Signature,Registration_number;
-	
-	DoctorPrescription()
-	{
-		// DateFormat d=new SimpleDateFormat("yyyy-MM-dd");
-		// Prescription_Date=d.format(new Date().toString());
-	}
-	
-	String getdoctorName()
+	private String doctorName, ProvisionalDiagnosis,FinalDiagnosis,Advice, Medication, Diagnosis, Prescription_Date,Referral,Signature,Registration_number;
+	/**
+	* Get doctor's name
+	* @return Name of doctor
+	*/
+	protected String getDoctorName()
 	{
 		return doctorName;
 	}
-	
+	/**
+	* Set name of doctor
+	* @param doctorName Name of doctor
+	*/
 	@XmlElement
-	void setdoctorName(String doctorName)
+	protected void setDoctorName(String doctorName)
 	{
 		this.doctorName=doctorName;
 	}
-
-	String getProvisionalDiagnosis()
+	/**
+	* Get provisional diagnosis 
+	* @return String, provisional diagnosis
+	*/
+	protected String getProvisionalDiagnosis()
 	{
 		return ProvisionalDiagnosis;
 	}
+	/**
+	* Set provisional diagnosis
+	* @param provisionalDiagnosis Provisional diagnosis provided by doctor
+	*/
 	@XmlElement
-	void setProvisionalDiagnosis(String ProvisionalDiagnosis)
+	protected void setProvisionalDiagnosis(String provisionalDiagnosis)
 	{
-		this.ProvisionalDiagnosis=ProvisionalDiagnosis;
+		this.ProvisionalDiagnosis=provisionalDiagnosis;
 	}
-
-	String getFinalDiagnosis()
+	/**
+	* Get final diagnosis
+	* @return String, final diagnosis, provided by doctor
+	*/
+	protected String getFinalDiagnosis()
 	{
 		return FinalDiagnosis;
 	}
+	/**
+	* Set final diagnosis
+	* @param finalDiagnosis Final diagnosis provided by doctor
+	*/
 	@XmlElement
-	void setFinalDiagnosis(String FinalDiagnosis)
+	protected void setFinalDiagnosis(String finalDiagnosis)
 	{
-		this.FinalDiagnosis=FinalDiagnosis;
+		this.FinalDiagnosis=finalDiagnosis;
 	}
-	
-	String getAdvice()
+	/**
+	* Get advice string
+	* @return Advice as string
+	*/
+	protected String getAdvice()
 	{
 		return Advice;
 	}
-	
+	/**
+	* Set advice of doctor
+	* @param advice Advice provided by doctor
+	*/
 	@XmlElement
-	void setAdvice(String Advice)
+	protected void setAdvice(String advice)
 	{
-		this.Advice=Advice;
+		this.Advice=advice;
 	}
-	
-	String getMedication()
+	/**
+	* Get medication provided by doctor
+	* @return Medication from doctor
+	*/
+	protected String getMedication()
 	{
 		return Medication;
 	}
-	
+	/**
+	* Set medication
+	* @param medication Medication provided by doctor
+	*/
 	@XmlElement
-	void setMedication(String Medication)
+	protected void setMedication(String medication)
 	{
-		this.Medication=Medication;
+		this.Medication=medication;
 	}
-	
-	String getDiagnosis()
+	/**
+	* Get diagnosis by doctor
+	* @return Diagnosis report by doctor
+	*/
+	protected String getDiagnosis()
 	{
 		return Diagnosis;
 	}
-	
+	/**
+	* Set diagnosis report by doctor
+	* @param diagnosis Diagnosis report provided by doctor
+	*/
 	@XmlElement
-	void setDiagnosis(String Diagnosis)
+	protected void setDiagnosis(String diagnosis)
 	{
-		this.Diagnosis=Diagnosis;
+		this.Diagnosis=diagnosis;
 	}
-	
-	String getPrescription_date()
+	/**
+	* Get date of prescription
+	* @return Date of prescription as string
+	*/
+	protected String getPrescription_date()
 	{
 		return Prescription_Date;
 	}
-	
+	/**
+	* Set date of prescription
+	* @param prescriptionDate Date of prescription
+	*/
 	@XmlElement
-	void setPrescription_date(String Prescription_date)
+	protected void setPrescription_date(String prescriptionDate)
 	{
-		this.Prescription_Date=Prescription_date;
+		this.Prescription_Date=prescriptionDate;
 	}
-
-	String getReferral()
+	/**
+	* Get referral
+	* @return Referral as a string
+	*/
+	protected String getReferral()
 	{
 		return Referral;
 	}
+	/**
+	* Set referral provided by doctor
+	* @param referral Referral provided by doctor
+	*/
 	@XmlElement
-	void setReferral(String Referral)
+	protected void setReferral(String referral)
 	{
-		this.Referral=Referral;
+		this.Referral=referral;
 	}
-
-	String getSignature()
+	/**
+	* Get signature of doctor
+	* @return Signature of doctor as encoded string
+	*/
+	protected String getSignature()
 	{
 		return Signature;
 	}
+	/**
+	* Set signature of doctor
+	* @param signature Signature of doctor as encoded string
+	*/
 	@XmlElement
-	void setSignature(String Signature)
+	protected void setSignature(String signature)
 	{
-		this.Signature=Signature;
+		this.Signature=signature;
 	}
-
-	String getRegistration_number()
+	/**
+	* Get registration number of doctor
+	* @return Registration number of doctor
+	*/
+	protected String getRegistration_number()
 	{
 		return Registration_number;
 	}
+	/**
+	* Set registration number of doctor
+	* @param registrationNumber Registration no of doctor
+	*/
 	@XmlElement
-	void setRegistration_number(String Registration_number)
+	protected void setRegistration_number(String registrationNumber)
 	{
-		this.Registration_number=Registration_number;
+		this.Registration_number=registrationNumber;
 	}
 }

@@ -22,7 +22,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 /**
-* First frame for Doctor's login
+* DoctorLogin: First frame for Doctor's login
 * @author Sushanto Halder
 */
 public class DoctorLogin

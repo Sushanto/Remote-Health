@@ -1,7 +1,4 @@
 package DoctorSide;
-/**
-* @author Sushanto Halder
-*/
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,6 +23,7 @@ import java.awt.image.BufferedImage;
 
 /**
 * GeneralPrescription class, creates frame for general prescription view
+* @author Sushanto Halder
 */
 public class GeneralPrescription
 {

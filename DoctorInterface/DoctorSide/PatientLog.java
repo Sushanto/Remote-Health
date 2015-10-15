@@ -1,41 +1,53 @@
 package DoctorSide;
 
-/**
-* @author Sushanto Halder
-*/
-
 import java.util.ArrayList;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
-* PatientLog class, stores list of visited and waiting patient, XML annotated
+* PatientLog: Stores list of visited and waiting patient, XML annotated
+* @author Sushanto Halder
 */
 @XmlRootElement
 @XmlType(propOrder={"Emergency","Normal"})
 public class PatientLog
 {
 	@XmlElement
-	ArrayList<String> Emergency=new ArrayList<String>();
+	private ArrayList<String> Emergency = new ArrayList<String>();
 	@XmlElement
-	ArrayList<String> Normal =new  ArrayList<String>();
+	private ArrayList<String> Normal = new  ArrayList<String>();
 
-	ArrayList<String> getnormal()
+	/**
+	* Get normal patient list
+	* @return Arraylist of normal patient
+	*/
+	protected ArrayList<String> getNormal()
 	{
 		return Normal;
 	}
-
-	void setnormal(ArrayList<String> normal)
+	/**
+	* Set normal patient list
+	* @param normal ArrayList of normal patients
+	*/
+	protected void setNormal(ArrayList<String> normal)
 	{
 		Normal = normal;
 	}
 
-	ArrayList<String> getemergency()
+	/**
+	* Get emergency patient list
+	* @return ArrayList of emergency patient
+	*/
+	protected ArrayList<String> getEmergency()
 	{
 		return Emergency;
 	}
-	void setemergency(ArrayList<String> emergency)
+	/**
+	* Set emergency patient list
+	* @param emergency Emergency patient list
+	*/
+	protected void setEmergency(ArrayList<String> emergency)
 	{
 		Emergency = emergency;
 	}
