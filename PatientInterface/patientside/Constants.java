@@ -1,4 +1,7 @@
 package patientside;
+/**
+* @author Sushanto Halder
+*/
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -11,6 +14,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+* Constants class to store constant values as static members
+*/
 public class Constants
 {
 	protected static final int SIZE_X = 900,SIZE_Y = 700,PANEL2_HEIGHT = 100;
@@ -67,7 +73,9 @@ public class Constants
 
 	}
 
-
+	/**
+	* Reads device informations from DeviceMetadata.cfg
+	*/
 	private static void readInfo()
 	{
 		try

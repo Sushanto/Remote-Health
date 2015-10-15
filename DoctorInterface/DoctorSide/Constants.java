@@ -1,9 +1,5 @@
 package DoctorSide;
 
-/**
-* @author Sushanto Halder
-*/
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.BorderFactory;
@@ -19,6 +15,7 @@ import java.io.IOException;
 
 /**
 * Constants class to store constant values as static members
+* @author Sushanto Halder
 */
 public class Constants
 {

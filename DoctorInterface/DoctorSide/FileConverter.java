@@ -1,8 +1,4 @@
 package DoctorSide;
-/**
-* @author Sushanto Halder
-*/
-
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +20,7 @@ import javax.xml.bind.JAXBException;
 
 /**
 * Convert binary files to xml binary data for easier transmission
+* @author Sushanto Halder
 */
 public class FileConverter {
 

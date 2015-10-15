@@ -18,6 +18,7 @@ import java.io.IOException;
 
 /**
 *	DoctorClient: a ClientConnection object wrapper for connecting with the server at the doctor end
+* @author Rounak Das
 */
 public class DoctorClient
 {

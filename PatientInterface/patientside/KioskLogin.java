@@ -37,71 +37,10 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.DirectoryNotEmptyException;
 
 /**
-*Drivier class
-*@author Sushanto Halder
-*/
-
-public class KioskLogin extends JFrame
-{
-	/**
-	*Drivier method
-	*@param args Unused
-	*/
-	public static void main(String args[])
-	{
-		if(!(new File(Constants.dataPath)).exists())
-			(new File(Constants.dataPath)).mkdir();
-		new KioskLogin();
-	}
-
-	/**
-	*Contructor, called by main method
-	*/
-	public KioskLogin()
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-            		for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            		{
-                		if ("Nimbus".equals(info.getName()))
-                		{
-							javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    		break;
-                		}
-            		}
-        		}
-        		catch (ClassNotFoundException ex)
-        		{
-            		java.util.logging.Logger.getLogger(RegisterNewPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-        		catch (InstantiationException ex)
-        		{
-            		java.util.logging.Logger.getLogger(RegisterNewPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-        		catch (IllegalAccessException ex)
-        		{
-            		java.util.logging.Logger.getLogger(RegisterNewPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-        		catch (javax.swing.UnsupportedLookAndFeelException ex)
-        		{
-            		java.util.logging.Logger.getLogger(RegisterNewPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        		}
-
-				new loginApplet();
-			}
-		});
-	}
-}
-
-/**
 *Kiosk Coordinator login interface class
 */
 
-class loginApplet extends JFrame
+class KioskLogin extends JFrame
 {
 	private JTextField useridBox;
 	private JPasswordField passwordBox;
@@ -175,7 +114,7 @@ class loginApplet extends JFrame
 	*/
 
 	@SuppressWarnings("unchecked")
-	public loginApplet()
+	public KioskLogin()
 	{
 		/*set frame*/
 		final JFrame jframe = this;

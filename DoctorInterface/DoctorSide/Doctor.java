@@ -1,9 +1,5 @@
 package DoctorSide;
 
-/**
-* @author Sushanto Halder
-*/
-
 import java.io.*;
 import java.net.*;
 import javax.xml.bind.annotation.*;
@@ -11,6 +7,7 @@ import java.util.ArrayList;
 
 /**
 * Stores Doctor's information, XML annotated
+* @author Sushanto Halder
 */
 @XmlRootElement(name="Doctor")
 @XmlType(propOrder={"doctorId","doctorName","doctorSignature","doctorRegistrationNumber","patientIdList","patientNameList"})

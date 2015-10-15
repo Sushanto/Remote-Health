@@ -1,4 +1,7 @@
 package patientside;
+/**
+* @author Sushanto Halder
+*/
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -16,7 +19,9 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.DirectoryNotEmptyException;
-
+/**
+* Connection, used for file transfer, file locking with the local server
+*/
 public class Connection
 {
 	private Socket clientSocket;
@@ -24,6 +29,10 @@ public class Connection
 	private BufferedReader strReader;
 	private static final int FILE_SIZE = 6022386;
 
+	/**
+	* initialize strWriter and strReader
+	* @param socket Already connected Socket object
+	*/
 	protected Connection(Socket socket)
 	{
 		try
@@ -38,25 +47,9 @@ public class Connection
 		}
 	}
 
-	protected Connection(String address,int port)
-	{
-		try
-		{
-			InetAddress inetAddress = InetAddress.getByName(address);
-			clientSocket = new Socket(inetAddress,port);
-			strWriter = new PrintWriter(clientSocket.getOutputStream(),true);
-			strReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		}
-		catch(UnknownHostException uhe)
-		{
-			uhe.printStackTrace();
-		}
-		catch(IOException ioe)
-		{
-			ioe.printStackTrace();
-		}
-	}
-
+	/**
+	* Disconnect connection with local server, closes all input and output stream
+	*/
 	protected void disconnect()
 	{
 		try
@@ -71,6 +64,11 @@ public class Connection
 		}
 	}
 
+	/**
+	* Lock a file so that other users cannot use it when locked, path not required
+	* @param fileName Name of the file to be locked
+	* @return If successfull, return 0, else return negative error number
+	*/
 	protected int lockFile(String fileName)
 	{
 		try
@@ -87,6 +85,11 @@ public class Connection
 		}
 	}
 
+	/**
+	* Unlock a file with the file name, path not required
+	* @param fileName Name of the file to be unlocked
+	* @return If successfull, return 0, else return negative error value
+	*/
 	protected int unlockFile(String fileName)
 	{
 		try
@@ -103,6 +106,12 @@ public class Connection
 		}
 	}
 
+	/**
+	* Receive a file from server
+	* @param serverFileName Name of the file in the server, path not required
+	* @param localFileName Name of the file to be stored in local directory, path required
+	* @return If successfull, then return file length, else return negative error value
+	*/
 	protected int receiveFromServer(String serverFileName,String localFileName)
 	{
 		try
@@ -128,6 +137,12 @@ public class Connection
 		}
 	}
 
+	/**
+	* Send file to server
+	* @param localFileName Name of file to be send, path required
+	* @param serverFileName Name of the file to be stored in server, path required
+	* @return If successfull, return file length else return negative error value
+	*/
 	protected int sendToServer(String localFileName,String serverFileName)
 	{
 		try
@@ -151,6 +166,11 @@ public class Connection
 		}
 	}
 
+	/**
+	* Send file line by line
+	* @param inFile File object of the file to be send
+	* @return On success return 0, else return -1
+	*/
 	private int sendFile(File inFile)
 	{
 		try
@@ -177,7 +197,12 @@ public class Connection
 		}
 	}
 
-
+	/**
+	* Receive file line by line
+	* @param outFileName Name of the to be stored locally, path required
+	* @param fileLength Length of the file
+	* @return On success return 0, else return -1
+	*/
 	private int receiveFile(String outFileName, int fileLength)
 	{
 		try
@@ -207,12 +232,21 @@ public class Connection
 		}
 	}
 
+	/**
+	* Send a string to the server
+	* @param str String to be send
+	*/
 	private void sendString(String str)
 	{
 		strWriter.println(str);
 		return;
 	}
 
+	/**
+	* Receive a string from the server
+	* @return String received from server
+	* @exception IOException If server closed of connection disconnected, throws IOException
+	*/
 	private String receiveString()
 	throws IOException
 	{
@@ -221,7 +255,12 @@ public class Connection
 			throw new IOException();
 		return str;
 	}
-
+	/**
+	* Send login request to local server with username and password
+	* @param username Username of the user
+	* @param password Password of the user
+	* @return If username and password correct then return true else return false
+	*/
 	protected boolean login(String username,String password)
 	{
 		try
@@ -240,6 +279,11 @@ public class Connection
 		}
 	}
 
+	/**
+	* Send int to server
+	* @param val Integer to be send
+	* @return If success return 0, else return negative error value;
+	*/
 	private int sendInt(int val)
 	{
 		sendString(Integer.toString(val));

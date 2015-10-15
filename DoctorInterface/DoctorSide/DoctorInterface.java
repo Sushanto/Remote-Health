@@ -1,13 +1,11 @@
 package DoctorSide;
-/**
-* @author Sushanto Halder
-*/
 
 import javax.swing.SwingUtilities;
 import java.io.File;
 
 /**
 * DoctorInterface, driver class
+* @author Sushanto Halder
 */
 public class DoctorInterface
 {

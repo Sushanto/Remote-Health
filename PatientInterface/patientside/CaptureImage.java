@@ -1,12 +1,13 @@
 package patientside;
-
+/**
+* @author Sushanto Halder
+*/
 import java.io.File;
 import java.io.IOException;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-// import javax.swing.JButton;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -24,11 +25,17 @@ import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamResolution;
 import com.github.sarxos.webcam.WebcamDiscoveryService;
 
-
+/**
+* Capture image from default webcam
+*/
 public class CaptureImage extends JFrame
 {
     private Webcam webcam;
 
+    /**
+    * Capture image and save the image as the provided file name
+    * @param fileName Name of the file of the picture to be save
+    */
     public CaptureImage(String fileName)
     {
         final JFrame frame=this;

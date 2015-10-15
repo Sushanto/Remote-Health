@@ -1,119 +1,168 @@
 package patientside;
+/**
+* @author Sushanto Halder
+*/
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+* Stores employee information
+*/
 @XmlRootElement
 @XmlType(propOrder={"employeeId","name","ph_no","address","country","state","gender", "password"})
 public class Employee
 {
-	String EmployeeId,Name,Ph_no,Address,Country,State,Gender, Password;
+	private String EmployeeId,Name,Ph_no,Address,Country,State,Gender, Password;
 
-	Employee()
-	{
-
-	}
-
-	String getEmployeeId()
+	/**
+	* Get employee's ID
+	* @return Employee ID
+	*/
+	protected String getEmployeeId()
 	{
 		return EmployeeId;
 	}
 
+	/**
+	* Set employee's ID
+	* @param EmployeeId ID to be set
+	*/
 	@XmlElement
-	void setEmployeeId(String EmployeeId)
+	protected void setEmployeeId(String EmployeeId)
 	{
 		this.EmployeeId=EmployeeId;
 	}
 
-	String getName()
+	/**
+	* Get employee's name
+	* @return Employee's name
+	*/
+	protected String getName()
 	{
 		return Name;
 	}
-
+	/**
+	* Set employee name
+	* @param Name Name of the employee
+	*/
 	@XmlElement
-	void setName(String Name)
+	protected void setName(String Name)
 	{
 		this.Name=Name;
 	}
 
-	String getPh_no()
+	/**
+	* Get employee's phone no
+	* @return Employee's phone no
+	*/
+	protected String getPh_no()
 	{
 		return Ph_no;
 	}
 
+	/**
+	* Set employee's phone no
+	* @param Ph_no Phone no of employee
+	*/
 	@XmlElement
-	void setPh_no(String Ph_no)
+	protected void setPh_no(String Ph_no)
 	{
 		this.Ph_no=Ph_no;
 	}
 
-	String getAddress()
+	/**
+	* Get employee's address
+	* @return Employee's address
+	*/
+	protected String getAddress()
 	{
 		return Address;
 	}
 
+	/**
+	* Set employee's address
+	* @param Address Employee's address
+	*/
 	@XmlElement
-	void setAddress(String Address)
+	protected void setAddress(String Address)
 	{
 		this.Address=Address;
 	}
 
-	String getcountry()
+	/**
+	* Get employee's country
+	* @return Country of the employee
+	*/
+	protected String getcountry()
 	{
 		return Country;
 	}
 
+	/**
+	* Set employee's country
+	* @param Country Country of the employee
+	*/
 	@XmlElement
-	void setcountry(String Country)
+	protected void setcountry(String Country)
 	{
 		this.Country=Country;
-		}
-		
-	String getState()
+	}
+	
+	/**
+	* Get employee's state
+	* @return State of the employee
+	*/	
+	protected String getState()
 	{
 		return State;
 	}
 
+	/**
+	* Set employee's state
+	* @param State State of the employee
+	*/
 	@XmlElement
-	void setState(String State)
+	protected void setState(String State)
 	{
 		this.State=State;
 	}
 
-
-	String getGender()
+	/**
+	* Get gender of the employee
+	* @return Gender of the employee
+	*/
+	protected String getGender()
 	{
 		return Gender;
 	}
 
+	/**
+	* Set gender of the employee
+	* @param Gender Gender to be set
+	*/
 	@XmlElement
-	void setGender(String Gender)
+	protected void setGender(String Gender)
 	{
 		this.Gender=Gender;
 	}
 	
-	
-	String getPassword()
+	/**
+	* Get password of the employee
+	* @return Employee's password
+	*/
+	protected String getPassword()
 	{
 		return Password;
 	}
-
+	/**
+	* Set password of the employee
+	* @param Password New password to be set
+	*/
 	@XmlElement
-	void setPassword(String Password)
+	protected void setPassword(String Password)
 	{
 		this.Password=Password;
 	}
-	
-/*	
-	int getAge()
-	{
-		return Age;
-	}
-
-	@XmlElement
-	void setAge(int Age)
-	{
-		this.Age=Age;
-	} */
 }
