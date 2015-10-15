@@ -179,7 +179,7 @@ public class PatientComplaint
 	}
 	/**
 	* Set on examination part of patient
-	* @param OtherResult On examination field of patient
+	* @param OtherResults On examination field of patient
 	*/
 	@XmlElement
 	protected void setOtherResults(String OtherResults)

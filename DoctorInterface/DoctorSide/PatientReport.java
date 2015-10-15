@@ -57,7 +57,7 @@ public class PatientReport
 	*/
 	@XmlElementWrapper(name="Reports")
 	@XmlElement(name="Report")
-	void setReports(ArrayList<Report> Reports)
+	protected void setReports(ArrayList<Report> Reports)
 	{
 		this.Reports=Reports;
 	}

@@ -1,11 +1,9 @@
 package DoctorSide;
-/**
-* @author Sushanto Halder
-*/
 
 import java.awt.Image;
 /**
 * PrescriptionInformation class, stores information neccessary for prescription
+* @author Sushanto Halder
 */
 public class PrescriptionInformation
 {
