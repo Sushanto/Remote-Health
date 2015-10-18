@@ -715,6 +715,9 @@ public class PatientPrescriptionForm
 
 				prev_button.setVisible(true);
 				next_button.setVisible(true);
+				prevDateLabel.setVisible(true);
+				prevDateComboBox.setVisible(true);
+				prevDateButton.setVisible(true);
 				prescribeButton.setVisible(true);
 				back_button.setVisible(true);
 				refresh_button.setVisible(true);
@@ -866,6 +869,9 @@ public class PatientPrescriptionForm
 						back2_button.setVisible(true);
 						prev_button.setVisible(false);
 						next_button.setVisible(false);
+						prevDateLabel.setVisible(false);
+						prevDateComboBox.setVisible(false);
+						prevDateButton.setVisible(false);
 						submit_button.setVisible(true);
 						prescribeButton.setVisible(false);
 						prescriptionButton.setVisible(false);
@@ -1005,6 +1011,9 @@ public class PatientPrescriptionForm
 						setReport(current_report_count);
 						prev_button.setVisible(true);
 						next_button.setVisible(true);
+						prevDateLabel.setVisible(true);
+						prevDateComboBox.setVisible(true);
+						prevDateButton.setVisible(true);
 						prescribeButton.setVisible(true);
 						back_button.setVisible(true);
 						refresh_button.setVisible(true);

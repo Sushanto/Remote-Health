@@ -3,155 +3,49 @@ package patientside;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
-@XmlRootElement(name="Reports")
-@XmlType(propOrder={"patientComplaint","doctorPrescription"})
+/**
+* Report: Contains patient complaint and doctor prescription, XML annotated
+* @author Sushanto Halder
+*/
+@XmlRootElement(name = "Reports")
+@XmlType(propOrder = {"patientComplaint","doctorPrescription"})
 public class Report
 {
-	PatientComplaint patientComplaint=new PatientComplaint();
-	DoctorPrescription doctorPrescription=new DoctorPrescription();
+	private PatientComplaint patientComplaint = new PatientComplaint();
+	private DoctorPrescription doctorPrescription = new DoctorPrescription();
 	
-	
-	PatientComplaint getpatientComplaint()
+	/**
+	* Get complaints and other datas of patient
+	* @return PatientComplaint object
+	*/
+	protected PatientComplaint getPatientComplaint()
 	{
 		return patientComplaint;
 	}
-	
+	/**
+	* Set complaint and other datas related to complaint of patient
+	* @param patientComplaint A PatientComplaint object
+	*/
 	@XmlElement
-	void setpatientComplaint(PatientComplaint patientComplaint)
+	protected void setPatientComplaint(PatientComplaint patientComplaint)
 	{
-		this.patientComplaint=patientComplaint;
+		this.patientComplaint = patientComplaint;
 	}
-	
-	DoctorPrescription getdoctorPrescription()
+	/**
+	* Get prescription provided by doctor
+	* @return DoctorPrescription object
+	*/
+	protected DoctorPrescription getDoctorPrescription()
 	{
 		return doctorPrescription;
 	}
-	
+	/**
+	* Set doctor prescription
+	* @param doctorPrescription A DoctorPrescription object
+	*/
 	@XmlElement
-	void setdoctorPrescription(DoctorPrescription doctorPrescription)
+	protected void setDoctorPrescription(DoctorPrescription doctorPrescription)
 	{
 		this.doctorPrescription=doctorPrescription;
 	}
 }
-
-@XmlRootElement
-@XmlType(propOrder={"doctorName","prescription_date","provisionalDiagnosis","finalDiagnosis","advice","medication","diagnosis","referral","signature","registration_number"})
-class DoctorPrescription
-{
-	String doctorName, ProvisionalDiagnosis,FinalDiagnosis,Advice, Medication, Diagnosis, Prescription_Date,Referral,Signature,Registration_number;
-	
-	DoctorPrescription()
-	{
-		// DateFormat d=new SimpleDateFormat("yyyy-MM-dd");
-		// Prescription_Date=d.format(new Date().toString());
-	}
-	
-	String getdoctorName()
-	{
-		return doctorName;
-	}
-	
-	@XmlElement
-	void setdoctorName(String doctorName)
-	{
-		this.doctorName=doctorName;
-	}
-
-	String getProvisionalDiagnosis()
-	{
-		return ProvisionalDiagnosis;
-	}
-	@XmlElement
-	void setProvisionalDiagnosis(String ProvisionalDiagnosis)
-	{
-		this.ProvisionalDiagnosis=ProvisionalDiagnosis;
-	}
-
-	String getFinalDiagnosis()
-	{
-		return FinalDiagnosis;
-	}
-	@XmlElement
-	void setFinalDiagnosis(String FinalDiagnosis)
-	{
-		this.FinalDiagnosis=FinalDiagnosis;
-	}
-	
-	String getAdvice()
-	{
-		return Advice;
-	}
-	
-	@XmlElement
-	void setAdvice(String Advice)
-	{
-		this.Advice=Advice;
-	}
-	
-	String getMedication()
-	{
-		return Medication;
-	}
-	
-	@XmlElement
-	void setMedication(String Medication)
-	{
-		this.Medication=Medication;
-	}
-	
-	String getDiagnosis()
-	{
-		return Diagnosis;
-	}
-	
-	@XmlElement
-	void setDiagnosis(String Diagnosis)
-	{
-		this.Diagnosis=Diagnosis;
-	}
-	
-	String getPrescription_date()
-	{
-		return Prescription_Date;
-	}
-	
-	@XmlElement
-	void setPrescription_date(String Prescription_date)
-	{
-		this.Prescription_Date=Prescription_date;
-	}
-
-	String getReferral()
-	{
-		return Referral;
-	}
-	@XmlElement
-	void setReferral(String Referral)
-	{
-		this.Referral=Referral;
-	}
-
-	String getSignature()
-	{
-		return Signature;
-	}
-	@XmlElement
-	void setSignature(String Signature)
-	{
-		this.Signature=Signature;
-	}
-
-	String getRegistration_number()
-	{
-		return Registration_number;
-	}
-	@XmlElement
-	void setRegistration_number(String Registration_number)
-	{
-		this.Registration_number=Registration_number;
-	}
-}
-
-	
-

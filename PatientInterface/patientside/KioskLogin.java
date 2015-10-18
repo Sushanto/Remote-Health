@@ -37,10 +37,11 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.DirectoryNotEmptyException;
 
 /**
-*Kiosk Coordinator login interface class
+* Kiosk Coordinator login interface class
+* @author Sushanto Halder
 */
 
-class KioskLogin extends JFrame
+public class KioskLogin extends JFrame
 {
 	private JTextField useridBox;
 	private JPasswordField passwordBox;
@@ -54,8 +55,8 @@ class KioskLogin extends JFrame
 	private Employee emp;
 
 	/**
-	*Set language specified by language
-	*@param language Bengali/English
+	* Set language specified by language
+	* @param language Bengali/English
 	*/
 	private void setLanguage(String language)
 	{
@@ -110,7 +111,7 @@ class KioskLogin extends JFrame
 	}
 
 	/**
-	*Constructor of the login interface
+	* Creates the GUI
 	*/
 
 	@SuppressWarnings("unchecked")
@@ -308,6 +309,9 @@ class KioskLogin extends JFrame
 		add(Constants.JPANEL1);
 	}
 
+	/**
+	* Changes language of kiosk, english or bengali
+	*/
 	private void changeKioskLanguage()
 	{
 		File tempFile = new File("tempData.cfg");
@@ -348,8 +352,8 @@ class KioskLogin extends JFrame
 	}
 
 	/**
-	*Creates new connection
-	*@return Connection object
+	* Creates new connection
+	* @return Connection object
 	*/
 	private Connection createNewConnection()
 	{
@@ -371,10 +375,10 @@ class KioskLogin extends JFrame
 	}
 
 	/**
-	*Checks username and password
-	*@param user Username provided in the username textfield
-	*@param pw Password provided in the password textfield
-	*@return boolean If username and password correct or not
+	* Checks username and password
+	* @param user Username provided in the username textfield
+	* @param pw Password provided in the password textfield
+	* @return boolean If username and password correct or not
 	*/
 
 	private boolean check(String user,String pw)
@@ -420,6 +424,12 @@ class KioskLogin extends JFrame
 		}
 	}
 
+	/**
+	* Move a file
+	* @param source Source file name
+	* @param destination Destination file name
+	* @return Destination file object
+	*/
 	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
 	{
 		Path src = Paths.get(source);

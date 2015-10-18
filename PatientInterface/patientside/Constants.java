@@ -15,7 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
-* Constants class to store constant values as static members
+* Constants: Stores constant values as static members
 */
 public class Constants
 {

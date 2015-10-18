@@ -23,10 +23,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-import sun.awt.image.ToolkitImage;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,14 +43,6 @@ import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.print.PageFormat;
-import java.awt.print.PrinterJob;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
 import javax.imageio.ImageIO;
 import javax.swing.border.LineBorder;
 import javax.imageio.ImageIO;
@@ -63,26 +51,9 @@ import javax.imageio.ImageIO;
 // import com.github.sarxos.webcam.WebcamResolution;
 // import com.github.sarxos.webcam.WebcamDiscoveryService;
 
-
 public class PatientForm
 {
-	PatientForm(Connection myCon,PatientReport pr,Employee e)
-	{
-		final Connection connection = myCon;
-		final PatientReport patientReport = pr;
-		final Employee emp = e;
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				new Form(connection,patientReport,emp);
-			}
-		});
-	}
-}
-
-class Form extends JFrame //implements ActionListener
-{
+	private JFrame patientFormFrame;
 	private JLabel form_label, picture, reg_no, status, date,emergency, name, sdw_of, occupation, ph_no, address, age, year, gender, height, cm, bmi, bp, weight, kg, pulse, spO2,percent, temperature, celcius, family_history, medical_history, prev_diagnosis, complaint_of, on_examination,anemia,edema,jaundice, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name,kiosk_coordinator_sign, kiosk_coordinator_date,doctor, doctor_name,doctor_sign,doctor_date;
 	
 	private JTextField reg_no_field, status_field, date_field, name_field, sdw_of_field, occupation_field, ph_no_field, age_field, gender_field, height_field, bmi_field, bp_field, weight_field, pulse_field, spO2_field, temperature_field, prev_diagnosis_field,final_diagnosis_field,kiosk_coordinator_name_field, kiosk_coordinator_date_field, doctor_name_field,doctor_date_field;
@@ -403,13 +374,14 @@ class Form extends JFrame //implements ActionListener
 		}
 	}
 
-	public Form(Connection myCon,PatientReport pr,Employee e)
+	public PatientForm(Connection myCon,PatientReport pr,Employee e)
 	{
-	//initialize Form
+	//initialize PatientForm
+		patientFormFrame = new JFrame();
 		connection = myCon;
 		patientReport = pr;
 		employee = e;
-		final JFrame jframe = this;
+		final JFrame jframe = patientFormFrame;
 		// final String PatientId = temp;
 		font = new Font("Century Schoolbook L", Font.BOLD, 14);
 
@@ -418,16 +390,16 @@ class Form extends JFrame //implements ActionListener
 		//horizontalLine = new Line2D.Float(490, 40, 1000, 40);
        	        //verticalLine = new Line2D.Float(810,0,810,490);
                              
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        patientFormFrame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		
-		setVisible(true);
+		patientFormFrame.setVisible(true);
 		
 		//setUndecorated(true);
 		
-		setLayout(null);
+		patientFormFrame.setLayout(null);
 		
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
+		patientFormFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		patientFormFrame.addWindowListener(new WindowAdapter()
 		{
 			@Override
 			public void windowClosing(WindowEvent we)
@@ -435,8 +407,8 @@ class Form extends JFrame //implements ActionListener
 				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
 					// if(webcam != null)
-     //                    webcam.getDevice().dispose();
-					dispose();
+     //                    webcam.getDevice().patientFormFrame.dispose();
+					patientFormFrame.dispose();
                     // try
                     // {
                     //     socket.close();
@@ -462,8 +434,8 @@ class Form extends JFrame //implements ActionListener
 			}
 		});
 		
-		setTitle("RURAL HEALTH KIOSK PRESCRIPTION");
-		getContentPane().setBackground(UIManager.getColor("Button.focus"));
+		patientFormFrame.setTitle("RURAL HEALTH KIOSK PRESCRIPTION");
+		patientFormFrame.setBackground(UIManager.getColor("Button.focus"));
 		
 		
 		form_label = new JLabel("RURAL HEALTH KIOSK PRESCRIPTION");
@@ -810,7 +782,7 @@ class Form extends JFrame //implements ActionListener
 			{
 				// (new File(Constants.dataPath + "tempPatientReport.xml")).delete();
 				new PatientLogin(connection,employee);
-				dispose();
+				patientFormFrame.dispose();
 			}
 		});
 
@@ -818,7 +790,7 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				getPatientReport(patientReport.patientBasicData.getId());
+				getPatientReport(patientReport.getPatientBasicData().getId());
 				setPatientReport();
 			}
 		});
@@ -895,8 +867,8 @@ class Form extends JFrame //implements ActionListener
 				{
 					getPatientReport(reg_no_field.getText());
 					setPatientReport();
-					int size = patientReport.Reports.size();
-					if(size == 0 || patientReport.Reports.get(size-1).doctorPrescription.getdoctorName() != null)
+					int size = patientReport.getReports().size();
+					if(size == 0 || patientReport.getReports().get(size-1).getDoctorPrescription().getdoctorName() != null)
 						newComplaintAction();
 					else
 					{
@@ -912,10 +884,10 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				if(current_report_count < patientReport.Reports.size()-1)
+				if(current_report_count < patientReport.getReports().size()-1)
 				{
 					setReport(++ current_report_count);
-					if(current_report_count == patientReport.Reports.size()-1)
+					if(current_report_count == patientReport.getReports().size()-1)
 						next_button.setEnabled(false);
 					if(current_report_count > 0)
 						prev_button.setEnabled(true);
@@ -932,7 +904,7 @@ class Form extends JFrame //implements ActionListener
 					setReport(--current_report_count);
 					if(current_report_count == 0)
 						prev_button.setEnabled(false);
-					if(current_report_count < patientReport.Reports.size()-1)
+					if(current_report_count < patientReport.getReports().size()-1)
 						next_button.setEnabled(true);
 				}
 			}
@@ -957,7 +929,7 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				Information info = new Information();
+				PrescriptionInformation info = new PrescriptionInformation();
 				info.date = doctor_date_field.getText();
 				info.doctor_name = doctor_name_field.getText();
 				try
@@ -986,7 +958,7 @@ class Form extends JFrame //implements ActionListener
 				info.doctor_referal = referral_area.getText();
 				info.doctor_diagnostic = diagnostic_test_area.getText();
 				info.kiosk_coordinator_name = kiosk_coordinator_name_field.getText();
-				JFrame FRAME_TO_PRINT = new Prescription_applet(info);
+				GeneralPrescription FRAME_TO_PRINT = new GeneralPrescription(info);
 			}
 		});
 
@@ -1033,7 +1005,7 @@ class Form extends JFrame //implements ActionListener
 					{
 						addComplaintToFile();
 						connection.unlockFile(reg_no_field.getText() + ".xml");
-						current_report_count = patientReport.Reports.size()-1;
+						current_report_count = patientReport.getReports().size()-1;
 						next_button.setEnabled(false);
 						if(current_report_count == 0)
 							prev_button.setEnabled(false);
@@ -1181,15 +1153,15 @@ class Form extends JFrame //implements ActionListener
 					print_button.setVisible(true);
 					patientComplaintEdit_button.setVisible(true);
 
-					patientReport.patientBasicData.setName(name_field.getText());
-					patientReport.patientBasicData.setReference(sdw_of_field.getText());
-					patientReport.patientBasicData.setOccupation(occupation_field.getText());
-					patientReport.patientBasicData.setPhone(ph_no_field.getText());
-					patientReport.patientBasicData.setAddress(address_area.getText());
-					patientReport.patientBasicData.setAge(age_field.getText());
-					patientReport.patientBasicData.setHeight(height_field.getText());
-					patientReport.patientBasicData.setFamilyhistory(family_history_area.getText());
-					patientReport.patientBasicData.setMedicalhistory(medical_history_area.getText());
+					patientReport.getPatientBasicData().setName(name_field.getText());
+					patientReport.getPatientBasicData().setReference(sdw_of_field.getText());
+					patientReport.getPatientBasicData().setOccupation(occupation_field.getText());
+					patientReport.getPatientBasicData().setPhone(ph_no_field.getText());
+					patientReport.getPatientBasicData().setAddress(address_area.getText());
+					patientReport.getPatientBasicData().setAge(age_field.getText());
+					patientReport.getPatientBasicData().setHeight(height_field.getText());
+					patientReport.getPatientBasicData().setFamilyhistory(family_history_area.getText());
+					patientReport.getPatientBasicData().setMedicalhistory(medical_history_area.getText());
 
 					File file = new File(Constants.dataPath + "tempPatientReport.xml");
 
@@ -1214,7 +1186,7 @@ class Form extends JFrame //implements ActionListener
 							JOptionPane.showMessageDialog(jframe,"Error in changing picture! Try again later!");
 							picture.setIcon(null);
 						}
-						else patientReport.patientBasicData.setImage(imageFileName);
+						else patientReport.getPatientBasicData().setImage(imageFileName);
 						if(new File(Constants.dataPath + imageFileName).isFile())
 							new File(Constants.dataPath + imageFileName).delete();
 					}
@@ -1260,7 +1232,7 @@ class Form extends JFrame //implements ActionListener
 				patientBasicDataSave_button.setVisible(false);
 				patientBasicDataCancel_button.setVisible(false);
 				changePicture_button.setVisible(false);
-				if(picture.getIcon() == null && patientReport.patientBasicData.getImage() != null)
+				if(picture.getIcon() == null && patientReport.getPatientBasicData().getImage() != null)
 					pictureDownloadButton.setVisible(true);
 
 
@@ -1273,7 +1245,7 @@ class Form extends JFrame //implements ActionListener
 				patientComplaintEdit_button.setVisible(true);
 
 				
-				getPatientReport(patientReport.patientBasicData.getId());
+				getPatientReport(patientReport.getPatientBasicData().getId());
 				setPatientReport();
 
 				String imageFileName = reg_no_field.getText() + "_image.jpg";
@@ -1323,7 +1295,7 @@ class Form extends JFrame //implements ActionListener
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String imageFileName = patientReport.patientBasicData.getImage();
+				String imageFileName = patientReport.getPatientBasicData().getImage();
 				System.out.println("imageFileName : " + imageFileName);
 				int response = connection.receiveFromServer(imageFileName , Constants.dataPath + imageFileName);
 				File imageFile = new File(Constants.dataPath + imageFileName);
@@ -1419,16 +1391,16 @@ class Form extends JFrame //implements ActionListener
 				{
 					File file = new File(Constants.dataPath + "tempPatientReport.xml");
 
-					Report report = patientReport.Reports.get(current_report_count);
-					report.patientComplaint.setcomplaint(complaint_of_area.getText());
-					report.patientComplaint.setPrevDiagnosis(prev_diagnosis_field.getText());
-					report.patientComplaint.setWeight(weight_field.getText());
-					report.patientComplaint.setBmi(bmi_field.getText());
-					report.patientComplaint.setBp(bp_field.getText());
-					report.patientComplaint.setPulse(pulse_field.getText());
-					report.patientComplaint.setTemperature(temperature_field.getText());
-					report.patientComplaint.setSpo2(spO2_field.getText());
-					report.patientComplaint.setOtherResults(on_examination_area.getText());
+					Report report = patientReport.getReports().get(current_report_count);
+					report.getPatientComplaint().setcomplaint(complaint_of_area.getText());
+					report.getPatientComplaint().setPrevDiagnosis(prev_diagnosis_field.getText());
+					report.getPatientComplaint().setWeight(weight_field.getText());
+					report.getPatientComplaint().setBmi(bmi_field.getText());
+					report.getPatientComplaint().setBp(bp_field.getText());
+					report.getPatientComplaint().setPulse(pulse_field.getText());
+					report.getPatientComplaint().setTemperature(temperature_field.getText());
+					report.getPatientComplaint().setSpo2(spO2_field.getText());
+					report.getPatientComplaint().setOtherResults(on_examination_area.getText());
 
 					SimpleDateFormat fileDate = new SimpleDateFormat("yy_MM_dd_HH_mm_ss");
 
@@ -1452,13 +1424,13 @@ class Form extends JFrame //implements ActionListener
 					// selectedFiles = null;
 					// selectedFiles = new ArrayList < File > ();
 					selectedFiles.removeAll(selectedFiles);
-					String prevFileNames = report.patientComplaint.getFileNames();
+					String prevFileNames = report.getPatientComplaint().getFileNames();
 					if(CheckNullString(prevFileNames) == null)
-						report.patientComplaint.setFileNames(tempFileNames);
+						report.getPatientComplaint().setFileNames(tempFileNames);
 					else
-						report.patientComplaint.setFileNames(prevFileNames + "\n" + tempFileNames);
+						report.getPatientComplaint().setFileNames(prevFileNames + "\n" + tempFileNames);
 
-					patientReport.Reports.set(current_report_count,report);
+					patientReport.getReports().set(current_report_count,report);
 
 					try
 					{
@@ -1478,7 +1450,7 @@ class Form extends JFrame //implements ActionListener
 					{
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(sendResponse));
 						new KioskLogin();
-						dispose();
+						patientFormFrame.dispose();
 					}
 					file.delete();
 					connection.unlockFile(reg_no_field.getText() + ".xml");
@@ -1583,112 +1555,112 @@ class Form extends JFrame //implements ActionListener
 		
 		
 	//add components
-		add(changePicture_button);
+		patientFormFrame.add(changePicture_button);
 
-		add(form_label);
-		add(picture);
-		add(reg_no);
-		add(reg_no_field);
-		add(status);
-		add(status_field);
-		add(date);
-		add(date_field);
-		add(emergency);
-		add(emergency_box);
-		add(anemia);
-		add(anemia_box);
-		add(edema);
-		add(edema_box);
-		add(jaundice);
-		add(jaundice_box);
-		add(name);
-		add(name_field);
-		add(sdw_of);
-		add(sdw_of_field);
-		add(occupation);
-		add(occupation_field);
-		add(ph_no);
-		add(ph_no_field);
-		add(address);
-		add(address_area);
-		add(age);
-		add(age_field);
-		add(year);
-		add(gender);
-		add(gender_field);
-		add(height);
-		add(height_field);
-		add(cm);
-		add(weight);
-		add(weight_field);
-		add(kg);
-		add(bmi);
-		add(bmi_field);
-		add(bp);
-		add(bp_field);
-		add(spO2);
-		add(spO2_field);
-		add(percent);
-		add(pulse);
-		add(pulse_field);
-		add(temperature);
-		add(temperature_field);
-		add(celcius);
-		add(family_history);
-		add(family_history_area);
-		add(medical_history);
-		add(medical_history_area);
-		add(prev_diagnosis);
-		add(prev_diagnosis_field);
-		add(complaint_of);
-		add(complaint_of_area);
-		add(on_examination);
-		add(on_examination_area);
-		add(filename_area);
-		add(provisional_diagnosis);
-		add(provisional_diagnosis_area);
-		add(final_diagnosis);
-		add(final_diagnosis_area);
-		add(advice);
-		add(advice_area);
-		add(medication);
-		add(medication_area);
-		add(diagnostic_test);
-		add(diagnostic_test_area);
-		add(referral);
-		add(referral_area);
-		add(kiosk_coordinator);
-		add(kiosk_coordinator_name);
-		add(kiosk_coordinator_name_field);
-		add(kiosk_coordinator_sign);
-		add(kiosk_coordinator_date);
-		add(kiosk_coordinator_date_field);
-		add(doctor);
-		add(doctor_name);
-		add(doctor_name_field);
-		add(doctor_sign);
-		add(doctor_date);
-		add(doctor_date_field);
+		patientFormFrame.add(form_label);
+		patientFormFrame.add(picture);
+		patientFormFrame.add(reg_no);
+		patientFormFrame.add(reg_no_field);
+		patientFormFrame.add(status);
+		patientFormFrame.add(status_field);
+		patientFormFrame.add(date);
+		patientFormFrame.add(date_field);
+		patientFormFrame.add(emergency);
+		patientFormFrame.add(emergency_box);
+		patientFormFrame.add(anemia);
+		patientFormFrame.add(anemia_box);
+		patientFormFrame.add(edema);
+		patientFormFrame.add(edema_box);
+		patientFormFrame.add(jaundice);
+		patientFormFrame.add(jaundice_box);
+		patientFormFrame.add(name);
+		patientFormFrame.add(name_field);
+		patientFormFrame.add(sdw_of);
+		patientFormFrame.add(sdw_of_field);
+		patientFormFrame.add(occupation);
+		patientFormFrame.add(occupation_field);
+		patientFormFrame.add(ph_no);
+		patientFormFrame.add(ph_no_field);
+		patientFormFrame.add(address);
+		patientFormFrame.add(address_area);
+		patientFormFrame.add(age);
+		patientFormFrame.add(age_field);
+		patientFormFrame.add(year);
+		patientFormFrame.add(gender);
+		patientFormFrame.add(gender_field);
+		patientFormFrame.add(height);
+		patientFormFrame.add(height_field);
+		patientFormFrame.add(cm);
+		patientFormFrame.add(weight);
+		patientFormFrame.add(weight_field);
+		patientFormFrame.add(kg);
+		patientFormFrame.add(bmi);
+		patientFormFrame.add(bmi_field);
+		patientFormFrame.add(bp);
+		patientFormFrame.add(bp_field);
+		patientFormFrame.add(spO2);
+		patientFormFrame.add(spO2_field);
+		patientFormFrame.add(percent);
+		patientFormFrame.add(pulse);
+		patientFormFrame.add(pulse_field);
+		patientFormFrame.add(temperature);
+		patientFormFrame.add(temperature_field);
+		patientFormFrame.add(celcius);
+		patientFormFrame.add(family_history);
+		patientFormFrame.add(family_history_area);
+		patientFormFrame.add(medical_history);
+		patientFormFrame.add(medical_history_area);
+		patientFormFrame.add(prev_diagnosis);
+		patientFormFrame.add(prev_diagnosis_field);
+		patientFormFrame.add(complaint_of);
+		patientFormFrame.add(complaint_of_area);
+		patientFormFrame.add(on_examination);
+		patientFormFrame.add(on_examination_area);
+		patientFormFrame.add(filename_area);
+		patientFormFrame.add(provisional_diagnosis);
+		patientFormFrame.add(provisional_diagnosis_area);
+		patientFormFrame.add(final_diagnosis);
+		patientFormFrame.add(final_diagnosis_area);
+		patientFormFrame.add(advice);
+		patientFormFrame.add(advice_area);
+		patientFormFrame.add(medication);
+		patientFormFrame.add(medication_area);
+		patientFormFrame.add(diagnostic_test);
+		patientFormFrame.add(diagnostic_test_area);
+		patientFormFrame.add(referral);
+		patientFormFrame.add(referral_area);
+		patientFormFrame.add(kiosk_coordinator);
+		patientFormFrame.add(kiosk_coordinator_name);
+		patientFormFrame.add(kiosk_coordinator_name_field);
+		patientFormFrame.add(kiosk_coordinator_sign);
+		patientFormFrame.add(kiosk_coordinator_date);
+		patientFormFrame.add(kiosk_coordinator_date_field);
+		patientFormFrame.add(doctor);
+		patientFormFrame.add(doctor_name);
+		patientFormFrame.add(doctor_name_field);
+		patientFormFrame.add(doctor_sign);
+		patientFormFrame.add(doctor_date);
+		patientFormFrame.add(doctor_date_field);
 
-		add(back_button);
-		add(refresh_button);
-		add(back2_button);
-		add(next_button);
-		add(prev_button);
-		add(newcomplaint_button);
-		add(addFile_button);
-		add(cancelFile_button);
-		add(submit_button);
-		add(choose_button);
-		add(print_button);
-		add(patientBasicDataEdit_button);
-		add(patientBasicDataSave_button);
-		add(patientBasicDataCancel_button);
-		add(patientComplaintEdit_button);
-		add(patientComplaintSave_button);
-		add(patientComplaintCancel_button);
-		add(pictureDownloadButton);
-		// getContentPane().add(address_pane);
+		patientFormFrame.add(back_button);
+		patientFormFrame.add(refresh_button);
+		patientFormFrame.add(back2_button);
+		patientFormFrame.add(next_button);
+		patientFormFrame.add(prev_button);
+		patientFormFrame.add(newcomplaint_button);
+		patientFormFrame.add(addFile_button);
+		patientFormFrame.add(cancelFile_button);
+		patientFormFrame.add(submit_button);
+		patientFormFrame.add(choose_button);
+		patientFormFrame.add(print_button);
+		patientFormFrame.add(patientBasicDataEdit_button);
+		patientFormFrame.add(patientBasicDataSave_button);
+		patientFormFrame.add(patientBasicDataCancel_button);
+		patientFormFrame.add(patientComplaintEdit_button);
+		patientFormFrame.add(patientComplaintSave_button);
+		patientFormFrame.add(patientComplaintCancel_button);
+		patientFormFrame.add(pictureDownloadButton);
+		// getContentPane().patientFormFrame.add(address_pane);
 
 	//initialize JScrollPane
 		on_examination_pane = new JScrollPane(on_examination_area);
@@ -1720,19 +1692,19 @@ class Form extends JFrame //implements ActionListener
    		referral_pane.setBounds(1100,350,250,80);
 
 
-   	//add JScrollPane
-		add(on_examination_pane);
-		add(filename_pane);
-		add(address_pane);
-		add(family_history_pane);
-		add(medical_history_pane);
-		add(complaint_of_pane);
-		add(advice_pane);
-		add(medication_pane);
-		add(diagnostic_test_pane);
-		add(provisional_diagnosis_pane);
-		add(final_diagnosis_pane);
-		add(referral_pane);
+   	//patientFormFrame.add JScrollPane
+		patientFormFrame.add(on_examination_pane);
+		patientFormFrame.add(filename_pane);
+		patientFormFrame.add(address_pane);
+		patientFormFrame.add(family_history_pane);
+		patientFormFrame.add(medical_history_pane);
+		patientFormFrame.add(complaint_of_pane);
+		patientFormFrame.add(advice_pane);
+		patientFormFrame.add(medication_pane);
+		patientFormFrame.add(diagnostic_test_pane);
+		patientFormFrame.add(provisional_diagnosis_pane);
+		patientFormFrame.add(final_diagnosis_pane);
+		patientFormFrame.add(referral_pane);
 
 		BasicDataPanel = new JPanel();
 		HealthInfoPanel = new JPanel();
@@ -1761,19 +1733,19 @@ class Form extends JFrame //implements ActionListener
 
 		// videocamInitialize();
 
-		add(BasicDataPanel);
-		add(HealthInfoPanel);
-		add(DoctorPrescriptionPanel);
-		add(KioskCoordinatorPanel);
-		add(DoctorPanel);
-		add(ButtonPanel);
-		add(CommunicationPanel);
+		patientFormFrame.add(BasicDataPanel);
+		patientFormFrame.add(HealthInfoPanel);
+		patientFormFrame.add(DoctorPrescriptionPanel);
+		patientFormFrame.add(KioskCoordinatorPanel);
+		patientFormFrame.add(DoctorPanel);
+		patientFormFrame.add(ButtonPanel);
+		patientFormFrame.add(CommunicationPanel);
 
-	//add JPanels
+	//patientFormFrame.add JPanels
 		Constants.JPANEL2.setBounds(0,0,2000,55);
 		Constants.JPANEL1.setBounds(0,0,2000,1000);
-		add(Constants.JPANEL2);
-		// add(Constants.JPANEL1);
+		patientFormFrame.add(Constants.JPANEL2);
+		// patientFormFrame.add(Constants.JPANEL1);
 
 		Constants.JPANEL2.setBounds(0,0,2000,Constants.PANEL2_HEIGHT);
 		Constants.JPANEL1.setBounds(0,0,2000,Constants.SIZE_Y);
@@ -1889,17 +1861,17 @@ class Form extends JFrame //implements ActionListener
 		if(jaundice_box.isSelected())
 			on_examination_area.setText(on_examination_area.getText() + "Jaundice\n");
 		PatientComplaint patientComplaint = new PatientComplaint();
-		patientComplaint.complaint = CheckNullString(complaint_of_area.getText());
-		patientComplaint.complaint_date = CheckNullString(kiosk_coordinator_date_field.getText());
-		patientComplaint.Weight = CheckNullString(weight_field.getText());
-		patientComplaint.Bmi = CheckNullString(bmi_field.getText());
-		patientComplaint.Bp = CheckNullString(bp_field.getText());
-		patientComplaint.Spo2 = CheckNullString(spO2_field.getText());
-		patientComplaint.Pulse = CheckNullString(pulse_field.getText());
-		patientComplaint.Temperature = CheckNullString(temperature_field.getText());
-		patientComplaint.OtherResults = CheckNullString(on_examination_area.getText());
-		patientComplaint.KioskCoordinatorName = CheckNullString(kiosk_coordinator_name_field.getText());
-		patientComplaint.PrevDiagnosis = CheckNullString(prev_diagnosis_field.getText());
+		patientComplaint.setcomplaint( CheckNullString(complaint_of_area.getText()) );
+		patientComplaint.setcomplaint_date( CheckNullString(kiosk_coordinator_date_field.getText()) );
+		patientComplaint.setWeight( CheckNullString(weight_field.getText()) );
+		patientComplaint.setBmi( CheckNullString(bmi_field.getText()) );
+		patientComplaint.setBp( CheckNullString(bp_field.getText()) );
+		patientComplaint.setSpo2( CheckNullString(spO2_field.getText()) );
+		patientComplaint.setPulse( CheckNullString(pulse_field.getText()) );
+		patientComplaint.setTemperature( CheckNullString(temperature_field.getText()) );
+		patientComplaint.setOtherResults( CheckNullString(on_examination_area.getText()) );
+		patientComplaint.setKioskCoordinatorName( CheckNullString(kiosk_coordinator_name_field.getText()) );
+		patientComplaint.setPrevDiagnosis( CheckNullString(prev_diagnosis_field.getText()) );
 
 
 
@@ -1923,7 +1895,7 @@ class Form extends JFrame //implements ActionListener
 			if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + fileName) < 0)
 			{
 				FileSendingComplete = false;
-				JOptionPane.showMessageDialog(this,"File upload failed : " + selectedFiles.get(i).getName());
+				JOptionPane.showMessageDialog(patientFormFrame,"File upload failed : " + selectedFiles.get(i).getName());
 			}
 			else if(tempFileNames.equals(""))
 				tempFileNames = fileName;
@@ -1938,10 +1910,10 @@ class Form extends JFrame //implements ActionListener
 		filename_area.setText(patientComplaint.getFileNames());
 
 		Report report = new Report();
-		report.patientComplaint = patientComplaint;
+		report.setPatientComplaint( patientComplaint );
 
-		patientReport.Reports.add(report);
-		patientReport.patientBasicData.setStatus(status_field.getText());
+		patientReport.getReports().add(report);
+		patientReport.getPatientBasicData().setStatus(status_field.getText());
 
 		try
 		{
@@ -1953,9 +1925,9 @@ class Form extends JFrame //implements ActionListener
 
 			int sendResponse;
 
-			if(patientReport.patientBasicData.getStatus().equals("New"))
+			if(patientReport.getPatientBasicData().getStatus().equals("New"))
 			{
-				String imageFileName = patientReport.patientBasicData.getImage();
+				String imageFileName = patientReport.getPatientBasicData().getImage();
 				if(imageFileName != null)
 				{
 					File imageFile = new File(Constants.dataPath + imageFileName);
@@ -1964,10 +1936,10 @@ class Form extends JFrame //implements ActionListener
 					{
 						if((sendResponse = connection.sendToServer(Constants.dataPath + imageFileName,Constants.finalDataPath + imageFileName)) < 0)
 						{
-							JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(sendResponse));
+							JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(sendResponse));
 							(new File(Constants.dataPath + imageFileName)).delete();
 							new PatientLogin(connection,employee);
-							dispose();
+							patientFormFrame.dispose();
 						}
 						else
 							(new File(Constants.dataPath + imageFileName)).delete();
@@ -1976,17 +1948,17 @@ class Form extends JFrame //implements ActionListener
 					{
 						if(imageFile.isFile())
 							imageFile.delete();
-						JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(receiveResponse));
+						JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(receiveResponse));
 					}
 				}
 			}
 
 			if((sendResponse = connection.sendToServer(Constants.dataPath + "tempPatientReport.xml",Constants.finalDataPath + reg_no_field.getText() + ".xml")) < 0)
 			{
-				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(sendResponse));
+				JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(sendResponse));
 				(new File(Constants.dataPath + "tempPatientReport.xml")).delete();
 				new PatientLogin(connection,employee);
-				dispose();
+				patientFormFrame.dispose();
 			}
 			else
 				(new File(Constants.dataPath + "tempPatientReport.xml")).delete();
@@ -2035,30 +2007,30 @@ class Form extends JFrame //implements ActionListener
 	{
 		if(report_count != -1)
 		{
-			Report report = patientReport.Reports.get(report_count);
-			weight_field.setText(report.patientComplaint.getWeight());
-			bmi_field.setText(report.patientComplaint.getBmi());
-			bp_field.setText(report.patientComplaint.getBp());
-			pulse_field.setText(report.patientComplaint.getPulse());
-			temperature_field.setText(report.patientComplaint.getTemperature());
-			spO2_field.setText(report.patientComplaint.getSpo2());
-			prev_diagnosis_field.setText(report.patientComplaint.getPrevDiagnosis());
-			on_examination_area.setText(report.patientComplaint.getOtherResults());
-			filename_area.setText(report.patientComplaint.getFileNames());
-			complaint_of_area.setText(report.patientComplaint.getcomplaint());
-			kiosk_coordinator_name_field.setText(report.patientComplaint.getKioskCoordinatorName());
-			kiosk_coordinator_date_field.setText(report.patientComplaint.getcomplaint_date());
+			Report report = patientReport.getReports().get(report_count);
+			weight_field.setText(report.getPatientComplaint().getWeight());
+			bmi_field.setText(report.getPatientComplaint().getBmi());
+			bp_field.setText(report.getPatientComplaint().getBp());
+			pulse_field.setText(report.getPatientComplaint().getPulse());
+			temperature_field.setText(report.getPatientComplaint().getTemperature());
+			spO2_field.setText(report.getPatientComplaint().getSpo2());
+			prev_diagnosis_field.setText(report.getPatientComplaint().getPrevDiagnosis());
+			on_examination_area.setText(report.getPatientComplaint().getOtherResults());
+			filename_area.setText(report.getPatientComplaint().getFileNames());
+			complaint_of_area.setText(report.getPatientComplaint().getcomplaint());
+			kiosk_coordinator_name_field.setText(report.getPatientComplaint().getKioskCoordinatorName());
+			kiosk_coordinator_date_field.setText(report.getPatientComplaint().getcomplaint_date());
 
-			if(report.doctorPrescription != null)
+			if(report.getDoctorPrescription() != null)
 			{
-				doctor_name_field.setText(report.doctorPrescription.getdoctorName());
-				doctor_date_field.setText(report.doctorPrescription.getPrescription_date());
-				provisional_diagnosis_area.setText(report.doctorPrescription.getProvisionalDiagnosis());
-				final_diagnosis_area.setText(report.doctorPrescription.getFinalDiagnosis());
-				advice_area.setText(report.doctorPrescription.getAdvice());
-				medication_area.setText(report.doctorPrescription.getMedication());
-				diagnostic_test_area.setText(report.doctorPrescription.getDiagnosis());
-				referral_area.setText(report.doctorPrescription.getReferral());
+				doctor_name_field.setText(report.getDoctorPrescription().getdoctorName());
+				doctor_date_field.setText(report.getDoctorPrescription().getPrescription_date());
+				provisional_diagnosis_area.setText(report.getDoctorPrescription().getProvisionalDiagnosis());
+				final_diagnosis_area.setText(report.getDoctorPrescription().getFinalDiagnosis());
+				advice_area.setText(report.getDoctorPrescription().getAdvice());
+				medication_area.setText(report.getDoctorPrescription().getMedication());
+				diagnostic_test_area.setText(report.getDoctorPrescription().getDiagnosis());
+				referral_area.setText(report.getDoctorPrescription().getReferral());
 			}
 			else
 			{
@@ -2100,8 +2072,8 @@ class Form extends JFrame //implements ActionListener
 				PatientLog patientLog = (PatientLog)um.unmarshal(file);
 
 				if(emergency_box.isSelected())
-					patientLog.Emergency.add(reg_no_field.getText());
-				else patientLog.Normal.add(reg_no_field.getText());
+					patientLog.getEmergency().add(reg_no_field.getText());
+				else patientLog.getNormal().add(reg_no_field.getText());
 
 				Marshaller jm = jc.createMarshaller();
 				jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
@@ -2109,7 +2081,7 @@ class Form extends JFrame //implements ActionListener
 				if(connection.sendToServer(Constants.dataPath + "log.xml",Constants.finalDataPath + "Patient_" + Constants.kioskNo + "_Log.xml") < 0)
 				{
 					file.delete();
-					JOptionPane.showMessageDialog(this,networkErrorMessage);
+					JOptionPane.showMessageDialog(patientFormFrame,networkErrorMessage);
 					connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
 					return false;
 				}
@@ -2129,7 +2101,7 @@ class Form extends JFrame //implements ActionListener
 		{
 			if(file.isFile())
 				file.delete();
-			JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+			JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(response));
 			connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
 			return false;
 		}
@@ -2158,26 +2130,26 @@ class Form extends JFrame //implements ActionListener
 			if(file.isFile())
 				file.delete();
 			if(response == -2)
-				JOptionPane.showMessageDialog(this,"File does not exist");
+				JOptionPane.showMessageDialog(patientFormFrame,"File does not exist");
 			else
 			{
-				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+				JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(response));
 				new PatientLogin(connection,employee);
-				dispose();
+				patientFormFrame.dispose();
 			}
 		}
 	}
 
 	private void setPatientReport()
 	{
-		reg_no_field.setText(patientReport.patientBasicData.getId());
-		name_field.setText(patientReport.patientBasicData.getName());
-		sdw_of_field.setText(patientReport.patientBasicData.getReference());
-		occupation_field.setText(patientReport.patientBasicData.getOccupation());
+		reg_no_field.setText(patientReport.getPatientBasicData().getId());
+		name_field.setText(patientReport.getPatientBasicData().getName());
+		sdw_of_field.setText(patientReport.getPatientBasicData().getReference());
+		occupation_field.setText(patientReport.getPatientBasicData().getOccupation());
 
-		status_field.setText(patientReport.patientBasicData.getStatus());
+		status_field.setText(patientReport.getPatientBasicData().getStatus());
 
-		String imageFileName = patientReport.patientBasicData.getImage();
+		String imageFileName = patientReport.getPatientBasicData().getImage();
 
 		if(status_field.getText().equals("New"))
 		{
@@ -2201,24 +2173,24 @@ class Form extends JFrame //implements ActionListener
 				{
 					if(imageFile.isFile())
 						imageFile.delete();
-					JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+					JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(response));
 				}
 			}
 		}
 		else if(picture.getIcon() == null && imageFileName != null)
 			pictureDownloadButton.setVisible(true);
-		date_field.setText(patientReport.patientBasicData.getDate());
-		address_area.setText(patientReport.patientBasicData.getAddress());
-		age_field.setText(patientReport.patientBasicData.getAge());
-		ph_no_field.setText(patientReport.patientBasicData.getPhone());
-		gender_field.setText(patientReport.patientBasicData.getGender());
-		height_field.setText(patientReport.patientBasicData.getHeight());
-		family_history_area.setText(patientReport.patientBasicData.getFamilyhistory());
-		medical_history_area.setText(patientReport.patientBasicData.getMedicalhistory());
+		date_field.setText(patientReport.getPatientBasicData().getDate());
+		address_area.setText(patientReport.getPatientBasicData().getAddress());
+		age_field.setText(patientReport.getPatientBasicData().getAge());
+		ph_no_field.setText(patientReport.getPatientBasicData().getPhone());
+		gender_field.setText(patientReport.getPatientBasicData().getGender());
+		height_field.setText(patientReport.getPatientBasicData().getHeight());
+		family_history_area.setText(patientReport.getPatientBasicData().getFamilyhistory());
+		medical_history_area.setText(patientReport.getPatientBasicData().getMedicalhistory());
 
-		if(!patientReport.Reports.isEmpty())
+		if(!patientReport.getReports().isEmpty())
 		{
-			current_report_count = patientReport.Reports.size()-1;
+			current_report_count = patientReport.getReports().size()-1;
 			next_button.setEnabled(false);
 			status_field.setText("Review");
 			if(current_report_count == 0)
@@ -2236,16 +2208,16 @@ class Form extends JFrame //implements ActionListener
 
 	private void newComplaintAction()
 	{
-		int size = patientReport.Reports.size();
+		int size = patientReport.getReports().size();
 		if(size != 0)
 		{
-			Report report = patientReport.Reports.get(size-1);
-			weight_field.setText(report.patientComplaint.getWeight());
-			bmi_field.setText(report.patientComplaint.getBmi());
-			bp_field.setText(report.patientComplaint.getBp());
-			pulse_field.setText(report.patientComplaint.getPulse());
-			temperature_field.setText(report.patientComplaint.getTemperature());
-			spO2_field.setText(report.patientComplaint.getSpo2());
+			Report report = patientReport.getReports().get(size-1);
+			weight_field.setText(report.getPatientComplaint().getWeight());
+			bmi_field.setText(report.getPatientComplaint().getBmi());
+			bp_field.setText(report.getPatientComplaint().getBp());
+			pulse_field.setText(report.getPatientComplaint().getPulse());
+			temperature_field.setText(report.getPatientComplaint().getTemperature());
+			spO2_field.setText(report.getPatientComplaint().getSpo2());
 		}
 
 		provisional_diagnosis_area.setText("");
@@ -2336,7 +2308,7 @@ class Form extends JFrame //implements ActionListener
 
 	private void videocamInitialize()
 	{
-		JFrame jframe = this;
+		JFrame jframe = patientFormFrame;
 		try
         {   
         	socket = new Socket(InetAddress.getByName(Constants.SERVER),Constants.PORT);
@@ -2421,7 +2393,7 @@ class Form extends JFrame //implements ActionListener
 
 	class SendImage extends Thread
     {
-        Thread t = this;
+        Thread t = patientFormFrame;
         boolean running = false;
         public void run()
         {
@@ -2611,598 +2583,531 @@ class Form extends JFrame //implements ActionListener
 }
 
 
-class Information
-{
-	public String date,doctor_name,doctor_degree,doctor_hospital;
-	public String patient_regno,patient_name,patient_sdw,patient_address,patient_age,patient_gender,patient_phone;
-	public String complaint,provisional_diagnosis,final_diagnosis;
-	public String doctor_advice,doctor_medication,doctor_diagnostic,doctor_referal;
-	public String kiosk_coordinator_name;
-	public Image patient_image;
-}
+// class PrescriptionInformation
+// {
+// 	public String date,doctor_name,doctor_degree,doctor_hospital;
+// 	public String patient_regno,patient_name,patient_sdw,patient_address,patient_age,patient_gender,patient_phone;
+// 	public String complaint,provisional_diagnosis,final_diagnosis;
+// 	public String doctor_advice,doctor_medication,doctor_diagnostic,doctor_referal;
+// 	public String kiosk_coordinator_name;
+// 	public Image patient_image;
+// }
 
-class Printer implements Printable
-{
-	Component comp;
-
-	public Printer(Component comp)
-	{
-		this.comp = comp;
-	}
-
-	@Override
-	public int print(Graphics g,PageFormat format,int page_index)
-	throws PrinterException
-	{
-		if(page_index > 0)
-			return Printable.NO_SUCH_PAGE;
-
-		Dimension dim = comp.getSize();
-		double cheight = dim.getHeight();
-		double cwidth = dim.getWidth();
-
-		double pheight = format.getImageableHeight();
-		double pwidth = format.getImageableWidth();
-
-		double Xstart = format.getImageableX();
-		double Ystart = format.getImageableY();
-
-		double Xratio = pwidth/cwidth;
-		double Yratio = pheight/cheight;
-
-		Graphics2D g2 = (Graphics2D)g;
-		g2.translate(Xstart,Ystart);
-		g2.scale(Xratio,Yratio);
-		comp.paint(g2);
-		return Printable.PAGE_EXISTS;
-	}
-}
-
-class Prescription_applet extends JFrame
-{
-	public JLabel form_label,patient_picture_label, date1, date2, regno,regno_label,name1, name2,sdw_of_label,age1, age2, years, gender1, gender2, ph_no1, ph_no2, address, complaint1, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name1, kiosk_coordinator_name2, kiosk_coordinator_sign, kiosk_coordinator_date, doctor_name1, doctor_name2,doctor_sign,degree,hospital,doctor_ph_no1,doctor_ph_no2;
+// class GeneralPrescription extends JFrame
+// {
+// 	public JLabel form_label,patient_picture_label, date1, date2, regno,regno_label,name1, name2,sdw_of_label,age1, age2, years, gender1, gender2, ph_no1, ph_no2, address, complaint1, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name1, kiosk_coordinator_name2, kiosk_coordinator_sign, kiosk_coordinator_date, doctor_name1, doctor_name2,doctor_sign,degree,hospital,doctor_ph_no1,doctor_ph_no2;
 	
-	JTextArea address_area, complaint2,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area;
+// 	JTextArea address_area, complaint2,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area;
 	
-	JPanel JPANEL1,JPANEL3,JPANEL4,JPANEL5,JPANEL6;
-	Font font = new Font("Serif",Font.BOLD,12);
-	String confirmMessage = "Are you sure?";
+// 	JPanel JPANEL1,JPANEL3,JPANEL4,JPANEL5,JPANEL6;
+// 	Font font = new Font("Serif",Font.BOLD,12);
+// 	String confirmMessage = "Are you sure?";
 	
 	
-	public Prescription_applet(Information info)
-	{
+// 	public GeneralPrescription(PrescriptionInformation info)
+// 	{
 		
 		
-		final JFrame jframe = this;
-		setVisible(true);
-		setSize(595,852);
-		form_label = new JLabel("RURAL HEALTH KIOSK PRESCRIPTION");
-		form_label.setForeground(Color.WHITE);
-		form_label.setBackground(Color.white);
-       	form_label.setFont(new Font("Serif", Font.BOLD, 15));	
+// 		final JFrame jframe = this;
+// 		setVisible(true);
+// 		setSize(595,852);
+// 		form_label = new JLabel("RURAL HEALTH KIOSK PRESCRIPTION");
+// 		form_label.setForeground(Color.WHITE);
+// 		form_label.setBackground(Color.white);
+//        	form_label.setFont(new Font("Serif", Font.BOLD, 15));	
        	
-       	patient_picture_label = new JLabel();
-       	date1 = new JLabel("Date:");
-        date2 = new JLabel("-date-");
+//        	patient_picture_label = new JLabel();
+//        	date1 = new JLabel("Date:");
+//         date2 = new JLabel("-date-");
                	
-        //DOCTOR LABELS
+//         //DOCTOR LABELS
         	
-        doctor_name1 = new JLabel("Dr.");
-        doctor_name2 = new JLabel("-name-");
-        degree = new JLabel("-Degree-");
-        hospital = new JLabel("-Hospital-");
-        doctor_sign = new JLabel("Signature : ");
-        doctor_ph_no1 = new JLabel("Ph.No.:");
-        doctor_ph_no2 = new JLabel("-number-");
-		jframe.setBounds(200,0,595,846 + 190);
-		setLayout(null);
+//         doctor_name1 = new JLabel("Dr.");
+//         doctor_name2 = new JLabel("-name-");
+//         degree = new JLabel("-Degree-");
+//         hospital = new JLabel("-Hospital-");
+//         doctor_sign = new JLabel("Signature : ");
+//         doctor_ph_no1 = new JLabel("Ph.No.:");
+//         doctor_ph_no2 = new JLabel("-number-");
+// 		jframe.setBounds(200,0,595,846 + 190);
+// 		setLayout(null);
 
-		setBackground(Color.white);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent we)
-			{
-				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
-				{
-					dispose();
-				}
-			}
-		});
+// 		setBackground(Color.white);
+// 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+// 		addWindowListener(new WindowAdapter()
+// 		{
+// 			@Override
+// 			public void windowClosing(WindowEvent we)
+// 			{
+// 				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
+// 				{
+// 					dispose();
+// 				}
+// 			}
+// 		});
         
         
-        //PATIENT LABELS
-        regno = new JLabel("Reg No.:");
-        regno_label = new JLabel();
-        name1 = new JLabel("Name :");
-        name2 = new JLabel("-name-");
-        sdw_of_label = new JLabel();
-        age1 = new JLabel("Age :");
-        age2 = new JLabel("-age-");
-        years = new JLabel("years");
-        gender1 = new JLabel("Gender:");
-        gender2 = new JLabel("-m/f-");
-     	ph_no1 = new JLabel("Ph.No. :");
-        ph_no2 = new JLabel("-number-");
-        address = new JLabel("Address :");
-		complaint1 = new JLabel("Complaint of :");
-		provisional_diagnosis = new JLabel("Provisional Diagnosis");
-		final_diagnosis = new JLabel("Final Diagnosis :");
-		advice = new JLabel("Advice :");
-		medication = new JLabel("Medication :");
-	    referral = new JLabel("Referral :"); 
-        diagnostic_test = new JLabel("Diagnostic Test :");
-        kiosk_coordinator = new JLabel("Kiosk Coordinator :");
-        kiosk_coordinator_name1 = new JLabel("Kiosk Coordinator Name :");
-       	kiosk_coordinator_sign = new JLabel("Signature :");   				
-        kiosk_coordinator_name2 = new JLabel("-name-");       	
+//         //PATIENT LABELS
+//         regno = new JLabel("Reg No.:");
+//         regno_label = new JLabel();
+//         name1 = new JLabel("Name :");
+//         name2 = new JLabel("-name-");
+//         sdw_of_label = new JLabel();
+//         age1 = new JLabel("Age :");
+//         age2 = new JLabel("-age-");
+//         years = new JLabel("years");
+//         gender1 = new JLabel("Gender:");
+//         gender2 = new JLabel("-m/f-");
+//      	ph_no1 = new JLabel("Ph.No. :");
+//         ph_no2 = new JLabel("-number-");
+//         address = new JLabel("Address :");
+// 		complaint1 = new JLabel("Complaint of :");
+// 		provisional_diagnosis = new JLabel("Provisional Diagnosis");
+// 		final_diagnosis = new JLabel("Final Diagnosis :");
+// 		advice = new JLabel("Advice :");
+// 		medication = new JLabel("Medication :");
+// 	    referral = new JLabel("Referral :"); 
+//         diagnostic_test = new JLabel("Diagnostic Test :");
+//         kiosk_coordinator = new JLabel("Kiosk Coordinator :");
+//         kiosk_coordinator_name1 = new JLabel("Kiosk Coordinator Name :");
+//        	kiosk_coordinator_sign = new JLabel("Signature :");   				
+//         kiosk_coordinator_name2 = new JLabel("-name-");       	
 
 
-        address_area = new JTextArea("-Address-");
-		complaint2 = new JTextArea("-complaint-");
-		provisional_diagnosis_area = new JTextArea("-provisional diagnosis-");
-		final_diagnosis_area = new JTextArea("-final diagnosis-");
-		advice_area = new JTextArea("-advice-");
-		medication_area = new JTextArea("-medication-");
-        referral_area = new JTextArea();
-        diagnostic_test_area = new JTextArea();
+//         address_area = new JTextArea("-Address-");
+// 		complaint2 = new JTextArea("-complaint-");
+// 		provisional_diagnosis_area = new JTextArea("-provisional diagnosis-");
+// 		final_diagnosis_area = new JTextArea("-final diagnosis-");
+// 		advice_area = new JTextArea("-advice-");
+// 		medication_area = new JTextArea("-medication-");
+//         referral_area = new JTextArea();
+//         diagnostic_test_area = new JTextArea();
 
 
-		address_area.setBackground(new Color(0, 0, 0, 0));
-		complaint2.setBackground(new Color(0, 0, 0, 0));
-		provisional_diagnosis_area.setBackground(new Color(0, 0, 0, 0));
-		final_diagnosis_area.setBackground(new Color(0, 0, 0, 0));
-		advice_area.setBackground(new Color(0, 0, 0, 0));
-		medication_area.setBackground(new Color(0, 0, 0, 0));
-		referral_area.setBackground(new Color(0, 0, 0, 0));
-		diagnostic_test_area.setBackground(new Color(0, 0, 0, 0));
+// 		address_area.setBackground(new Color(0, 0, 0, 0));
+// 		complaint2.setBackground(new Color(0, 0, 0, 0));
+// 		provisional_diagnosis_area.setBackground(new Color(0, 0, 0, 0));
+// 		final_diagnosis_area.setBackground(new Color(0, 0, 0, 0));
+// 		advice_area.setBackground(new Color(0, 0, 0, 0));
+// 		medication_area.setBackground(new Color(0, 0, 0, 0));
+// 		referral_area.setBackground(new Color(0, 0, 0, 0));
+// 		diagnostic_test_area.setBackground(new Color(0, 0, 0, 0));
 
-		date1.setForeground(Color.WHITE);
-		date2.setForeground(Color.WHITE);
+// 		date1.setForeground(Color.WHITE);
+// 		date2.setForeground(Color.WHITE);
 
-		address_area.setEditable(false);
-		complaint2.setEditable(false);
-		provisional_diagnosis_area.setEditable(false);
-		final_diagnosis_area.setEditable(false);
-		advice_area.setEditable(false);
-		medication_area.setEditable(false);
-		referral_area.setEditable(false);	  
-		diagnostic_test_area.setEditable(false);
+// 		address_area.setEditable(false);
+// 		complaint2.setEditable(false);
+// 		provisional_diagnosis_area.setEditable(false);
+// 		final_diagnosis_area.setEditable(false);
+// 		advice_area.setEditable(false);
+// 		medication_area.setEditable(false);
+// 		referral_area.setEditable(false);	  
+// 		diagnostic_test_area.setEditable(false);
 
-		complaint2.setLineWrap(true);
-		provisional_diagnosis_area.setLineWrap(true);
-		final_diagnosis_area.setLineWrap(true);
-		advice_area.setLineWrap(true);
-		medication_area.setLineWrap(true);
-		referral_area.setLineWrap(true);	  
-		diagnostic_test_area.setLineWrap(true);
+// 		complaint2.setLineWrap(true);
+// 		provisional_diagnosis_area.setLineWrap(true);
+// 		final_diagnosis_area.setLineWrap(true);
+// 		advice_area.setLineWrap(true);
+// 		medication_area.setLineWrap(true);
+// 		referral_area.setLineWrap(true);	  
+// 		diagnostic_test_area.setLineWrap(true);
 
-		complaint2.setWrapStyleWord(true);
-		provisional_diagnosis_area.setWrapStyleWord(true);
-		final_diagnosis_area.setWrapStyleWord(true);
-		advice_area.setWrapStyleWord(true);
-		medication_area.setWrapStyleWord(true);
-		referral_area.setWrapStyleWord(true);	  
-		diagnostic_test_area.setWrapStyleWord(true);
+// 		complaint2.setWrapStyleWord(true);
+// 		provisional_diagnosis_area.setWrapStyleWord(true);
+// 		final_diagnosis_area.setWrapStyleWord(true);
+// 		advice_area.setWrapStyleWord(true);
+// 		medication_area.setWrapStyleWord(true);
+// 		referral_area.setWrapStyleWord(true);	  
+// 		diagnostic_test_area.setWrapStyleWord(true);
 
-		address_area.setBorder(null);
+// 		address_area.setBorder(null);
 
-		doctor_name1.setFont(font);
-		degree.setFont(font);
-		hospital.setFont(font);
+// 		doctor_name1.setFont(font);
+// 		degree.setFont(font);
+// 		hospital.setFont(font);
 
-		date1.setFont(font);
-		regno.setFont(font);
-		name1.setFont(font);
-		sdw_of_label.setFont(font);
-		age1.setFont(font);
-		years.setFont(font);
-		gender1.setFont(font);
-		ph_no1.setFont(font);
-		doctor_sign.setFont(font);
-		address.setFont(font);
-		complaint1.setFont(font);
-		provisional_diagnosis.setFont(font);
-		final_diagnosis.setFont(font);
-		advice.setFont(font);
-		medication.setFont(font);
-		referral.setFont(font);
-		diagnostic_test.setFont(font);
+// 		date1.setFont(font);
+// 		regno.setFont(font);
+// 		name1.setFont(font);
+// 		sdw_of_label.setFont(font);
+// 		age1.setFont(font);
+// 		years.setFont(font);
+// 		gender1.setFont(font);
+// 		ph_no1.setFont(font);
+// 		doctor_sign.setFont(font);
+// 		address.setFont(font);
+// 		complaint1.setFont(font);
+// 		provisional_diagnosis.setFont(font);
+// 		final_diagnosis.setFont(font);
+// 		advice.setFont(font);
+// 		medication.setFont(font);
+// 		referral.setFont(font);
+// 		diagnostic_test.setFont(font);
 
-		kiosk_coordinator.setFont(font);
-		kiosk_coordinator_name1.setFont(font);
-		// kiosk_coordinator_date.setFont(font);
+// 		kiosk_coordinator.setFont(font);
+// 		kiosk_coordinator_name1.setFont(font);
+// 		// kiosk_coordinator_date.setFont(font);
 
-		patient_picture_label.setBounds(10,45,100,100);
-		form_label.setBounds(100,5,400,30);
-		date1.setBounds(470,20,40,15);
-		date2.setBounds(510,20,80,15);
-		//DOCTOR BOUNDS
+// 		patient_picture_label.setBounds(10,45,100,100);
+// 		form_label.setBounds(100,5,400,30);
+// 		date1.setBounds(470,20,40,15);
+// 		date2.setBounds(510,20,80,15);
+// 		//DOCTOR BOUNDS
 
-		//PATIENT BOUNDS
-		regno.setBounds(120,45,100,15);
-		regno_label.setBounds(180,45,100,15);
-		name1.setBounds(120,65,100,15);
-		name2.setBounds(180,65,200,15);
-		sdw_of_label.setBounds(320,65,200,15);
-		age1.setBounds(120,85,40,15);
-		age2.setBounds(180,85,50,15);
-		years.setBounds(200,85,40,15);
-		gender1.setBounds(120,105,70,15);
-		gender2.setBounds(180,105,70,15);
-		ph_no1.setBounds(120,125,70,15);
-		ph_no2.setBounds(180,125,100,15);
-		address.setBounds(320,85,70,15);
-		address_area.setBounds(390,85,150,60);
+// 		//PATIENT BOUNDS
+// 		regno.setBounds(120,45,100,15);
+// 		regno_label.setBounds(180,45,100,15);
+// 		name1.setBounds(120,65,100,15);
+// 		name2.setBounds(180,65,200,15);
+// 		sdw_of_label.setBounds(320,65,200,15);
+// 		age1.setBounds(120,85,40,15);
+// 		age2.setBounds(180,85,50,15);
+// 		years.setBounds(200,85,40,15);
+// 		gender1.setBounds(120,105,70,15);
+// 		gender2.setBounds(180,105,70,15);
+// 		ph_no1.setBounds(120,125,70,15);
+// 		ph_no2.setBounds(180,125,100,15);
+// 		address.setBounds(320,85,70,15);
+// 		address_area.setBounds(390,85,150,60);
 
-		patient_picture_label.setBorder(new LineBorder(Color.black, 1));
+// 		patient_picture_label.setBorder(new LineBorder(Color.black, 1));
 
 
-		try
-		{
-			BufferedImage newImg = ((ToolkitImage)(info.patient_image)).getBufferedImage();
-			(new File(Constants.dataPath + "patient_Picture.jpg")).createNewFile();
-			ImageIO.write(newImg, "jpg", new File(Constants.dataPath + "patient_Picture.jpg"));
-			ImageIcon imageIcon = new ImageIcon(Constants.dataPath + "patient_Picture.jpg"); // load the image to a imageIcon
-			int h = patient_picture_label.getHeight();
-			int w = patient_picture_label.getWidth();
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);
-			patient_picture_label.setIcon(imageIcon);
-			(new File(Constants.dataPath + "patient_Picture.jpg")).delete();
-		}
-		catch(IOException ioe)
-		{
-			ioe.printStackTrace();
-		}
-		catch(NullPointerException npe)
-		{
-			npe.printStackTrace();
-			patient_picture_label.setText("No Image");
-		}
+// 		try
+// 		{
+// 			BufferedImage newImg = ((ToolkitImage)(info.patient_image)).getBufferedImage();
+// 			(new File(Constants.dataPath + "patient_Picture.jpg")).createNewFile();
+// 			ImageIO.write(newImg, "jpg", new File(Constants.dataPath + "patient_Picture.jpg"));
+// 			ImageIcon imageIcon = new ImageIcon(Constants.dataPath + "patient_Picture.jpg"); // load the image to a imageIcon
+// 			int h = patient_picture_label.getHeight();
+// 			int w = patient_picture_label.getWidth();
+// 			Image image = imageIcon.getImage(); // transform it 
+// 			Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+// 			imageIcon = new ImageIcon(newimg);
+// 			patient_picture_label.setIcon(imageIcon);
+// 			(new File(Constants.dataPath + "patient_Picture.jpg")).delete();
+// 		}
+// 		catch(IOException ioe)
+// 		{
+// 			ioe.printStackTrace();
+// 		}
+// 		catch(NullPointerException npe)
+// 		{
+// 			npe.printStackTrace();
+// 			patient_picture_label.setText("No Image");
+// 		}
 
-		// patient_picture_label.setIcon(info.patient_image);
-		date2.setText(info.date);
-		regno_label.setText(info.patient_regno);
-		doctor_name2.setText(info.doctor_name);
-		degree.setText(info.doctor_degree);
-		hospital.setText(info.doctor_hospital);
-		name2.setText(info.patient_name);
-		sdw_of_label.setText(info.patient_sdw);
-		address_area.setText(info.patient_address);
-		age2.setText(info.patient_age);
-		gender2.setText(info.patient_gender);
-		ph_no2.setText(info.patient_phone);
+// 		// patient_picture_label.setIcon(info.patient_image);
+// 		date2.setText(info.date);
+// 		regno_label.setText(info.patient_regno);
+// 		doctor_name2.setText(info.doctor_name);
+// 		degree.setText(info.doctor_degree);
+// 		hospital.setText(info.doctor_hospital);
+// 		name2.setText(info.patient_name);
+// 		sdw_of_label.setText(info.patient_sdw);
+// 		address_area.setText(info.patient_address);
+// 		age2.setText(info.patient_age);
+// 		gender2.setText(info.patient_gender);
+// 		ph_no2.setText(info.patient_phone);
 
-		complaint2.setText(info.complaint);
-		provisional_diagnosis_area.setText(info.provisional_diagnosis);
-		final_diagnosis_area.setText(info.final_diagnosis);
-		advice_area.setText(info.doctor_advice);
-		medication_area.setText(info.doctor_medication);
-		referral_area.setText(info.doctor_referal);
-		diagnostic_test_area.setText(info.doctor_diagnostic);
+// 		complaint2.setText(info.complaint);
+// 		provisional_diagnosis_area.setText(info.provisional_diagnosis);
+// 		final_diagnosis_area.setText(info.final_diagnosis);
+// 		advice_area.setText(info.doctor_advice);
+// 		medication_area.setText(info.doctor_medication);
+// 		referral_area.setText(info.doctor_referal);
+// 		diagnostic_test_area.setText(info.doctor_diagnostic);
 
-		kiosk_coordinator_name2.setText(info.kiosk_coordinator_name);
+// 		kiosk_coordinator_name2.setText(info.kiosk_coordinator_name);
 
-		boolean extraPage = false;
+// 		boolean extraPage = false;
 
-		int LEFTSIDECOLUMN = 45;
-		int LEFTSIDEX = 10;
-		int LEFTSIDEW = 250;
+// 		int LEFTSIDECOLUMN = 45;
+// 		int LEFTSIDEX = 10;
+// 		int LEFTSIDEW = 250;
 
-		int RIGHTSIDECOLUMN = 48;
-		int RIGHTSIDEX = 280;
-		int RIGHTSIDEW = 300;
+// 		int RIGHTSIDECOLUMN = 48;
+// 		int RIGHTSIDEX = 280;
+// 		int RIGHTSIDEW = 300;
 
-		int JPANEL6Y = 630;
+// 		int JPANEL6Y = 630;
 
-		int ComplaintLabelY = 160;
-		int ComplaintLabelH = 15;
-		int ComplaintAreaY = ComplaintLabelY + ComplaintLabelH + 5;
-		int ComplaintAreaH = getHeight(complaint2.getText(),LEFTSIDECOLUMN);
+// 		int ComplaintLabelY = 160;
+// 		int ComplaintLabelH = 15;
+// 		int ComplaintAreaY = ComplaintLabelY + ComplaintLabelH + 5;
+// 		int ComplaintAreaH = getHeight(complaint2.getText(),LEFTSIDECOLUMN);
 
-		int ProvisionalDiagnosisLabelY = ComplaintAreaY + ComplaintAreaH + 5;
-		int ProvisionalDiagnosisLabelH = 15;
-		int ProvisionalDiagnosisAreaY = ProvisionalDiagnosisLabelY + ProvisionalDiagnosisLabelH + 5;
-		int ProvisionalDiagnosisAreaH = getHeight(provisional_diagnosis_area.getText(),LEFTSIDECOLUMN);
+// 		int ProvisionalDiagnosisLabelY = ComplaintAreaY + ComplaintAreaH + 5;
+// 		int ProvisionalDiagnosisLabelH = 15;
+// 		int ProvisionalDiagnosisAreaY = ProvisionalDiagnosisLabelY + ProvisionalDiagnosisLabelH + 5;
+// 		int ProvisionalDiagnosisAreaH = getHeight(provisional_diagnosis_area.getText(),LEFTSIDECOLUMN);
 
-		if(isNullString(provisional_diagnosis_area.getText()))
-		{
-			provisional_diagnosis.setVisible(false);
-			provisional_diagnosis_area.setVisible(false);
+// 		if(isNullString(provisional_diagnosis_area.getText()))
+// 		{
+// 			provisional_diagnosis.setVisible(false);
+// 			provisional_diagnosis_area.setVisible(false);
 
-			ProvisionalDiagnosisLabelH = 0;
-			ProvisionalDiagnosisAreaY = ProvisionalDiagnosisLabelY + ProvisionalDiagnosisLabelH + 5;
-			ProvisionalDiagnosisAreaH = -10;
-		}
+// 			ProvisionalDiagnosisLabelH = 0;
+// 			ProvisionalDiagnosisAreaY = ProvisionalDiagnosisLabelY + ProvisionalDiagnosisLabelH + 5;
+// 			ProvisionalDiagnosisAreaH = -10;
+// 		}
 
-		int FinalDiagnosisLabelY = ProvisionalDiagnosisAreaY + ProvisionalDiagnosisAreaH + 5;
-		int FinalDiagnosisLabelH = 15;
-		int FinalDiagnosisAreaY = FinalDiagnosisLabelY + FinalDiagnosisLabelH + 5;
-		int FinalDiagnosisAreaH = getHeight(final_diagnosis_area.getText(),LEFTSIDECOLUMN);
+// 		int FinalDiagnosisLabelY = ProvisionalDiagnosisAreaY + ProvisionalDiagnosisAreaH + 5;
+// 		int FinalDiagnosisLabelH = 15;
+// 		int FinalDiagnosisAreaY = FinalDiagnosisLabelY + FinalDiagnosisLabelH + 5;
+// 		int FinalDiagnosisAreaH = getHeight(final_diagnosis_area.getText(),LEFTSIDECOLUMN);
 
-		int ReferralLabelY = FinalDiagnosisAreaY + FinalDiagnosisAreaH + 5;
-		int ReferralLabelH = 15;
-		int ReferralAreaY = ReferralLabelY + ReferralLabelH + 5;
-		int ReferralAreaH = getHeight(referral_area.getText(),LEFTSIDECOLUMN);
-		int ReferralX = LEFTSIDEX;
-		int ReferralW = LEFTSIDEW;
+// 		int ReferralLabelY = FinalDiagnosisAreaY + FinalDiagnosisAreaH + 5;
+// 		int ReferralLabelH = 15;
+// 		int ReferralAreaY = ReferralLabelY + ReferralLabelH + 5;
+// 		int ReferralAreaH = getHeight(referral_area.getText(),LEFTSIDECOLUMN);
+// 		int ReferralX = LEFTSIDEX;
+// 		int ReferralW = LEFTSIDEW;
 
-		if(isNullString(referral_area.getText()))
-		{
-			referral.setVisible(false);
-			referral_area.setVisible(false);
+// 		if(isNullString(referral_area.getText()))
+// 		{
+// 			referral.setVisible(false);
+// 			referral_area.setVisible(false);
 
-			ReferralLabelH = 0;
-			ReferralAreaY = ReferralLabelY + ReferralLabelH + 5;
-			ReferralAreaH = -10;
-		}
+// 			ReferralLabelH = 0;
+// 			ReferralAreaY = ReferralLabelY + ReferralLabelH + 5;
+// 			ReferralAreaH = -10;
+// 		}
 
-		int AdviceLabelY = 160;
-		int AdviceLabelH = 15;
-		int AdviceAreaY = AdviceLabelY + AdviceLabelH + 5;
-		int AdviceAreaH = getHeight(advice_area.getText(),RIGHTSIDECOLUMN);
+// 		int AdviceLabelY = 160;
+// 		int AdviceLabelH = 15;
+// 		int AdviceAreaY = AdviceLabelY + AdviceLabelH + 5;
+// 		int AdviceAreaH = getHeight(advice_area.getText(),RIGHTSIDECOLUMN);
 
-		if(isNullString(advice_area.getText()))
-		{
-			advice.setVisible(false);
-			advice_area.setVisible(false);
+// 		if(isNullString(advice_area.getText()))
+// 		{
+// 			advice.setVisible(false);
+// 			advice_area.setVisible(false);
 
-			AdviceLabelH = 0;
-			AdviceAreaY = AdviceLabelY + AdviceLabelH + 5;
-			AdviceAreaH = -10;
-		}
+// 			AdviceLabelH = 0;
+// 			AdviceAreaY = AdviceLabelY + AdviceLabelH + 5;
+// 			AdviceAreaH = -10;
+// 		}
 
-		int MedicationLabelY = AdviceAreaY + AdviceAreaH + 5;
-		int MedicationLabelH = 15;
-		int MedicationAreaY = MedicationLabelY + MedicationLabelH + 5;
-		int MedicationAreaH = getHeight(medication_area.getText(),RIGHTSIDECOLUMN);
+// 		int MedicationLabelY = AdviceAreaY + AdviceAreaH + 5;
+// 		int MedicationLabelH = 15;
+// 		int MedicationAreaY = MedicationLabelY + MedicationLabelH + 5;
+// 		int MedicationAreaH = getHeight(medication_area.getText(),RIGHTSIDECOLUMN);
 
-		int DiagnosticLabelY = MedicationAreaY + MedicationAreaH + 5;
-		int DiagnosticLabelH = 15;
-		int DiagnosticAreaY = DiagnosticLabelY + DiagnosticLabelH + 5;
-		int DiagnosticAreaH = getHeight(info.doctor_diagnostic,RIGHTSIDECOLUMN);
-		int DiagnosticX = RIGHTSIDEX;
-		int DiagnosticW = RIGHTSIDEW;
+// 		int DiagnosticLabelY = MedicationAreaY + MedicationAreaH + 5;
+// 		int DiagnosticLabelH = 15;
+// 		int DiagnosticAreaY = DiagnosticLabelY + DiagnosticLabelH + 5;
+// 		int DiagnosticAreaH = getHeight(info.doctor_diagnostic,RIGHTSIDECOLUMN);
+// 		int DiagnosticX = RIGHTSIDEX;
+// 		int DiagnosticW = RIGHTSIDEW;
 
-		if(isNullString(diagnostic_test_area.getText()))
-		{
-			diagnostic_test.setVisible(false);
-			diagnostic_test_area.setVisible(false);
+// 		if(isNullString(diagnostic_test_area.getText()))
+// 		{
+// 			diagnostic_test.setVisible(false);
+// 			diagnostic_test_area.setVisible(false);
 
-			DiagnosticLabelH = 0;
-			DiagnosticAreaY = DiagnosticLabelY + DiagnosticLabelH + 5;
-			DiagnosticAreaH = 0;
-		}
+// 			DiagnosticLabelH = 0;
+// 			DiagnosticAreaY = DiagnosticLabelY + DiagnosticLabelH + 5;
+// 			DiagnosticAreaH = 0;
+// 		}
 
-		if(DiagnosticAreaY + DiagnosticAreaH + 5 > ReferralAreaY + ReferralAreaH + DiagnosticLabelH + DiagnosticAreaH)
-		{
-			DiagnosticLabelY = ReferralAreaY + ReferralAreaH + 5;
-			DiagnosticAreaY = DiagnosticLabelY + DiagnosticLabelH + 5;
+// 		if(DiagnosticAreaY + DiagnosticAreaH + 5 > ReferralAreaY + ReferralAreaH + DiagnosticLabelH + DiagnosticAreaH)
+// 		{
+// 			DiagnosticLabelY = ReferralAreaY + ReferralAreaH + 5;
+// 			DiagnosticAreaY = DiagnosticLabelY + DiagnosticLabelH + 5;
 
-			DiagnosticX = LEFTSIDEX;
-			DiagnosticW = LEFTSIDEW;
-		}
-		else if(ReferralAreaY + ReferralAreaH + 5 > DiagnosticAreaY + DiagnosticAreaH + ReferralLabelH + ReferralAreaH)
-		{
-			ReferralLabelY = DiagnosticAreaY + DiagnosticAreaH + 5;
-			ReferralAreaY = ReferralLabelY + ReferralLabelH + 5;
+// 			DiagnosticX = LEFTSIDEX;
+// 			DiagnosticW = LEFTSIDEW;
+// 		}
+// 		else if(ReferralAreaY + ReferralAreaH + 5 > DiagnosticAreaY + DiagnosticAreaH + ReferralLabelH + ReferralAreaH)
+// 		{
+// 			ReferralLabelY = DiagnosticAreaY + DiagnosticAreaH + 5;
+// 			ReferralAreaY = ReferralLabelY + ReferralLabelH + 5;
 
-			ReferralX = RIGHTSIDEX;
-			ReferralW = RIGHTSIDEW;
-		}
+// 			ReferralX = RIGHTSIDEX;
+// 			ReferralW = RIGHTSIDEW;
+// 		}
 
-		int[] data = {JPANEL6Y,DiagnosticAreaY + DiagnosticAreaH,ReferralAreaY + ReferralAreaH,MedicationAreaY + MedicationAreaH,FinalDiagnosisAreaY + FinalDiagnosisAreaH};
-		Arrays.sort(data);
-		JPANEL6Y = data[4] + 10;
+// 		int[] data = {JPANEL6Y,DiagnosticAreaY + DiagnosticAreaH,ReferralAreaY + ReferralAreaH,MedicationAreaY + MedicationAreaH,FinalDiagnosisAreaY + FinalDiagnosisAreaH};
+// 		Arrays.sort(data);
+// 		JPANEL6Y = data[4] + 10;
 
-		// setSize(595,950);
+// 		// setSize(595,950);
 
-		// setLocationRelativeTo(null);
+// 		// setLocationRelativeTo(null);
 
-		//COMPLAINT OF BOUNDS
-		complaint1.setBounds(LEFTSIDEX,ComplaintLabelY,200,ComplaintLabelH);
-		complaint2.setBounds(LEFTSIDEX,ComplaintAreaY,LEFTSIDEW,ComplaintAreaH);
-		//DIAGNOSIS BOUNDS
-		provisional_diagnosis.setBounds(LEFTSIDEX,ProvisionalDiagnosisLabelY,200,ProvisionalDiagnosisLabelH);
-		provisional_diagnosis_area.setBounds(LEFTSIDEX,ProvisionalDiagnosisAreaY,LEFTSIDEW,ProvisionalDiagnosisAreaH);
+// 		//COMPLAINT OF BOUNDS
+// 		complaint1.setBounds(LEFTSIDEX,ComplaintLabelY,200,ComplaintLabelH);
+// 		complaint2.setBounds(LEFTSIDEX,ComplaintAreaY,LEFTSIDEW,ComplaintAreaH);
+// 		//DIAGNOSIS BOUNDS
+// 		provisional_diagnosis.setBounds(LEFTSIDEX,ProvisionalDiagnosisLabelY,200,ProvisionalDiagnosisLabelH);
+// 		provisional_diagnosis_area.setBounds(LEFTSIDEX,ProvisionalDiagnosisAreaY,LEFTSIDEW,ProvisionalDiagnosisAreaH);
 
-		final_diagnosis.setBounds(LEFTSIDEX,FinalDiagnosisLabelY,200,FinalDiagnosisLabelH);
-		final_diagnosis_area.setBounds(LEFTSIDEX,FinalDiagnosisAreaY,LEFTSIDEW,FinalDiagnosisAreaH);
+// 		final_diagnosis.setBounds(LEFTSIDEX,FinalDiagnosisLabelY,200,FinalDiagnosisLabelH);
+// 		final_diagnosis_area.setBounds(LEFTSIDEX,FinalDiagnosisAreaY,LEFTSIDEW,FinalDiagnosisAreaH);
 
-		referral.setBounds(ReferralX,ReferralLabelY,200,ReferralLabelH);
-		referral_area.setBounds(ReferralX,ReferralAreaY,ReferralW,ReferralAreaH);
-		//ADVICE BOUNDS
-		advice.setBounds(RIGHTSIDEX,AdviceLabelY,200,AdviceLabelH);
-		advice_area.setBounds(RIGHTSIDEX,AdviceAreaY,RIGHTSIDEW,AdviceAreaH);
-		//MEDICATION BOUNDS
-		medication.setBounds(RIGHTSIDEX,MedicationLabelY,200,MedicationLabelH);
-		medication_area.setBounds(RIGHTSIDEX,MedicationAreaY,RIGHTSIDEW,MedicationAreaH);
-		//REFERRAL
-		diagnostic_test.setBounds(DiagnosticX,DiagnosticLabelY,200,DiagnosticLabelH);
-		diagnostic_test_area.setBounds(DiagnosticX,DiagnosticAreaY,DiagnosticW,DiagnosticAreaH);
-		//DIAGNOSTIC TEST
+// 		referral.setBounds(ReferralX,ReferralLabelY,200,ReferralLabelH);
+// 		referral_area.setBounds(ReferralX,ReferralAreaY,ReferralW,ReferralAreaH);
+// 		//ADVICE BOUNDS
+// 		advice.setBounds(RIGHTSIDEX,AdviceLabelY,200,AdviceLabelH);
+// 		advice_area.setBounds(RIGHTSIDEX,AdviceAreaY,RIGHTSIDEW,AdviceAreaH);
+// 		//MEDICATION BOUNDS
+// 		medication.setBounds(RIGHTSIDEX,MedicationLabelY,200,MedicationLabelH);
+// 		medication_area.setBounds(RIGHTSIDEX,MedicationAreaY,RIGHTSIDEW,MedicationAreaH);
+// 		//REFERRAL
+// 		diagnostic_test.setBounds(DiagnosticX,DiagnosticLabelY,200,DiagnosticLabelH);
+// 		diagnostic_test_area.setBounds(DiagnosticX,DiagnosticAreaY,DiagnosticW,DiagnosticAreaH);
+// 		//DIAGNOSTIC TEST
 
-		// getRow(info.doctor_medication,200);
+// 		// getRow(info.doctor_medication,200);
 		
 
-		add(patient_picture_label);
-		add(form_label);
-		add(date1);
-		add(date2);
-		add(doctor_name1);
-		add(doctor_name2);
-		add(doctor_sign);
-		add(degree);
-		add(hospital);
-		add(doctor_ph_no1);
-		add(doctor_ph_no2);
-		add(regno);
-		add(regno_label);
-        add(name1);
-        add(name2);
-        add(sdw_of_label);
-        add(age1);
-        add(age2);
-        add(years);
-        add(gender1);
-        add(gender2);
-        add(ph_no1);
-        add(ph_no2);
-        add(address);
-        add(address_area);
-        add(complaint1);
-        add(complaint2);
-        add(provisional_diagnosis);
-        add(provisional_diagnosis_area);
-        add(final_diagnosis);
-        add(final_diagnosis_area);
-        add(advice);
-        add(advice_area);
-        add(medication);
-        add(medication_area);
-        add(referral);
-        add(referral_area);
-        add(diagnostic_test);
-        add(diagnostic_test_area);
-        add(kiosk_coordinator_name1);
-        add(kiosk_coordinator_name2);
-        add(kiosk_coordinator_sign);
+// 		add(patient_picture_label);
+// 		add(form_label);
+// 		add(date1);
+// 		add(date2);
+// 		add(doctor_name1);
+// 		add(doctor_name2);
+// 		add(doctor_sign);
+// 		add(degree);
+// 		add(hospital);
+// 		add(doctor_ph_no1);
+// 		add(doctor_ph_no2);
+// 		add(regno);
+// 		add(regno_label);
+//         add(name1);
+//         add(name2);
+//         add(sdw_of_label);
+//         add(age1);
+//         add(age2);
+//         add(years);
+//         add(gender1);
+//         add(gender2);
+//         add(ph_no1);
+//         add(ph_no2);
+//         add(address);
+//         add(address_area);
+//         add(complaint1);
+//         add(complaint2);
+//         add(provisional_diagnosis);
+//         add(provisional_diagnosis_area);
+//         add(final_diagnosis);
+//         add(final_diagnosis_area);
+//         add(advice);
+//         add(advice_area);
+//         add(medication);
+//         add(medication_area);
+//         add(referral);
+//         add(referral_area);
+//         add(diagnostic_test);
+//         add(diagnostic_test_area);
+//         add(kiosk_coordinator_name1);
+//         add(kiosk_coordinator_name2);
+//         add(kiosk_coordinator_sign);
 
-        //you dont have to touch this one
-        JPANEL1 = new JPanel();
-		// JPANEL2 = new JPanel();
-		JPANEL3 = new JPanel();
-		JPANEL4 = new JPanel();
-		JPANEL5 = new JPanel();
-		JPANEL6 = new JPanel();
+//         //you dont have to touch this one
+//         JPANEL1 = new JPanel();
+// 		// JPANEL2 = new JPanel();
+// 		JPANEL3 = new JPanel();
+// 		JPANEL4 = new JPanel();
+// 		JPANEL5 = new JPanel();
+// 		JPANEL6 = new JPanel();
 
-		JPANEL1.setLayout(new BorderLayout());
-		// JPANEL2.setLayout(new BorderLayout());
-		JPANEL3.setLayout(new BorderLayout());
-		JPANEL4.setLayout(new BorderLayout());
-		JPANEL5.setLayout(new BorderLayout());
-		JPANEL6.setLayout(new BorderLayout());
+// 		JPANEL1.setLayout(new BorderLayout());
+// 		// JPANEL2.setLayout(new BorderLayout());
+// 		JPANEL3.setLayout(new BorderLayout());
+// 		JPANEL4.setLayout(new BorderLayout());
+// 		JPANEL5.setLayout(new BorderLayout());
+// 		JPANEL6.setLayout(new BorderLayout());
 		
-		doctor_name1.setBounds(280,JPANEL6Y + 10,25,15);
-		doctor_name2.setBounds(305,JPANEL6Y + 10,200,15);
-		degree.setBounds(280,JPANEL6Y + 30,250,15);
-		// hospital.setBounds(10,80,250,15);
-		// doctor_ph_no1.setBounds(280,40,50,15);
-		// doctor_ph_no2.setBounds(330,40,100,15);	
-		doctor_sign.setBounds(280,JPANEL6Y + 50,100,30);
+// 		doctor_name1.setBounds(280,JPANEL6Y + 10,25,15);
+// 		doctor_name2.setBounds(305,JPANEL6Y + 10,200,15);
+// 		degree.setBounds(280,JPANEL6Y + 30,250,15);
+// 		// hospital.setBounds(10,80,250,15);
+// 		// doctor_ph_no1.setBounds(280,40,50,15);
+// 		// doctor_ph_no2.setBounds(330,40,100,15);	
+// 		doctor_sign.setBounds(280,JPANEL6Y + 50,100,30);
 
-		//KIOSK COORDINATOR
-		kiosk_coordinator_name1.setBounds(10,JPANEL6Y + 10,200,15);
-		kiosk_coordinator_name2.setBounds(10,JPANEL6Y + 30,200,15);
-		kiosk_coordinator_sign.setBounds(10,JPANEL6Y + 50,100,30);
+// 		//KIOSK COORDINATOR
+// 		kiosk_coordinator_name1.setBounds(10,JPANEL6Y + 10,200,15);
+// 		kiosk_coordinator_name2.setBounds(10,JPANEL6Y + 30,200,15);
+// 		kiosk_coordinator_sign.setBounds(10,JPANEL6Y + 50,100,30);
 	       
-		JPANEL1.setBounds(0,0,595,35);
-		// JPANEL2.setBounds(0,35,625,110);
-		JPANEL3.setBounds(0,35,595,120);
-		JPANEL4.setBounds(0,150,270,JPANEL6Y-145);
-		JPANEL5.setBounds(265,150,330,JPANEL6Y-145);
-		JPANEL6.setBounds(0,JPANEL6Y,595,120);
+// 		JPANEL1.setBounds(0,0,595,35);
+// 		// JPANEL2.setBounds(0,35,625,110);
+// 		JPANEL3.setBounds(0,35,595,120);
+// 		JPANEL4.setBounds(0,150,270,JPANEL6Y-145);
+// 		JPANEL5.setBounds(265,150,330,JPANEL6Y-145);
+// 		JPANEL6.setBounds(0,JPANEL6Y,595,120);
 
 
-		JPANEL1.setBackground(Color.green.darker().darker());
-		// JPANEL2.setBackground(Color.white);
-		JPANEL3.setBackground(Color.white);
-		JPANEL4.setBackground(Color.white);
-		JPANEL5.setBackground(Color.white);
-		JPANEL6.setBackground(Color.white);
+// 		JPANEL1.setBackground(Color.green.darker().darker());
+// 		// JPANEL2.setBackground(Color.white);
+// 		JPANEL3.setBackground(Color.white);
+// 		JPANEL4.setBackground(Color.white);
+// 		JPANEL5.setBackground(Color.white);
+// 		JPANEL6.setBackground(Color.white);
 		
-		JPANEL1.setBorder(BorderFactory.createRaisedBevelBorder());
-		// JPANEL2.setBorder(new LineBorder(Color.black, 5));
-		JPANEL3.setBorder(new LineBorder(Color.black, 5));
-		JPANEL4.setBorder(new LineBorder(Color.black, 5));
-		JPANEL5.setBorder(new LineBorder(Color.black, 5));
-		JPANEL6.setBorder(new LineBorder(Color.black, 5));
+// 		JPANEL1.setBorder(BorderFactory.createRaisedBevelBorder());
+// 		// JPANEL2.setBorder(new LineBorder(Color.black, 5));
+// 		JPANEL3.setBorder(new LineBorder(Color.black, 5));
+// 		JPANEL4.setBorder(new LineBorder(Color.black, 5));
+// 		JPANEL5.setBorder(new LineBorder(Color.black, 5));
+// 		JPANEL6.setBorder(new LineBorder(Color.black, 5));
 
-		add(JPANEL6);
-		add(JPANEL5);
-		add(JPANEL4);
-		add(JPANEL3);
-		// add(JPANEL2);
-		add(JPANEL1);
+// 		add(JPANEL6);
+// 		add(JPANEL5);
+// 		add(JPANEL4);
+// 		add(JPANEL3);
+// 		// add(JPANEL2);
+// 		add(JPANEL1);
 
-		jframe.setSize(595,JPANEL6Y + 150);
-		// jframe.pack();
+// 		jframe.setSize(595,JPANEL6Y + 150);
+// 		// jframe.pack();
 
-		// kiosk_coordinator_name1.setBounds(10,10,100,25);
+// 		// kiosk_coordinator_name1.setBounds(10,10,100,25);
 
-		try
-		{
-			PrinterJob pjob = PrinterJob.getPrinterJob();
-			PageFormat preformat = pjob.defaultPage();
-			preformat.setOrientation(PageFormat.LANDSCAPE);
-			PageFormat postformat = pjob.pageDialog(preformat);
-			//If user does not hit cancel then print.
-			if (preformat != postformat) {
-			    //Set print component
-			    pjob.setPrintable(new Printer(this), postformat);
-			    if (pjob.printDialog()) {
-			        pjob.print();
-			    }
-			}
-		}
-		catch(PrinterException pe)
-		{
-			pe.printStackTrace();
-		}
-		dispose();
-	}
+// 		try
+// 		{
+// 			PrinterJob pjob = PrinterJob.getPrinterJob();
+// 			PageFormat preformat = pjob.defaultPage();
+// 			preformat.setOrientation(PageFormat.LANDSCAPE);
+// 			PageFormat postformat = pjob.pageDialog(preformat);
+// 			//If user does not hit cancel then print.
+// 			if (preformat != postformat) {
+// 			    //Set print component
+// 			    pjob.setPrintable(new Printer(this), postformat);
+// 			    if (pjob.printDialog()) {
+// 			        pjob.print();
+// 			    }
+// 			}
+// 		}
+// 		catch(PrinterException pe)
+// 		{
+// 			pe.printStackTrace();
+// 		}
+// 		dispose();
+// 	}
 
-	private int getHeight(String str,int width)
-	{
-		String arr[] = str.split("\n");
-		for(int i = 0;i < arr.length;i++)
-		{
-			int extraLine = arr[i].length()/width;
-			for(int j = 0;j < extraLine;j++)
-				str = str + "\nab";
-		}
-		str += "\n";
-		JTextArea tempTextArea = new JTextArea(str);
-		return (int)tempTextArea.getPreferredSize().getHeight();
-	}
+// 	private int getHeight(String str,int width)
+// 	{
+// 		String arr[] = str.split("\n");
+// 		for(int i = 0;i < arr.length;i++)
+// 		{
+// 			int extraLine = arr[i].length()/width;
+// 			for(int j = 0;j < extraLine;j++)
+// 				str = str + "\nab";
+// 		}
+// 		str += "\n";
+// 		JTextArea tempTextArea = new JTextArea(str);
+// 		return (int)tempTextArea.getPreferredSize().getHeight();
+// 	}
 
-	private boolean isNullString(String str)
-    {
-    	if(str.equals(""))
-    		return true;
-    	else return false;
-    }
-}
-
-
-@XmlRootElement
-@XmlType(propOrder = {"Emergency","Normal"})
-class PatientLog
-{
-	@XmlElement
-	ArrayList < String >  Emergency = new ArrayList < String > ();
-	@XmlElement
-	ArrayList < String >  Normal = new  ArrayList < String > ();
-
-	ArrayList < String >  getnormal()
-	{
-		return Normal;
-	}
-
-	void setnormal(ArrayList < String >  normal)
-	{
-		Normal = normal;
-	}
-
-	ArrayList < String >  getemergency()
-	{
-		return Emergency;
-	}
-	void setemergency(ArrayList < String >  emergency)
-	{
-		Emergency = emergency;
-	}
-}
+// 	private boolean isNullString(String str)
+//     {
+//     	if(str.equals(""))
+//     		return true;
+//     	else return false;
+//     }
+// }

@@ -5,6 +5,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
+/**
+* PatientBasicData: Stores patient's basic data, XML annotated
+* @author Sushanto Halder
+*/
 @XmlRootElement(name="PatientBasicData")
 @XmlType(propOrder={"id","date","name","image","reference","gender","age","phone","address","occupation","status","height",
 "familyhistory","medicalhistory"})
@@ -14,139 +18,253 @@ public class PatientBasicData{
 	reference,age,occupation,status,height,
 	familyhistory,medicalhistory,date;
 
-	@XmlElement
-	public String getName()
+	/**
+	* Get patient's name
+	* @return Patient's name
+	*/
+	protected String getName()
 	{
 		return name;
 	}
-	public void setName(String s)
+	/**
+	* Set patient's name
+	* @param name Name of patient
+	*/
+	@XmlElement
+	protected void setName(String name)
 	{
-		this.name=s;
+		this.name=name;
 	}
 
-	public String getImage()
+	/**
+	* Get patient's Image file name
+	* @return Name of the patient's image file
+	*/
+	protected String getImage()
 	{
 		return image;
 	}
-	public void setImage(String s)
+	/**
+	* Set image file name of patient
+	* @param image Image file name of patient
+	*/
+	@XmlElement
+	protected void setImage(String image)
 	{
-		this.image=s;
+		this.image=image;
 	}
 
-	public String getDate()
+	/**
+	* Get patient's registration date
+	* @return Patient's registration date
+	*/
+	protected String getDate()
 	{
 		return date;
 	}
-	public void setDate(String s)
+	/**
+	* Set patient's registration date
+	* @param date Registration date
+	*/
+	@XmlElement
+	protected void setDate(String date)
 	{
-		this.date=s;
+		this.date=date;
 	}	
 
-	public String getId()
+	/**
+	* Get patient's ID
+	* @return Patient's ID
+	*/
+	protected String getId()
 	{
 		return id;
 	}
-	public void setId(String s)
+	/**
+	* Set patient's ID
+	* @param id Patient's ID
+	*/
+	@XmlElement
+	protected void setId(String id)
 	{
-		this.id=s;
+		this.id=id;
 	}
 
-
-	public String getReference()
+	/**
+	* Get reference of patient
+	* @return Patient's reference
+	*/
+	protected String getReference()
 	{
 		return reference;
 	}
-	public void setReference(String s)
+	/**
+	* Set reference of patient
+	* @param reference Reference of patient
+	*/
+	@XmlElement
+	protected void setReference(String reference)
 	{
-		this.reference=s;
+		this.reference=reference;
 	}
-
-	public String getGender()
+	/**
+	* Get gender of patient
+	* @return Gender of patient
+	*/
+	protected String getGender()
 	{
 		return gender;
 	}
-	public void setGender(String s)
+	/**
+	* Set gender of patient
+	* @param gender Gender of patient
+	*/
+	@XmlElement
+	protected void setGender(String gender)
 	{
-		this.gender=s;
+		this.gender=gender;
 	}
 
-
-	public String getAge()
+	/**
+	* Get patient's age
+	* @return Age of patient
+	*/
+	protected String getAge()
 	{
 		return age;
 	}
-	public void setAge(String s)
+	/**
+	* Set patient's age
+	* @param age Age of patient
+	*/
+	@XmlElement
+	protected void setAge(String age)
 	{
-		this.age=s;
+		this.age=age;
 	}
-	
-	public String getAddress()
+	/**
+	* Get address of patient
+	* @return Address of patient
+	*/
+	protected String getAddress()
 	{
 		return address;
 	}
-	public void setAddress(String s)
+	/**
+	* Set address of patient
+	* @param address Address of patient
+	*/
+	@XmlElement
+	protected void setAddress(String address)
 	{
-		this.address=s;
+		this.address=address;
 	}
 
-
-	public String getPhone()
+	/**
+	* Get patient's phone no
+	* @return Patient's phone no
+	*/
+	protected String getPhone()
 	{
 		return phone;
 	}
-	public void setPhone(String s)
+	/**
+	* Set patient's phone no
+	* @param phone Phone no of patient
+	*/
+	@XmlElement
+	protected void setPhone(String phone)
 	{
-		this.phone=s;
+		this.phone=phone;
 	}
 	
-
-	public String getOccupation()
+	/**
+	* Get patient's occupation
+	* @return Patient's occupation
+	*/
+	protected String getOccupation()
 	{
 		return occupation;
 	}
-	public void setOccupation(String s)
+	/**
+	* Set patient's occupation
+	* @param occupation Occupation of patient
+	*/
+	@XmlElement
+	protected void setOccupation(String occupation)
 	{
-		this.occupation=s;
+		this.occupation=occupation;
 	}
 
-	public String getStatus()
+	/**
+	* Get patient's status, new or revisited
+	* @return Patient's status
+	*/
+	protected String getStatus()
 	{
 		return status;
 	}
-	public void setStatus(String s)
+	/**
+	* Set patient's status
+	* @param status Status of patient, new or revisited
+	*/
+	@XmlElement
+	protected void setStatus(String status)
 	{
-		this.status=s;
+		this.status=status;
 	}
 
-	public String getHeight()
+	/**
+	* Get patient's height
+	* @return Patient's height
+	*/
+	protected String getHeight()
 	{
 		return height;
 	}
-	public void setHeight(String s)
+	/**
+	* Set patient's height
+	* @param height Height of patient
+	*/
+	@XmlElement
+	protected void setHeight(String height)
 	{
-		this.height=s;
+		this.height=height;
 	}
 
-
-	public String getFamilyhistory()
+	/**
+	* Get family history of patient
+	* @return Patient's family history
+	*/
+	protected String getFamilyhistory()
 	{
 		return familyhistory;
 	}
-	public void setFamilyhistory(String s)
+	/**
+	* Set family history of patient
+	* @param familyHistory Family history of patient
+	*/
+	@XmlElement
+	protected void setFamilyhistory(String familyHistory)
 	{
-		this.familyhistory=s;
+		this.familyhistory=familyHistory;
 	}
 	
-
-	public String getMedicalhistory()
+	/**
+	* Get medical history of patient
+	* @return Patient's medical history
+	*/
+	protected String getMedicalhistory()
 	{
 		return medicalhistory;
 	}
-	public void setMedicalhistory(String s)
+	/**
+	* Set medical history of patient
+	* @param medicalHistory Medical history of patient
+	*/
+	@XmlElement
+	protected void setMedicalhistory(String medicalHistory)
 	{
-		this.medicalhistory=s;
+		this.medicalhistory=medicalHistory;
 	}
-
-	
-
 }

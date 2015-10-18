@@ -217,7 +217,7 @@ class BasicInformation
 		int lockResponse = connection.lockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");
 		if(lockResponse < 0)
 		{
-			JOptionPane.showMessageDialog(this, RHErrors.getErrorDescription(lockResponse));
+			JOptionPane.showMessageDialog(frame, RHErrors.getErrorDescription(lockResponse));
 			new KioskLogin();
 			frame.dispose();
 		}
@@ -783,28 +783,28 @@ class BasicInformation
 	private void createPatientBasicData()
 	{
 		patientReport = new PatientReport();
-		patientReport.patientBasicData = new PatientBasicData();
+		patientReport.setPatientBasicData( new PatientBasicData() );
 
 
-		patientReport.patientBasicData.setId(patientId);
-		patientReport.patientBasicData.setName(nameVar);
-		patientReport.patientBasicData.setDate(dateVar);
-		patientReport.patientBasicData.setAddress(addressVar);
-		patientReport.patientBasicData.setPhone(phoneVar);
-		// patientReport.patientBasicData.setDateofbirth(birthVar);
-		patientReport.patientBasicData.setGender(genVar);
-		patientReport.patientBasicData.setReference(reNameVar);
-		patientReport.patientBasicData.setAge(ageVar);
-		patientReport.patientBasicData.setOccupation(occuVar);
-		patientReport.patientBasicData.setStatus(statusVar);
-		patientReport.patientBasicData.setHeight(heightVar);
+		patientReport.getPatientBasicData().setId(patientId);
+		patientReport.getPatientBasicData().setName(nameVar);
+		patientReport.getPatientBasicData().setDate(dateVar);
+		patientReport.getPatientBasicData().setAddress(addressVar);
+		patientReport.getPatientBasicData().setPhone(phoneVar);
+		// patientReport.getPatientBasicData().setDateofbirth(birthVar);
+		patientReport.getPatientBasicData().setGender(genVar);
+		patientReport.getPatientBasicData().setReference(reNameVar);
+		patientReport.getPatientBasicData().setAge(ageVar);
+		patientReport.getPatientBasicData().setOccupation(occuVar);
+		patientReport.getPatientBasicData().setStatus(statusVar);
+		patientReport.getPatientBasicData().setHeight(heightVar);
 		if(new File(Constants.dataPath + imageFileName).exists())
-			patientReport.patientBasicData.setImage(imageFileName);
+			patientReport.getPatientBasicData().setImage(imageFileName);
 		else			
-			patientReport.patientBasicData.setImage(null);
+			patientReport.getPatientBasicData().setImage(null);
 
-		patientReport.patientBasicData.setFamilyhistory(familyVar);
-		patientReport.patientBasicData.setMedicalhistory(medicalVar);
+		patientReport.getPatientBasicData().setFamilyhistory(familyVar);
+		patientReport.getPatientBasicData().setMedicalhistory(medicalVar);
 
 		try
 		{

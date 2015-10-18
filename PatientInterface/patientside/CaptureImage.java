@@ -1,7 +1,5 @@
 package patientside;
-/**
-* @author Sushanto Halder
-*/
+
 import java.io.File;
 import java.io.IOException;
 import java.awt.EventQueue;
@@ -27,6 +25,7 @@ import com.github.sarxos.webcam.WebcamDiscoveryService;
 
 /**
 * Capture image from default webcam
+* @author Sushanto Halder
 */
 public class CaptureImage extends JFrame
 {
@@ -36,7 +35,7 @@ public class CaptureImage extends JFrame
     * Capture image and save the image as the provided file name
     * @param fileName Name of the file of the picture to be save
     */
-    public CaptureImage(String fileName)
+    protected CaptureImage(String fileName)
     {
         final JFrame frame=this;
     	setTitle("Kiosk Enterprise");

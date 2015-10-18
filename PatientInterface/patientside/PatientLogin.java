@@ -23,26 +23,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.JAXBException;
 
-
-
-public class PatientLogin extends JFrame
+public class PatientLogin
 {
-	PatientLogin(Connection myCon,Employee emp)
-	{
-		final Connection connection = myCon;
-		final Employee employee = emp;
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				new PatientLoginApplet(connection,employee);
-			}
-		});
-	}
-}
-
-class PatientLoginApplet extends JFrame
-{
+	private JFrame patientLoginFrame;
 	private JButton newPatient,existingPatient,backButton,submitButton,confirmButton;
 	private JTextField patientIdField;
 	private JLabel frameLabel,warningLabel;
@@ -103,19 +86,20 @@ class PatientLoginApplet extends JFrame
 
 
 
-	public PatientLoginApplet(Connection myCon,Employee emp)
+	public PatientLogin(Connection myCon,Employee emp)
 	{
+		patientLoginFrame = new JFrame();
 		connection = myCon;
 		employee = emp;
-		final JFrame jframe = this;
+		final JFrame jframe = patientLoginFrame;
 		
 		font = new Font("Monotype Corsiva",Font.BOLD,15);
-		setSize(Constants.SIZE_X,Constants.SIZE_Y);
-		setResizable(false);
-		setTitle("PATIENT LOGIN");
-		setVisible(true);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
+		patientLoginFrame.setSize(Constants.SIZE_X,Constants.SIZE_Y);
+		patientLoginFrame.setResizable(false);
+		patientLoginFrame.setTitle("PATIENT LOGIN");
+		patientLoginFrame.setVisible(true);
+		patientLoginFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		patientLoginFrame.addWindowListener(new WindowAdapter()
 		{
 			@Override
 			public void windowClosing(WindowEvent we)
@@ -123,7 +107,7 @@ class PatientLoginApplet extends JFrame
 				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
                     System.exit(0);
-					dispose();
+					patientLoginFrame.dispose();
 				}
 			}
 		});
@@ -187,7 +171,7 @@ class PatientLoginApplet extends JFrame
 			{
 				connection.disconnect();
 				new KioskLogin();
-				dispose();
+				patientLoginFrame.dispose();
 			}
 		});
 
@@ -196,7 +180,7 @@ class PatientLoginApplet extends JFrame
 			public void actionPerformed(ActionEvent ae)
 			{
 				new RegisterNewPatient(connection,employee);
-				dispose();
+				patientLoginFrame.dispose();
 			}
 		});
 
@@ -266,7 +250,7 @@ class PatientLoginApplet extends JFrame
 						jaxbe.printStackTrace();
 					}
 					file.delete();
-					nameValue.setText(patientReport.patientBasicData.getName() + "/ " + patientReport.patientBasicData.getAge() + " yrs");
+					nameValue.setText(patientReport.getPatientBasicData().getName() + "/ " + patientReport.getPatientBasicData().getAge() + " yrs");
 
 					setPatientBasicDataVisible(true);
 					warningLabel.setVisible(false);
@@ -283,7 +267,7 @@ class PatientLoginApplet extends JFrame
 						warningLabel.setVisible(false);
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
 						new KioskLogin();
-						dispose();
+						patientLoginFrame.dispose();
 					}
 				}
 			}
@@ -294,27 +278,27 @@ class PatientLoginApplet extends JFrame
 			public void actionPerformed(ActionEvent ae)
 			{
 				new PatientForm(connection,patientReport,employee);
-				dispose();
+				patientLoginFrame.dispose();
 			}
 		});
 
 		Constants.NAME_LABEL.setText(employee.getName());
 
-		add(frameLabel);
-		add(warningLabel);
-		add(newPatient);
-		add(existingPatient);
-		add(backButton);
-		add(confirmButton);
-		add(patientIdField);
-		add(submitButton);
+		patientLoginFrame.add(frameLabel);
+		patientLoginFrame.add(warningLabel);
+		patientLoginFrame.add(newPatient);
+		patientLoginFrame.add(existingPatient);
+		patientLoginFrame.add(backButton);
+		patientLoginFrame.add(confirmButton);
+		patientLoginFrame.add(patientIdField);
+		patientLoginFrame.add(submitButton);
 
-		add(nameValue);
-		add(Constants.NAME_LABEL);
+		patientLoginFrame.add(nameValue);
+		patientLoginFrame.add(Constants.NAME_LABEL);
 
-		add(patientInformationPanel);
-		add(Constants.JPANEL2);
-		add(Constants.JPANEL1);
+		patientLoginFrame.add(patientInformationPanel);
+		patientLoginFrame.add(Constants.JPANEL2);
+		patientLoginFrame.add(Constants.JPANEL1);
 	}
 
 	private void setPatientBasicDataVisible(boolean visible)

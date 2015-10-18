@@ -1,7 +1,4 @@
 package patientside;
-/**
-* @author Sushanto Halder
-*/
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -21,6 +18,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.DirectoryNotEmptyException;
 /**
 * Connection, used for file transfer, file locking with the local server
+* @author Sushanto Halder
 */
 public class Connection
 {
@@ -30,7 +28,7 @@ public class Connection
 	private static final int FILE_SIZE = 6022386;
 
 	/**
-	* initialize strWriter and strReader
+	* Initialize strWriter and strReader
 	* @param socket Already connected Socket object
 	*/
 	protected Connection(Socket socket)
@@ -317,7 +315,12 @@ public class Connection
 		System.out.println("Garbage Collection: Connection");
 	}
 
-
+	/**
+	* Move a file
+	* @param source File name to be moved
+	* @param destination Destination file name
+	* @return File object of destination file
+	*/
 	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
 	{
 		Path src = Paths.get(source);

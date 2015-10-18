@@ -6,39 +6,58 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 
-
+/**
+* PatientReport class, stores all the reports of a patient, XML annotated
+* @author Sushanto Halder
+*/
 @XmlRootElement(name="PatientReport")
 @XmlType(propOrder={"patientBasicData","reports"})
 public class PatientReport
 {
-	PatientBasicData patientBasicData;
-	ArrayList<Report> Reports;
+	private PatientBasicData patientBasicData;
+	private ArrayList<Report> Reports;
 
-	PatientReport()
+	/**
+	* Initialize Reports arraylist
+	*/
+	protected PatientReport()
 	{
 		Reports=new ArrayList<Report>();
 	}
 	
-	PatientBasicData getpatientBasicData()
+	/**
+	* Get basic data of patient
+	* @return PatientBasicData object
+	*/
+	protected PatientBasicData getPatientBasicData()
 	{
 		return patientBasicData;
 	}
-	
+	/**
+	* Set basicdata of patient
+	* @param patientBasicData Object of PatientBasicData, contains basic data of patient
+	*/
 	@XmlElement(name="PatientBasicData")
-	void setpatientBasicData(PatientBasicData patientBasicData)
+	protected void setPatientBasicData(PatientBasicData patientBasicData)
 	{
 		this.patientBasicData=patientBasicData;
 	}
 	
-	
-	ArrayList<Report> getReports()
+	/**
+	* Get report of patient which contains complaint and prescription
+	* @return ArrayList of report see DoctorSide.Report
+	*/
+	protected ArrayList<Report> getReports()
 	{
 		return Reports;
 	}
-
+	/**
+	* Set report of patient
+	* @param Reports Arraylist of report, see DoctorSide.Report
+	*/
 	@XmlElementWrapper(name="Reports")
 	@XmlElement(name="Report")
-	void setReports(ArrayList<Report> Reports)
+	protected void setReports(ArrayList<Report> Reports)
 	{
 		this.Reports=Reports;
 	}

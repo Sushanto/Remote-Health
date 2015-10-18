@@ -4,8 +4,8 @@ import javax.swing.SwingUtilities;
 import java.io.File;
 
 /**
-*Drivier class
-*@author Sushanto Halder
+* Drivier class
+* @author Sushanto Halder
 */
 
 public class KioskInterface
@@ -22,7 +22,7 @@ public class KioskInterface
 	}
 
 	/**
-	*Contructor, called by main method
+	* Set look and feel
 	*/
 	public KioskInterface()
 	{
