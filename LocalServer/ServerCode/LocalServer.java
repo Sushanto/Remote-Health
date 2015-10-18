@@ -10,13 +10,6 @@ import java.util.Collections;
 
 public class LocalServer
 {
-	// ServerSocket serverSocket;
-
-	// public static void main(String args[])
-	// {
-
-	// }
-
 	protected static HashMap<String, String> filelocks;
 
 	private String clientHostName;

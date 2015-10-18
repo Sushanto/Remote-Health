@@ -23,16 +23,23 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.DirectoryNotEmptyException;
 
-class Connection extends Thread
+/**
+* Connection: Used for communication with Kiosk devices
+* @author Sushanto Halder
+*/
+
+public class Connection extends Thread
 {
 	private Socket clientSocket;
 	private PrintWriter strWriter;
 	private BufferedReader strReader;
-	private DataOutputStream outStream;
-	private DataInputStream inStream;
 	private static final int FILE_SIZE=6022386;
 	private String connectionId;
 
+	/**
+	* Initialize socket and input output streams
+	* @param socket Socket object, already connected to Kiosk device
+	*/
 	protected Connection(Socket socket)
 	{
 		try
@@ -49,35 +56,15 @@ class Connection extends Thread
 		}
 	}
 
-	protected Connection(String address,int port)
-	{
-		try
-		{
-			InetAddress inetAddress=InetAddress.getByName(address);
-			clientSocket=new Socket(inetAddress,port);
-			outStream=new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-			inStream=new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
-			strWriter=new PrintWriter(clientSocket.getOutputStream(),true);
-			strReader=new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		}
-		catch(UnknownHostException uhe)
-		{
-			uhe.printStackTrace();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
+	/**
+	* Disconnec connection and all input output stream
+	*/
 	protected void disconnect()
 	{
 		try
 		{
 			strReader.close();
 			strWriter.close();
-			inStream.close();
-			outStream.close();
 			clientSocket.close();
 		}
 		catch(IOException e)
@@ -86,6 +73,9 @@ class Connection extends Thread
 		}
 	}
 
+	/**
+	* Listen for new request
+	*/
 	public void run()
 	{
 		try
@@ -142,6 +132,10 @@ class Connection extends Thread
 		}
 	}
 
+	/**
+	* Action for lockfile request from client
+	* @return True if success else false
+	*/
 	private boolean lockFile()
 	{
 		try
@@ -159,6 +153,10 @@ class Connection extends Thread
 		}
 	}
 
+	/**
+	* Action for unlock file request from client
+	* @return True if success else false
+	*/
 	private boolean unlockFile()
 	{
 		try
@@ -176,6 +174,10 @@ class Connection extends Thread
 		}
 	}
 
+	/**
+	* Receive a file from client
+	* @return True if success else false
+	*/
 	private boolean receiveFromClient()
 	{
 		try
@@ -217,6 +219,10 @@ class Connection extends Thread
 		}
 	}
 
+	/**
+	* Send file to client
+	* @return True if success else false
+	*/
 	private boolean sendToClient()
 	{
 		try
@@ -273,6 +279,11 @@ class Connection extends Thread
 		}
 	}
 
+	/**
+	* Send file utility function for sending file to client
+	* @param inFile File object for input file
+	* @return If success, return file length, else return negative error value
+	*/
 	private int sendFile1(File inFile)
 	{
 		try
@@ -299,25 +310,12 @@ class Connection extends Thread
 		}
 	}
 
-	private int sendFile(File inFile)
-	{
-		try {
-			FileInputStream ifStream = new FileInputStream(inFile);
-			BufferedInputStream biStream = new BufferedInputStream(ifStream);
-
-			byte[] fileBuffer = new byte[(int)inFile.length()];
-			biStream.read(fileBuffer, 0, fileBuffer.length);
-
-			outStream.write(fileBuffer, 0, fileBuffer.length);
-			outStream.flush();
-			System.out.println("return from sendFile");
-			return fileBuffer.length;
-		} catch(IOException e) {
-			e.printStackTrace();
-			return RHErrors.RHE_IOE;
-		}
-	}
-
+	/**
+	* Utility function for receiving file
+	* @param outFileName Name of the file to be received
+	* @param fileLength Length of the file to be received, unused
+	* @return If success return file length, else return negative error value
+	*/
 	private int receiveFile1(String outFileName, int fileLength)
 	{
 		try
@@ -347,45 +345,21 @@ class Connection extends Thread
 		}
 	}
 
-	private int receiveFile(String outFileName, int fileLength)
-	{
-		try {
-			int origFileLength = fileLength;
-			/* Send the OK to send */
-			this.sendInt(0);
-			System.out.println("Sent zero OK, fileLength = " + fileLength);
-			File outFile = new File(outFileName);
-			outFile.getParentFile().mkdirs();
-			outFile.createNewFile();
-			FileOutputStream ofStream = new FileOutputStream(outFile);
-			BufferedOutputStream boStream = new BufferedOutputStream(ofStream);
-
-			byte[] fileBuffer = new byte[fileLength];
-			int byteRead = 0;
-
-			while((fileLength > 0) && (byteRead = inStream.read(fileBuffer, 0, Math.min(fileBuffer.length, fileLength))) != -1) {
-				System.out.println("Inside read loop: " + byteRead + ", " + byteRead);
-				boStream.write(fileBuffer, 0, byteRead);
-				fileLength -= byteRead;
-			}
-
-			boStream.flush();
-			boStream.close();
-			ofStream.close();
-
-			return origFileLength;
-		} catch(IOException e) {
-			e.printStackTrace();
-			return RHErrors.RHE_IOE;
-		}
-	}
-
+	/**
+	* Send a string to client
+	* @param String to be send
+	*/
 	private void sendString(String str)
 	{
 		strWriter.println(str);
 		return;
 	}
 
+	/**
+	* Receive a string from a client
+	* @return String received from client
+	* @throws IOException in case of any error
+	*/
 	protected String receiveString()
 	throws IOException
 	{
@@ -395,11 +369,18 @@ class Connection extends Thread
 		return str;
 	}
 
+	/**
+	* Finalize method, called by garbage collector
+	*/
 	protected void finalize()
 	{
 		System.out.println("Garbage Collected: Connection");
 	}
 
+	/**
+	* Handle login request from client
+	* @return True if success else false
+	*/
 	protected boolean login()
 	{
 		try
@@ -420,6 +401,11 @@ class Connection extends Thread
 		}
 	}
 
+	/**
+	* Send a integer to client
+	* @param val Integer to be sent
+	* @return 0 if success, else negative error value
+	*/
 	protected int sendInt(int val)
 	{
 		sendString(Integer.toString(val));
@@ -450,7 +436,15 @@ class Connection extends Thread
 
 
 
-
+	/**
+	* Move a file from source to destination
+	* @param source Name of the source file
+	* @param destination Destination file name
+	* @return File object of the destination file
+	* @throws DirectoryNotEmptyException see java.nio.files.Files.copy()
+	* @throws IOException see java.nio.files.Files.copy()
+	* @throws SecurityException see java.nio.files.Files.copy()
+	*/
 	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
 	{
 		Path src = Paths.get(source);

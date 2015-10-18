@@ -25,10 +25,11 @@ import com.github.sarxos.webcam.WebcamDiscoveryService;
 
 /**
 * Capture image from default webcam
-* @author Sushanto Halder
+* @author Sourav Maji
 */
-public class CaptureImage extends JFrame
+public class CaptureImage
 {
+    private JFrame captureImageFrame;
     private Webcam webcam;
 
     /**
@@ -37,15 +38,16 @@ public class CaptureImage extends JFrame
     */
     protected CaptureImage(String fileName)
     {
-        final JFrame frame=this;
-    	setTitle("Kiosk Enterprise");
-    	setBounds(350, 50, 598, 475);
-        setResizable(false);
-    	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        setLayout(null);
-        setVisible(true);
+        captureImageFrame = new JFrame();
+        final JFrame frame=captureImageFrame;
+    	captureImageFrame.setTitle("Kiosk Enterprise");
+    	captureImageFrame.setBounds(350, 50, 598, 475);
+        captureImageFrame.setResizable(false);
+    	captureImageFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        captureImageFrame.setLayout(null);
+        captureImageFrame.setVisible(true);
 
-        addWindowListener(new WindowAdapter()
+        captureImageFrame.addWindowListener(new WindowAdapter()
         {
             @Override
             public void windowClosing(WindowEvent e)
@@ -55,7 +57,7 @@ public class CaptureImage extends JFrame
                     webcam.close();
                     WebcamDiscoveryService webcamDiscoveryService = Webcam.getDiscoveryService();
                     webcamDiscoveryService.stop();
-                    dispose();
+                    captureImageFrame.dispose();
         		}
             }
         });
@@ -70,7 +72,7 @@ public class CaptureImage extends JFrame
         webcamPanel.setBounds(10, 10, 572, 400);
         webcamPanel.setMirrored(false);
         webcamPanel.setPreferredSize(size);
-        add(webcamPanel);
+        captureImageFrame.add(webcamPanel);
       		
     	JButton btnCapture = new JButton("CAPTURE");
     	btnCapture.addActionListener(new ActionListener()
@@ -95,7 +97,7 @@ public class CaptureImage extends JFrame
 
                     WebcamDiscoveryService webcamDiscoveryService = Webcam.getDiscoveryService();
                     webcamDiscoveryService.stop();
-        			dispose();
+        			captureImageFrame.dispose();
 	       	    }
                 catch (InterruptedException e)
                 {
@@ -104,7 +106,7 @@ public class CaptureImage extends JFrame
         	}
         });
 		btnCapture.setBounds(250, 415, 117, 25);
-		add(btnCapture);
+		captureImageFrame.add(btnCapture);
     }
 
 

@@ -39,26 +39,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.JAXBException;
 
-
-
+/**
+* RegisterNewPatient: Frame to register new patient
+* @author Sourav Maji
+*/
 public class RegisterNewPatient
-{
-	public RegisterNewPatient(Connection myCon,Employee e)
-	{
-		final Connection connection = myCon;
-		final Employee emp = e;
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				new BasicInformation(connection,emp);
-			}
-		});
-	}
-}			
-
-
-class BasicInformation
 {
 	private JFrame frame;
 	private JTextField nameField,phoneField,ageField,referenceField,occuField,heightField;
@@ -85,6 +70,10 @@ class BasicInformation
 	private Employee emp;
 	private PatientReport patientReport;
 
+	/**
+	* Checks if fields are valid or not
+	* @return Return true if all fields are non-empty and valid
+	*/
 	private boolean checkField()
 	{
 		boolean emptyCheck = !(nameVar.trim().isEmpty() || addressVar.trim().isEmpty() 
@@ -126,6 +115,11 @@ class BasicInformation
 		return (emptyCheck & nameCheck & sdwCheck & occupationCheck & phoneCheck & ageCheck & heightCheck);
 	}
 
+	/**
+	* Checks if a string is null or empty
+	* @param str String to be checked
+	* @return String if not null or empty else return null
+	*/
 	private String checkNullString(String str)
 	{
 		if(str.equals(""))
@@ -133,7 +127,9 @@ class BasicInformation
 		else return str;
 	}
 
-
+	/**
+	* Get values of fields
+	*/
 	private void getValues(){
 		nameVar = nameField.getText();
 		addressVar = addressArea.getText();
@@ -161,6 +157,9 @@ class BasicInformation
 
 	}
 
+	/**
+	* Reset all fields
+	*/
 	private void resetField(){
 		phoneField.setText("");
 		addressArea.setText("");
@@ -178,7 +177,9 @@ class BasicInformation
 		lblImage.setIcon(null);
 	}
 
-
+	/**
+	* Increment patientIdCount for the particular Kiosk
+	*/
 	private void incrementPatientIdCount()
 	{
 		try
@@ -207,6 +208,9 @@ class BasicInformation
 		}
 	}
 
+	/**
+	* Create a new Id for new patient
+	*/
 	private void createId()
 	{
 		Date date = new Date();
@@ -252,6 +256,9 @@ class BasicInformation
 		}
 	}
 	
+	/**
+	* Take picture from default camera
+	*/
 	private void takePicture()
 	{
 		try
@@ -270,7 +277,9 @@ class BasicInformation
 	
 	}
 
-
+	/**
+	* Set image to the image label
+	*/
 	private void setImage()
 	{
 		if(new File(Constants.dataPath + imageFileName).exists())
@@ -287,6 +296,10 @@ class BasicInformation
 		}
 	}
 
+	/**
+	* Set language of the frame
+	* @param str Language to be set, English or Bengali
+	*/
 	private void setLanguage(String str)
 	{
 		if(str.equals("Bengali"))
@@ -413,8 +426,12 @@ class BasicInformation
 		}
 	}
 
-
-	public BasicInformation(Connection myCon,Employee e)
+	/**
+	* Creates the GUI
+	* @param myCon Connection object, used for communication with the local server
+	* @param e Employee object, contains information of the employee
+	*/
+	public RegisterNewPatient(Connection myCon,Employee e)
 	{
 		connection = myCon;
 		emp = e;

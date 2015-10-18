@@ -1,7 +1,4 @@
 package patientside;
-/**
-* @author Sushanto Halder
-*/
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -16,6 +13,7 @@ import java.io.IOException;
 
 /**
 * Constants: Stores constant values as static members
+* @author Sushanto Halder
 */
 public class Constants
 {

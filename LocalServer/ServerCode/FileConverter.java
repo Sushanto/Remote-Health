@@ -20,6 +20,7 @@ import javax.xml.bind.JAXBException;
 
 /**
 * Convert binary files to xml binary data for easier transmission
+* @author Sushanto Halder
 */
 public class FileConverter {
 

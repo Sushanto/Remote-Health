@@ -1,7 +1,4 @@
 package patientside;
-/**
-* @author Sushanto Halder
-*/
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
@@ -9,6 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
 * Stores employee information
+* @author Sushanto Halder
 */
 @XmlRootElement
 @XmlType(propOrder={"employeeId","name","ph_no","address","country","state","gender", "password"})

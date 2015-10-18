@@ -51,6 +51,10 @@ import javax.imageio.ImageIO;
 // import com.github.sarxos.webcam.WebcamResolution;
 // import com.github.sarxos.webcam.WebcamDiscoveryService;
 
+/**
+* PatientForm: Frame to display patient's complaint and doctor prescription
+* @author Sushanto Halder
+*/
 public class PatientForm
 {
 	private JFrame patientFormFrame;
@@ -86,6 +90,10 @@ public class PatientForm
 
 //constructor
 
+	/**
+	* Set language of the form
+	* @param str Language, english or bengali
+	*/
 	private void setLanguage(String str)
 	{
 		if(str.equals("Bengali"))
@@ -374,6 +382,12 @@ public class PatientForm
 		}
 	}
 
+	/**
+	* Creates the GUI
+	* @param myCon Connection object, used for communication with the local server
+	* @param pr PatientReport object, contains all information of the patient
+	* @param e Employee object, contains information of an employee
+	*/
 	public PatientForm(Connection myCon,PatientReport pr,Employee e)
 	{
 	//initialize PatientForm
@@ -868,7 +882,7 @@ public class PatientForm
 					getPatientReport(reg_no_field.getText());
 					setPatientReport();
 					int size = patientReport.getReports().size();
-					if(size == 0 || patientReport.getReports().get(size-1).getDoctorPrescription().getdoctorName() != null)
+					if(size == 0 || patientReport.getReports().get(size-1).getDoctorPrescription().getDoctorName() != null)
 						newComplaintAction();
 					else
 					{
@@ -1425,7 +1439,7 @@ public class PatientForm
 					// selectedFiles = new ArrayList < File > ();
 					selectedFiles.removeAll(selectedFiles);
 					String prevFileNames = report.getPatientComplaint().getFileNames();
-					if(CheckNullString(prevFileNames) == null)
+					if(checkNullString(prevFileNames) == null)
 						report.getPatientComplaint().setFileNames(tempFileNames);
 					else
 						report.getPatientComplaint().setFileNames(prevFileNames + "\n" + tempFileNames);
@@ -1756,6 +1770,10 @@ public class PatientForm
 
 	}
 
+	/**
+	* Check validation of patient complaint block
+	* @return Returns true, if information are correct, else return false
+	*/
 	private boolean validatePatientComplaint()
 	{
 		boolean weightcheck = !weight_field.getText().matches(".*[a-zA-Z]+.*");
@@ -1786,6 +1804,10 @@ public class PatientForm
 		return (weightcheck & bmicheck & bpcheck & pulsecheck & temperaturecheck & spO2check);
 	}
 
+	/**
+	* Check validation of patient basic data block
+	* @return Returns true, if patient basic information are correct, else return false
+	*/
 	private boolean validatePatientBasicData()
 	{
 		boolean nameCheck = !name_field.getText().matches(".*[0-9]+.*");
@@ -1829,21 +1851,30 @@ public class PatientForm
 	}
 //neccessary methods
 
-	private void SetPatientBasicDataEditable(boolean EDITABLE)
+	/**
+	* Set patient basic data block to editable or non editable mode
+	* @param editable Boolean, true if basic data block needs to set to editable mode
+	*/
+	private void SetPatientBasicDataEditable(boolean editable)
 	{
-		name_field.setEditable(EDITABLE);
-		sdw_of_field.setEditable(EDITABLE);
-		occupation_field.setEditable(EDITABLE);
-		ph_no_field.setEditable(EDITABLE);
-		address_area.setEditable(EDITABLE);
-		age_field.setEditable(EDITABLE);
-		height_field.setEditable(EDITABLE);
-		gender_field.setEditable(EDITABLE);
-		family_history_area.setEditable(EDITABLE);
-		medical_history_area.setEditable(EDITABLE);
+		name_field.setEditable(editable);
+		sdw_of_field.setEditable(editable);
+		occupation_field.setEditable(editable);
+		ph_no_field.setEditable(editable);
+		address_area.setEditable(editable);
+		age_field.setEditable(editable);
+		height_field.setEditable(editable);
+		gender_field.setEditable(editable);
+		family_history_area.setEditable(editable);
+		medical_history_area.setEditable(editable);
 	}
 
-    private String CheckNullString(String str)
+	/**
+	* Checks if a string is null or empty string
+	* @param str String to be checked
+	* @return Returns the string if not empty else return null
+	*/
+    private String checkNullString(String str)
     {
     	if(str == null)
     		return null;
@@ -1852,6 +1883,9 @@ public class PatientForm
     	else return str;
     }
 
+    /**
+    * Adds new complaints to patient file
+    */
 	private void addComplaintToFile()
 	{
 		if(anemia_box.isSelected())
@@ -1861,17 +1895,17 @@ public class PatientForm
 		if(jaundice_box.isSelected())
 			on_examination_area.setText(on_examination_area.getText() + "Jaundice\n");
 		PatientComplaint patientComplaint = new PatientComplaint();
-		patientComplaint.setcomplaint( CheckNullString(complaint_of_area.getText()) );
-		patientComplaint.setcomplaint_date( CheckNullString(kiosk_coordinator_date_field.getText()) );
-		patientComplaint.setWeight( CheckNullString(weight_field.getText()) );
-		patientComplaint.setBmi( CheckNullString(bmi_field.getText()) );
-		patientComplaint.setBp( CheckNullString(bp_field.getText()) );
-		patientComplaint.setSpo2( CheckNullString(spO2_field.getText()) );
-		patientComplaint.setPulse( CheckNullString(pulse_field.getText()) );
-		patientComplaint.setTemperature( CheckNullString(temperature_field.getText()) );
-		patientComplaint.setOtherResults( CheckNullString(on_examination_area.getText()) );
-		patientComplaint.setKioskCoordinatorName( CheckNullString(kiosk_coordinator_name_field.getText()) );
-		patientComplaint.setPrevDiagnosis( CheckNullString(prev_diagnosis_field.getText()) );
+		patientComplaint.setcomplaint( checkNullString(complaint_of_area.getText()) );
+		patientComplaint.setcomplaint_date( checkNullString(kiosk_coordinator_date_field.getText()) );
+		patientComplaint.setWeight( checkNullString(weight_field.getText()) );
+		patientComplaint.setBmi( checkNullString(bmi_field.getText()) );
+		patientComplaint.setBp( checkNullString(bp_field.getText()) );
+		patientComplaint.setSpo2( checkNullString(spO2_field.getText()) );
+		patientComplaint.setPulse( checkNullString(pulse_field.getText()) );
+		patientComplaint.setTemperature( checkNullString(temperature_field.getText()) );
+		patientComplaint.setOtherResults( checkNullString(on_examination_area.getText()) );
+		patientComplaint.setKioskCoordinatorName( checkNullString(kiosk_coordinator_name_field.getText()) );
+		patientComplaint.setPrevDiagnosis( checkNullString(prev_diagnosis_field.getText()) );
 
 
 
@@ -1906,7 +1940,7 @@ public class PatientForm
 		// selectedFiles = new ArrayList < File > ();
 		selectedFiles.removeAll(selectedFiles);
 
-		patientComplaint.setFileNames(CheckNullString(tempFileNames));
+		patientComplaint.setFileNames(checkNullString(tempFileNames));
 		filename_area.setText(patientComplaint.getFileNames());
 
 		Report report = new Report();
@@ -1970,6 +2004,10 @@ public class PatientForm
 		}
 	}
 
+	/**
+	* Execute the PatientComplaint module
+	* @throws IOException
+	*/
 	private void getPatientComplaint()
 	throws IOException
 	{
@@ -2023,7 +2061,7 @@ public class PatientForm
 
 			if(report.getDoctorPrescription() != null)
 			{
-				doctor_name_field.setText(report.getDoctorPrescription().getdoctorName());
+				doctor_name_field.setText(report.getDoctorPrescription().getDoctorName());
 				doctor_date_field.setText(report.getDoctorPrescription().getPrescription_date());
 				provisional_diagnosis_area.setText(report.getDoctorPrescription().getProvisionalDiagnosis());
 				final_diagnosis_area.setText(report.getDoctorPrescription().getFinalDiagnosis());
@@ -2056,6 +2094,10 @@ public class PatientForm
 		}
 	}
 
+	/**
+	* Update patient log file so that doctor can check the patient
+	* @return Return true if successfull, else return false
+	*/
 	private boolean update_log()
 	{
 		int lockResponse = connection.lockFile("Patient_" + Constants.kioskNo + "_Log.xml");
@@ -2107,6 +2149,10 @@ public class PatientForm
 		}
 	}
 
+	/**
+	* Get all information of the patient
+	* @param PatientId Id of the patient whose information needed
+	*/
 	private void getPatientReport(String PatientId)
 	{
 		int response = connection.receiveFromServer(PatientId + ".xml",Constants.dataPath + "tempPatientReport.xml");
@@ -2140,6 +2186,9 @@ public class PatientForm
 		}
 	}
 
+	/**
+	* Set report of patient to the frame
+	*/
 	private void setPatientReport()
 	{
 		reg_no_field.setText(patientReport.getPatientBasicData().getId());
@@ -2206,6 +2255,9 @@ public class PatientForm
 		}
 	}
 
+	/**
+	* Set of action to be executed when new complaint button pressed
+	*/
 	private void newComplaintAction()
 	{
 		int size = patientReport.getReports().size();

@@ -2,6 +2,7 @@ package ServerCode;
 /**
 *	Defines error numbers used throught the system
 *	error numbers are all negative, starting from -1
+* @author Rounak Das
 **/
 public class RHErrors {
 	/* Error number definitions */

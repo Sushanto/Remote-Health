@@ -41,8 +41,9 @@ import java.nio.file.DirectoryNotEmptyException;
 * @author Sushanto Halder
 */
 
-public class KioskLogin extends JFrame
+public class KioskLogin
 {
+	private JFrame kioskLoginFrame;
 	private JTextField useridBox;
 	private JPasswordField passwordBox;
 	private JLabel useridLabel,passwordLabel,errorLabel,signupLabel,showPasswordLabel,frameLabel,languageLabel;
@@ -118,13 +119,14 @@ public class KioskLogin extends JFrame
 	public KioskLogin()
 	{
 		/*set frame*/
-		final JFrame jframe = this;
-		setTitle("KIOSK LOGIN");
-		setSize(Constants.SIZE_X,Constants.SIZE_Y);
-		setResizable(false);
-		setVisible(true);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
+		kioskLoginFrame = new JFrame();
+		final JFrame jframe = kioskLoginFrame;
+		kioskLoginFrame.setTitle("KIOSK LOGIN");
+		kioskLoginFrame.setSize(Constants.SIZE_X,Constants.SIZE_Y);
+		kioskLoginFrame.setResizable(false);
+		kioskLoginFrame.setVisible(true);
+		kioskLoginFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		kioskLoginFrame.addWindowListener(new WindowAdapter()
 		{
 			@Override
 			public void windowClosing(WindowEvent we)
@@ -132,7 +134,7 @@ public class KioskLogin extends JFrame
 				if(JOptionPane.showConfirmDialog(jframe,confirmMessage) == JOptionPane.OK_OPTION)
 				{
                     System.exit(0);
-					dispose();
+					kioskLoginFrame.dispose();
 				}
 			}
 		});
@@ -214,7 +216,7 @@ public class KioskLogin extends JFrame
 					{
 						errorLabel.setVisible(false);
 						new PatientLogin(connection,emp);
-						dispose();
+						kioskLoginFrame.dispose();
 					}
 					else
 					{
@@ -236,8 +238,8 @@ public class KioskLogin extends JFrame
 			public void mouseClicked(MouseEvent ae)
 			{
 
-				new RegisterNewEmployee();
-				dispose();
+				// new RegisterNewEmployee();
+				// kioskLoginFrame.dispose();
 			}
 
 			public void mouseEntered(MouseEvent ae)
@@ -291,22 +293,22 @@ public class KioskLogin extends JFrame
 			}
 		});
 
-		add(frameLabel);
-		add(useridBox);
-		add(passwordBox);
-		add(useridLabel);
-		add(passwordLabel);
-		add(showPassword);
-		add(showPasswordLabel);
-		add(errorLabel);
-		add(signinButton);
-		add(signupLabel);
-		add(languageLabel);
-		add(languageComboBox);
-		add(languageSaveButton);
+		kioskLoginFrame.add(frameLabel);
+		kioskLoginFrame.add(useridBox);
+		kioskLoginFrame.add(passwordBox);
+		kioskLoginFrame.add(useridLabel);
+		kioskLoginFrame.add(passwordLabel);
+		kioskLoginFrame.add(showPassword);
+		kioskLoginFrame.add(showPasswordLabel);
+		kioskLoginFrame.add(errorLabel);
+		kioskLoginFrame.add(signinButton);
+		kioskLoginFrame.add(signupLabel);
+		kioskLoginFrame.add(languageLabel);
+		kioskLoginFrame.add(languageComboBox);
+		kioskLoginFrame.add(languageSaveButton);
 
-		add(Constants.JPANEL2);
-		add(Constants.JPANEL1);
+		kioskLoginFrame.add(Constants.JPANEL2);
+		kioskLoginFrame.add(Constants.JPANEL1);
 	}
 
 	/**
@@ -405,7 +407,7 @@ public class KioskLogin extends JFrame
 			catch(JAXBException jaxbe)
 			{
 				jaxbe.printStackTrace();
-				JOptionPane.showMessageDialog(this, "XML parsing error");
+				JOptionPane.showMessageDialog(kioskLoginFrame, "XML parsing error");
 				return false;
 			}
 		}
@@ -417,7 +419,7 @@ public class KioskLogin extends JFrame
 				errorLabel.setVisible(true);
 			else
 			{
-				JOptionPane.showMessageDialog(this,RHErrors.getErrorDescription(response));
+				JOptionPane.showMessageDialog(kioskLoginFrame,RHErrors.getErrorDescription(response));
 				errorLabel.setVisible(false);
 			}
 			return false;
