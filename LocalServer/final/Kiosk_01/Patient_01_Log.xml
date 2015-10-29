@@ -1,6 +1,4 @@
 <patientLog>
-   <Emergency>
-      <string>Patient_01_02</string>
-   </Emergency>
-   <Normal/>
+   <Emergency>Patient_01_04</Emergency>
+   <Normal>Patient_01_01</Normal>
 </patientLog>

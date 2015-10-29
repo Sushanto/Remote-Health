@@ -53,9 +53,9 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 public class PatientPrescriptionForm
 {
 	private JFrame patientPrescriptionFormFrame;
-	private JLabel form_label, picture, reg_no, status, date, name, sdw_of, occupation, ph_no, address, age, year, gender, height, cm, bmi, bp, weight, kg, pulse, spO2,percent, temperature, celcius, family_history, medical_history, prev_diagnosis, complaint_of, on_examination, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name, kiosk_coordinator_date,doctorLabel, doctor_name,doctor_date;
+	private JLabel form_label, picture, reg_no, status, date, name, sdw_of, occupation, ph_no, address, age, year, gender,bloodGroupLabel, height, cm, bmi, bp, weight, kg, pulse, spO2,percent, temperature, celcius, family_history, medical_history, prev_diagnosis, complaint_of, on_examination, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name, kiosk_coordinator_date,doctorLabel, doctor_name,doctor_date;
 	
-	private JTextField reg_no_field, status_field, date_field, name_field, sdw_of_field, occupation_field, ph_no_field, age_field, gender_field, height_field, bmi_field, bp_field, weight_field, pulse_field, spO2_field, temperature_field, prev_diagnosis_field,final_diagnosis_field,kiosk_coordinator_name_field, kiosk_coordinator_date_field, doctor_name_field,doctor_date_field;
+	private JTextField reg_no_field, status_field, date_field, name_field, sdw_of_field, occupation_field, ph_no_field, age_field, gender_field,bloodGroupField, height_field, bmi_field, bp_field, weight_field, pulse_field, spO2_field, temperature_field, prev_diagnosis_field,final_diagnosis_field,kiosk_coordinator_name_field, kiosk_coordinator_date_field, doctor_name_field,doctor_date_field;
 	
 	private JTextArea address_area,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area,  kiosk_coordinator_area, doctor_area;
 	
@@ -105,6 +105,7 @@ public class PatientPrescriptionForm
 	    age.setText("Age :");
 	    year.setText("years");
 	    gender.setText("Gender :");
+	    bloodGroupLabel.setText("Blood :");
 	    height.setText("Height :");
 	    cm.setText("cm");
 	    bmi.setText("BMI:");
@@ -167,6 +168,7 @@ public class PatientPrescriptionForm
 	    age.setFont(Constants.SMALLLABELFONT);
 	    year.setFont(Constants.SMALLLABELFONT);
 	    gender.setFont(Constants.SMALLLABELFONT);
+	    bloodGroupLabel.setFont(Constants.SMALLLABELFONT);
 	    height.setFont(Constants.SMALLLABELFONT);
 	    cm.setFont(Constants.SMALLLABELFONT);
 	    bmi.setFont(Constants.SMALLLABELFONT);
@@ -304,6 +306,7 @@ public class PatientPrescriptionForm
         age = new JLabel();
         year = new JLabel();
         gender = new JLabel();
+        bloodGroupLabel = new JLabel();
         height = new JLabel();
         cm = new JLabel();
         bmi = new JLabel();
@@ -344,6 +347,7 @@ public class PatientPrescriptionForm
 		ph_no_field = new JTextField();
 		age_field = new JTextField();
 		gender_field = new JTextField();
+		bloodGroupField = new JTextField();
 		height_field = new JTextField();
 		bmi_field = new JTextField();
 		bp_field = new JTextField();
@@ -445,6 +449,7 @@ public class PatientPrescriptionForm
 		ph_no_field.setEditable(false);
 		age_field.setEditable(false);
 		gender_field.setEditable(false);
+		bloodGroupField.setEditable(false);
 		height_field.setEditable(false);
 
 		bmi_field.setEditable(false);
@@ -529,8 +534,10 @@ public class PatientPrescriptionForm
 		age.setBounds(160,150,150,20);
 		age_field.setBounds(220,150,60,27);
 		year.setBounds(280,150,60,20);
-		gender.setBounds(390,180,60,20);
-		gender_field.setBounds(450,180,60,27);
+		gender.setBounds(390,150,60,20);
+		gender_field.setBounds(450,150,60,27);
+		bloodGroupLabel.setBounds(390,180,60,20);
+		bloodGroupField.setBounds(450,180,60,27);
 		height.setBounds(160,180,60,20);
 		height_field.setBounds(220,180,60,27);
 		cm.setBounds(280,180,30,20);
@@ -697,7 +704,8 @@ public class PatientPrescriptionForm
 				{
 					if(imageFile.isFile())
 						imageFile.delete();
-					JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
+					pictureDownloadButton.setVisible(false);
+					JOptionPane.showMessageDialog(patientPrescriptionFormFrame,"No picture found!");
 				}
 			}
 		});
@@ -788,18 +796,18 @@ public class PatientPrescriptionForm
 					else
 					{
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
-						try
-						{
-							connection.logoutRequest();
-						}
-						catch(Exception e)
-						{
-							e.printStackTrace();
-						}
-						for(File tempFile: new File(Constants.dataFolder).listFiles())
-							tempFile.delete();
-						new DoctorLogin();
-						patientPrescriptionFormFrame.dispose();
+						// try
+						// {
+						// 	connection.logoutRequest();
+						// }
+						// catch(Exception e)
+						// {
+						// 	e.printStackTrace();
+						// }
+						// for(File tempFile: new File(Constants.dataFolder).listFiles())
+						// 	tempFile.delete();
+						// new DoctorLogin();
+						// patientPrescriptionFormFrame.dispose();
 					}
 				}
 				else
@@ -1139,6 +1147,8 @@ public class PatientPrescriptionForm
 		patientPrescriptionFormFrame.add(year);
 		patientPrescriptionFormFrame.add(gender);
 		patientPrescriptionFormFrame.add(gender_field);
+		patientPrescriptionFormFrame.add(bloodGroupLabel);
+		patientPrescriptionFormFrame.add(bloodGroupField);
 		patientPrescriptionFormFrame.add(height);
 		patientPrescriptionFormFrame.add(height_field);
 		patientPrescriptionFormFrame.add(cm);
@@ -1547,7 +1557,7 @@ public class PatientPrescriptionForm
 			kiosk_coordinator_name_field.setText(report.getPatientComplaint().getKioskCoordinatorName());
 			kiosk_coordinator_date_field.setText(report.getPatientComplaint().getcomplaint_date());
 
-			if(report.getPatientComplaint().getFileNames() != null)
+			if(report.getPatientComplaint().getFileNames() != null && !report.getPatientComplaint().getFileNames().equals(""))
 			{
 				DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<String>(report.getPatientComplaint().getFileNames().split("\n"));
 				additionalReportsComboBox.setModel(defaultComboBoxModel);
@@ -1813,8 +1823,8 @@ public class PatientPrescriptionForm
 				JOptionPane.showMessageDialog(patientPrescriptionFormFrame,RHErrors.getErrorDescription(response));
 				for(File tempFile: new File(Constants.dataFolder).listFiles())
 					tempFile.delete();
-				new PatientSelect(connection,doctor);
-				patientPrescriptionFormFrame.dispose();
+				// new PatientSelect(connection,doctor);
+				// patientPrescriptionFormFrame.dispose();
 			}
 		}
 	}
@@ -1835,7 +1845,7 @@ public class PatientPrescriptionForm
 
 		if(status_field.getText().equals("New"))
 		{
-			if(imageFileName != null)
+			if(imageFileName != null && !imageFileName.equals(""))
 			{
 				int response = 0;
 				try
@@ -1863,17 +1873,19 @@ public class PatientPrescriptionForm
 				{
 					if(imageFile.isFile())
 						imageFile.delete();
-					JOptionPane.showMessageDialog(patientPrescriptionFormFrame,RHErrors.getErrorDescription(response));
+					pictureDownloadButton.setVisible(false);
+					JOptionPane.showMessageDialog(patientPrescriptionFormFrame,"No picture found!");
 				}
 			}
 		}
-		else if(picture.getIcon() == null && imageFileName != null)
+		else if(picture.getIcon() == null && imageFileName != null && !imageFileName.equals(""))
 			pictureDownloadButton.setVisible(true);
 		date_field.setText(patientReport.getPatientBasicData().getDate());
 		address_area.setText(patientReport.getPatientBasicData().getAddress());
 		age_field.setText(patientReport.getPatientBasicData().getAge());
 		ph_no_field.setText(patientReport.getPatientBasicData().getPhone());
 		gender_field.setText(patientReport.getPatientBasicData().getGender());
+		bloodGroupField.setText(patientReport.getPatientBasicData().getBloodGroup());
 		height_field.setText(patientReport.getPatientBasicData().getHeight());
 		family_history_area.setText(patientReport.getPatientBasicData().getFamilyhistory());
 		medical_history_area.setText(patientReport.getPatientBasicData().getMedicalhistory());

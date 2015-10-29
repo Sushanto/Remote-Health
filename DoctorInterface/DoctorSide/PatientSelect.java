@@ -602,6 +602,8 @@ public class PatientSelect
 				nameValue.setVisible(false);
 				confirmButton.setVisible(false);
 			}
+			else if( response == -12 || response == -13 )
+				JOptionPane.showMessageDialog(patientSelectFrame,RHErrors.getErrorDescription(response));
 			else
 			{
 				JOptionPane.showMessageDialog(patientSelectFrame,RHErrors.getErrorDescription(response));

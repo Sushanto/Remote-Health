@@ -58,9 +58,9 @@ import javax.imageio.ImageIO;
 public class PatientForm
 {
 	private JFrame patientFormFrame;
-	private JLabel form_label, picture, reg_no, status, date,emergency, name, sdw_of, occupation, ph_no, address, age, year, gender, height, cm, bmi, bp, weight, kg, pulse, spO2,percent, temperature, celcius, family_history, medical_history, prev_diagnosis, complaint_of, on_examination,anemia,edema,jaundice, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name,kiosk_coordinator_sign, kiosk_coordinator_date,doctor, doctor_name,doctor_sign,doctor_date;
+	private JLabel form_label, picture, reg_no, status, date,emergency, name, sdw_of, occupation, ph_no, address, age, year, gender,bloodGroupLabel, height, cm, bmi, bp, weight, kg, pulse, spO2,percent, temperature, celcius, family_history, medical_history, prev_diagnosis, complaint_of, on_examination,anemia,edema,jaundice, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name,kiosk_coordinator_sign, kiosk_coordinator_date,doctor, doctor_name,doctor_sign,doctor_date;
 	
-	private JTextField reg_no_field, status_field, date_field, name_field, sdw_of_field, occupation_field, ph_no_field, age_field, gender_field, height_field, bmi_field, bp_field, weight_field, pulse_field, spO2_field, temperature_field, prev_diagnosis_field,final_diagnosis_field,kiosk_coordinator_name_field, kiosk_coordinator_date_field, doctor_name_field,doctor_date_field;
+	private JTextField reg_no_field, status_field, date_field, name_field, sdw_of_field, occupation_field, ph_no_field, age_field, gender_field,bloodGroupField, height_field, bmi_field, bp_field, weight_field, pulse_field, spO2_field, temperature_field, prev_diagnosis_field,final_diagnosis_field,kiosk_coordinator_name_field, kiosk_coordinator_date_field, doctor_name_field,doctor_date_field;
 	
 	private JTextArea address_area,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, filename_area,advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area,  kiosk_coordinator_area, doctor_area;
 	
@@ -109,6 +109,7 @@ public class PatientForm
 		    age.setText("বয়স :");
 		    year.setText("বছর");
 		    gender.setText("লিঙ্গ :");
+		    bloodGroupLabel.setText("রক্ত :");
 		    height.setText("উচ্চতা :");
 		    cm.setText("সেমি");
 		    bmi.setText("BMI:");
@@ -158,6 +159,7 @@ public class PatientForm
 		    age.setFont(Constants.BENGALILABELFONT);
 		    year.setFont(Constants.BENGALILABELFONT);
 		    gender.setFont(Constants.BENGALILABELFONT);
+		    bloodGroupLabel.setFont(Constants.BENGALILABELFONT);
 		    height.setFont(Constants.BENGALILABELFONT);
 		    cm.setFont(Constants.BENGALILABELFONT);
 		    bmi.setFont(Constants.SMALLLABELFONT);
@@ -251,6 +253,7 @@ public class PatientForm
 		    age.setText("Age :");
 		    year.setText("years");
 		    gender.setText("Gender :");
+		    bloodGroupLabel.setText("Blood :");
 		    height.setText("Height :");
 		    cm.setText("cm");
 		    bmi.setText("BMI:");
@@ -299,6 +302,7 @@ public class PatientForm
 		    age.setFont(Constants.SMALLLABELFONT);
 		    year.setFont(Constants.SMALLLABELFONT);
 		    gender.setFont(Constants.SMALLLABELFONT);
+		    bloodGroupLabel.setFont(Constants.SMALLLABELFONT);
 		    height.setFont(Constants.SMALLLABELFONT);
 		    cm.setFont(Constants.SMALLLABELFONT);
 		    bmi.setFont(Constants.SMALLLABELFONT);
@@ -472,6 +476,7 @@ public class PatientForm
         age = new JLabel("বয়স:");
         year = new JLabel("বছর");
         gender = new JLabel("লিঙ্গ:");
+        bloodGroupLabel = new JLabel("রক্ত :");
         height = new JLabel("উচ্চতা:");
         cm = new JLabel("সেমি");
         bmi = new JLabel("BMI:");
@@ -517,6 +522,7 @@ public class PatientForm
 		ph_no_field = new JTextField();
 		age_field = new JTextField();
 		gender_field = new JTextField();
+		bloodGroupField = new JTextField();
 		height_field = new JTextField();
 		bmi_field = new JTextField();
 		bp_field = new JTextField();
@@ -570,6 +576,7 @@ public class PatientForm
 		ph_no_field.setEditable(false);
 		age_field.setEditable(false);
 		gender_field.setEditable(false);
+		bloodGroupField.setEditable(false);
 		height_field.setEditable(false);
 
 		bmi_field.setEditable(false);
@@ -700,8 +707,10 @@ public class PatientForm
 		age.setBounds(160,150,150,20);
 		age_field.setBounds(220,150,60,27);
 		year.setBounds(280,150,60,20);
-		gender.setBounds(390,180,60,20);
-		gender_field.setBounds(450,180,60,27);
+		gender.setBounds(390,150,60,20);
+		gender_field.setBounds(450,150,60,27);
+		bloodGroupLabel.setBounds(390,180,60,20);
+		bloodGroupField.setBounds(450,180,60,27);
 		height.setBounds(160,180,60,20);
 		height_field.setBounds(220,180,60,27);
 		cm.setBounds(280,180,30,20);
@@ -1109,6 +1118,7 @@ public class PatientForm
 				height.setForeground(Color.WHITE);
 				cm.setForeground(Color.WHITE);
 				gender.setForeground(Color.WHITE);
+				bloodGroupLabel.setForeground(Color.WHITE);
 				family_history.setForeground(Color.WHITE);
 				medical_history.setForeground(Color.WHITE);
 
@@ -1151,6 +1161,7 @@ public class PatientForm
 					height.setForeground(Color.BLACK);
 					cm.setForeground(Color.BLACK);
 					gender.setForeground(Color.BLACK);
+					bloodGroupLabel.setForeground(Color.BLACK);
 					family_history.setForeground(Color.BLACK);
 					medical_history.setForeground(Color.BLACK);
 
@@ -1172,9 +1183,12 @@ public class PatientForm
 					patientComplaintEdit_button.setVisible(true);
 
 					patientReport.getPatientBasicData().setName(name_field.getText());
+					patientReport.getPatientBasicData().setImage(reg_no_field.getText() + "_image.jpg");
 					patientReport.getPatientBasicData().setReference(sdw_of_field.getText());
 					patientReport.getPatientBasicData().setOccupation(occupation_field.getText());
 					patientReport.getPatientBasicData().setPhone(ph_no_field.getText());
+					patientReport.getPatientBasicData().setGender(gender_field.getText());
+					patientReport.getPatientBasicData().setBloodGroup(bloodGroupField.getText());
 					patientReport.getPatientBasicData().setAddress(address_area.getText());
 					patientReport.getPatientBasicData().setAge(age_field.getText());
 					patientReport.getPatientBasicData().setHeight(height_field.getText());
@@ -1239,6 +1253,7 @@ public class PatientForm
 				height.setForeground(Color.BLACK);
 				cm.setForeground(Color.BLACK);
 				gender.setForeground(Color.BLACK);
+				bloodGroupLabel.setForeground(Color.BLACK);
 				family_history.setForeground(Color.BLACK);
 				medical_history.setForeground(Color.BLACK);
 
@@ -1250,7 +1265,7 @@ public class PatientForm
 				patientBasicDataSave_button.setVisible(false);
 				patientBasicDataCancel_button.setVisible(false);
 				changePicture_button.setVisible(false);
-				if(picture.getIcon() == null && patientReport.getPatientBasicData().getImage() != null)
+				if(picture.getIcon() == null && patientReport.getPatientBasicData().getImage() != null && !patientReport.getPatientBasicData().getImage().equals(""))
 					pictureDownloadButton.setVisible(true);
 
 
@@ -1280,7 +1295,7 @@ public class PatientForm
 				String imageFileName = reg_no_field.getText() + "_image.jpg";
 				try
 				{
-					Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
+					Process ps = Runtime.getRuntime().exec("java "/* + "-cp PatientApp.jar "*//**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
 					ps.waitFor();
 				}
 				catch(IOException ioe)
@@ -1334,7 +1349,8 @@ public class PatientForm
 				{
 					if(imageFile.isFile())
 						imageFile.delete();
-					JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
+					pictureDownloadButton.setVisible(false);
+					JOptionPane.showMessageDialog(patientFormFrame,"No picture found!");
 				}
 			}
 		});
@@ -1467,7 +1483,7 @@ public class PatientForm
 					if((sendResponse = connection.sendToServer(Constants.dataPath + "tempPatientReport.xml",Constants.finalDataPath + reg_no_field.getText() + ".xml")) < 0)
 					{
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(sendResponse));
-						new KioskLogin();
+						new PatientLogin(connection,employee);
 						patientFormFrame.dispose();
 					}
 					file.delete();
@@ -1606,6 +1622,8 @@ public class PatientForm
 		patientFormFrame.add(year);
 		patientFormFrame.add(gender);
 		patientFormFrame.add(gender_field);
+		patientFormFrame.add(bloodGroupLabel);
+		patientFormFrame.add(bloodGroupField);
 		patientFormFrame.add(height);
 		patientFormFrame.add(height_field);
 		patientFormFrame.add(cm);
@@ -1780,12 +1798,12 @@ public class PatientForm
 	*/
 	private boolean validatePatientComplaint()
 	{
-		boolean weightcheck = !weight_field.getText().matches(".*[a-zA-Z]+.*");
-		boolean bmicheck = !bmi_field.getText().matches(".*[a-zA-Z]+.*");
-		boolean bpcheck = !bp_field.getText().matches(".*[a-zA-Z]+.*");
-		boolean pulsecheck = !pulse_field.getText().matches(".*[a-zA-Z]+.*");
-		boolean temperaturecheck = !temperature_field.getText().matches(".*[a-zA-Z]+.*");
-		boolean spO2check = !spO2_field.getText().matches(".*[a-zA-Z]+.*");
+		boolean weightcheck = !weight_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(weight_field.getText()) >= 3 && Float.parseFloat(weight_field.getText()) <= 100;
+		boolean bmicheck = !bmi_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(bmi_field.getText()) >= 17 && Float.parseFloat(bmi_field.getText()) <= 35;
+		boolean bpcheck = !bp_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat((bp_field.getText().split("/"))[0]) >= 40 && Float.parseFloat((bp_field.getText().split("/"))[1]) <= 200;
+		boolean pulsecheck = !pulse_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(pulse_field.getText()) >= 30 && Float.parseFloat(pulse_field.getText()) <= 120;
+		boolean temperaturecheck = !temperature_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(temperature_field.getText()) >= 13 && Float.parseFloat(temperature_field.getText()) <= 45;
+		boolean spO2check = !spO2_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(spO2_field.getText()) >= 90 && Float.parseFloat(spO2_field.getText()) <= 100;
 		if(weightcheck)
 			weight_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		else weight_field.setBorder(BorderFactory.createLineBorder(Color.red));
@@ -1818,40 +1836,45 @@ public class PatientForm
 		boolean sdwCheck = !sdw_of_field.getText().matches(".*[0-9]+.*");
 		boolean occupationCheck = !occupation_field.getText().matches(".*[0-9]+.*");
 		boolean genderCheck = !gender_field.getText().matches(".*[0-9]+.*");
+		boolean bloodGroupCheck = !bloodGroupField.getText().matches(".*[0-9]+.*");
 		boolean phoneCheck = !ph_no_field.getText().matches(".*[a-zA-Z]+.*");
-		boolean ageCheck = !age_field.getText().matches(".*[a-zA-Z]+.*");
-		boolean heightCheck = !height_field.getText().matches(".*[a-zA-Z]+.*");
+		boolean ageCheck = !age_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(age_field.getText()) >= 0 && Float.parseFloat(age_field.getText()) <= 120;
+		boolean heightCheck = !height_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(height_field.getText()) >= 30 && Float.parseFloat(height_field.getText()) <= 240;
 
 		if(nameCheck)
-			name_field.setBorder(BorderFactory.createLineBorder(Color.black));
+			name_field.setBorder(reg_no_field.getBorder());
 		else
 			name_field.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(sdwCheck)
-			sdw_of_field.setBorder(BorderFactory.createLineBorder(Color.black));
+			sdw_of_field.setBorder(reg_no_field.getBorder());
 		else
 			sdw_of_field.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(occupationCheck)
-			occupation_field.setBorder(BorderFactory.createLineBorder(Color.black));
+			occupation_field.setBorder(reg_no_field.getBorder());
 		else
 			occupation_field.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(genderCheck)
-			gender_field.setBorder(BorderFactory.createLineBorder(Color.black));
+			gender_field.setBorder(reg_no_field.getBorder());
 		else
 			gender_field.setBorder(BorderFactory.createLineBorder(Color.red));
+		if(bloodGroupCheck)
+			bloodGroupField.setBorder(reg_no_field.getBorder());
+		else
+			bloodGroupField.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(phoneCheck)
-			ph_no_field.setBorder(BorderFactory.createLineBorder(Color.black));
+			ph_no_field.setBorder(reg_no_field.getBorder());
 		else
 			ph_no_field.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(ageCheck)
-			age_field.setBorder(BorderFactory.createLineBorder(Color.black));
+			age_field.setBorder(reg_no_field.getBorder());
 		else
 			age_field.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(heightCheck)
-			height_field.setBorder(BorderFactory.createLineBorder(Color.black));
+			height_field.setBorder(reg_no_field.getBorder());
 		else
 			height_field.setBorder(BorderFactory.createLineBorder(Color.red));
 
-		return (nameCheck & sdwCheck & occupationCheck & genderCheck & phoneCheck & ageCheck & heightCheck);
+		return (nameCheck & sdwCheck & occupationCheck & genderCheck & bloodGroupCheck & phoneCheck & ageCheck & heightCheck);
 	}
 //neccessary methods
 
@@ -1869,6 +1892,7 @@ public class PatientForm
 		age_field.setEditable(editable);
 		height_field.setEditable(editable);
 		gender_field.setEditable(editable);
+		bloodGroupField.setEditable(editable);
 		family_history_area.setEditable(editable);
 		medical_history_area.setEditable(editable);
 	}
@@ -1966,7 +1990,7 @@ public class PatientForm
 			if(patientReport.getPatientBasicData().getStatus().equals("New"))
 			{
 				String imageFileName = patientReport.getPatientBasicData().getImage();
-				if(imageFileName != null)
+				if(imageFileName != null && !imageFileName.equals(""))
 				{
 					File imageFile = new File(Constants.dataPath + imageFileName);
 					int receiveResponse = connection.receiveFromServer(imageFileName,Constants.dataPath + imageFileName);
@@ -2015,7 +2039,7 @@ public class PatientForm
 	private void getPatientComplaint()
 	throws IOException
 	{
-		Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "projecttrialv5.PatientBasicInfo");
+		Process ps = Runtime.getRuntime().exec("java "/* + "-cp PatientApp.jar "*//**/ + "projecttrialv5.PatientBasicInfo");
 		try
 		{
 			ps.waitFor();
@@ -2184,8 +2208,8 @@ public class PatientForm
 			else
 			{
 				JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(response));
-				new PatientLogin(connection,employee);
-				patientFormFrame.dispose();
+				// new PatientLogin(connection,employee);
+				// patientFormFrame.dispose();
 			}
 		}
 	}
@@ -2206,7 +2230,7 @@ public class PatientForm
 
 		if(status_field.getText().equals("New"))
 		{
-			if(imageFileName != null)
+			if(imageFileName != null && !imageFileName.equals(""))
 			{
 				int response = connection.receiveFromServer(imageFileName , Constants.dataPath + imageFileName);
 				File imageFile = new File(Constants.dataPath + imageFileName);
@@ -2226,17 +2250,19 @@ public class PatientForm
 				{
 					if(imageFile.isFile())
 						imageFile.delete();
-					JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(response));
+					pictureDownloadButton.setVisible(false);
+					JOptionPane.showMessageDialog(patientFormFrame,"No picture found!");
 				}
 			}
 		}
-		else if(picture.getIcon() == null && imageFileName != null)
+		else if(picture.getIcon() == null && imageFileName != null && !imageFileName.equals(""))
 			pictureDownloadButton.setVisible(true);
 		date_field.setText(patientReport.getPatientBasicData().getDate());
 		address_area.setText(patientReport.getPatientBasicData().getAddress());
 		age_field.setText(patientReport.getPatientBasicData().getAge());
 		ph_no_field.setText(patientReport.getPatientBasicData().getPhone());
 		gender_field.setText(patientReport.getPatientBasicData().getGender());
+		bloodGroupField.setText(patientReport.getPatientBasicData().getBloodGroup());
 		height_field.setText(patientReport.getPatientBasicData().getHeight());
 		family_history_area.setText(patientReport.getPatientBasicData().getFamilyhistory());
 		medical_history_area.setText(patientReport.getPatientBasicData().getMedicalhistory());

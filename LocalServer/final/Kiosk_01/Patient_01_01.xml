@@ -2,40 +2,201 @@
 <PatientReport>
     <PatientBasicData>
         <id>Patient_01_01</id>
-        <date>29-10-2015</date>
-        <name>Sushanto Halder</name>
-        <reference>Son of wdh</reference>
+        <date>30-10-2015</date>
+        <name>gdhdj</name>
+        <bloodGroup>B+</bloodGroup>
+        <image>Patient_01_01_image.jpg</image>
+        <reference>Son of hdjdj</reference>
         <gender>Male</gender>
-        <age>787</age>
-        <phone>4578</phone>
-        <address>h	hg</address>
-        <occupation>jhjh</occupation>
-        <status>New</status>
-        <height>987</height>
-        <familyhistory>b</familyhistory>
-        <medicalhistory>gh</medicalhistory>
+        <age>64</age>
+        <phone>7377377383</phone>
+        <address>hdhhhd</address>
+        <occupation>udhd</occupation>
+        <status>Review</status>
+        <height>74</height>
+        <familyhistory></familyhistory>
+        <medicalhistory>ydhhdh</medicalhistory>
     </PatientBasicData>
     <Reports>
         <Report>
             <patientComplaint>
-                <complaint>hbhbh	bh	</complaint>
+                <complaint>Pain
+Where --&gt; Joints-Shoulder
+Where --&gt; Joints-Wrist
+Fever
+Whole Day --&gt; Yes
+Shivers --&gt; Yes
+</complaint>
                 <complaint_date>29-10-2015</complaint_date>
-                <weight>88</weight>
-                <bmi>0.90</bmi>
-                <bp>8</bp>
-                <pulse>8</pulse>
-                <temperature>8</temperature>
-                <spo2>8</spo2>
-                <otherResults>bhb</otherResults>
+                <weight>73</weight>
+                <bmi>7</bmi>
+                <bp>73</bp>
+                <pulse>73</pulse>
+                <temperature>83</temperature>
+                <spo2>84</spo2>
+                <otherResults>
+jaundice</otherResults>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>29-10-2015</prescription_date>
+                <provisionalDiagnosis>sfef</provisionalDiagnosis>
+                <finalDiagnosis>efefe</finalDiagnosis>
+                <advice>fefe</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>fef</diagnosis>
+                <referral>efef</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>efefefe</complaint>
+                <complaint_date>29-10-2015</complaint_date>
+                <weight>73</weight>
+                <bmi>133.31</bmi>
+                <bp>73</bp>
+                <pulse>73</pulse>
+                <temperature>83</temperature>
+                <spo2>84</spo2>
+                <otherResults>efefAnemia
+Edema
+</otherResults>
                 <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
                 <prevDiagnosis>no</prevDiagnosis>
             </patientComplaint>
             <doctorPrescription>
                 <doctorName>Sushanto Halder</doctorName>
                 <prescription_date>29-10-2015</prescription_date>
-                <provisionalDiagnosis>rrg	hg	h	gh	gh	gh	gh	g</provisionalDiagnosis>
-                <finalDiagnosis>jbb</finalDiagnosis>
+                <provisionalDiagnosis>tht</provisionalDiagnosis>
+                <finalDiagnosis>hth</finalDiagnosis>
+                <advice>thth</advice>
+                <medication>hth</medication>
+                <diagnosis>tht</diagnosis>
+                <referral>htht</referral>
             </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint_date>30-10-2015</complaint_date>
+                <weight>566</weight>
+                <bmi>667</bmi>
+                <bp>67</bp>
+                <pulse>78</pulse>
+                <temperature>778</temperature>
+                <spo2>78</spo2>
+                <otherResults>anaemia
+jaundice</otherResults>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>30-10-2015</prescription_date>
+                <provisionalDiagnosis>rtrtrt</provisionalDiagnosis>
+                <finalDiagnosis>rtr</finalDiagnosis>
+                <advice>trt</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>rtrtr</diagnosis>
+                <referral>trtrt</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>fefeSwelling
+Where --&gt; Head-Front
+Where --&gt; Teeth
+Where --&gt; Neck
+
+</complaint>
+                <complaint_date>30-10-2015</complaint_date>
+                <weight>566</weight>
+                <bmi>1033.60</bmi>
+                <bp>67</bp>
+                <pulse>78</pulse>
+                <temperature>778</temperature>
+                <spo2>78</spo2>
+                <otherResults>fefe</otherResults>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>efef</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>30-10-2015</prescription_date>
+                <provisionalDiagnosis>er</provisionalDiagnosis>
+                <finalDiagnosis>ere</finalDiagnosis>
+                <advice>rer</advice>
+                <medication>rer</medication>
+                <diagnosis>er</diagnosis>
+                <referral>ere</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>Pain
+Where --&gt; Arm-Arm
+Where --&gt; Arm-Fingers
+Eye
+Injury Location --&gt; Right
+Other --&gt; not ok
+</complaint>
+                <complaint_date>30-10-2015</complaint_date>
+                <fileNames>Patient_01_01_effected_image.jpg
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>30-10-2015</prescription_date>
+                <provisionalDiagnosis>rgr</provisionalDiagnosis>
+                <finalDiagnosis>grgr</finalDiagnosis>
+                <advice>grgrgrgrgr</advice>
+                <medication>rgrgrg</medication>
+                <diagnosis>gr</diagnosis>
+                <referral>grgr</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>Pain
+Where --&gt; Back-Lower
+Where --&gt; Arm-Fingers
+</complaint>
+                <complaint_date>30-10-2015</complaint_date>
+                <otherResults>anaemia</otherResults>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>30-10-2015</prescription_date>
+                <provisionalDiagnosis>j,juui,iui,i</provisionalDiagnosis>
+                <finalDiagnosis>,i,i,i,i,</finalDiagnosis>
+                <advice>,i,i</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 5 Day(s)
+Tablet: ACAREX, 1 time(s) in a day(After Food) X 5 Day(s)
+Tablet: ACAREX, 1 time(s) in a day(8.00PM/1.00AM) X 5 Day(s)</medication>
+                <diagnosis>,i,</diagnosis>
+                <referral>i,i</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint></complaint>
+                <complaint_date>30-10-2015</complaint_date>
+                <weight></weight>
+                <bmi></bmi>
+                <bp></bp>
+                <pulse></pulse>
+                <temperature></temperature>
+                <spo2></spo2>
+                <otherResults></otherResults>
+                <fileNames></fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis></prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription/>
         </Report>
     </Reports>
 </PatientReport>

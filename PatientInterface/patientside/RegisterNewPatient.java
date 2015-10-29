@@ -84,8 +84,8 @@ public class RegisterNewPatient
 		boolean sdwCheck = !referenceField.getText().matches(".*[0-9]+.*");
 		boolean occupationCheck = !occuVar.matches(".*[0-9]+.*");
 		boolean phoneCheck = !phoneField.getText().matches(".*[a-zA-Z]+.*");
-		boolean ageCheck = !ageVar.matches(".*[a-zA-Z]+.*");
-		boolean heightCheck = !heightVar.matches(".*[a-zA-Z]+.*");
+		boolean ageCheck = !ageVar.matches(".*[a-zA-Z]+.*") && Float.parseFloat(ageVar) >= 0 && Float.parseFloat(ageVar) <= 120;
+		boolean heightCheck = !heightVar.matches(".*[a-zA-Z]+.*") && Float.parseFloat(heightVar) >= 30 && Float.parseFloat(heightVar) <= 240;
 
 		if(nameCheck)
 			nameField.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -197,6 +197,7 @@ public class RegisterNewPatient
 				connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");
 				new PatientLogin(connection,emp);
 				frame.dispose();
+				return;
 			}
 			else file.delete();
 			connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");	
@@ -213,17 +214,14 @@ public class RegisterNewPatient
 	*/
 	private void createId()
 	{
-		Date date = new Date();
-		SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yyyy");
-		this.dateVar = ft.format(date);
-		this.fileDirectory = Constants.dataPath + "";
 		// Thread.sleep(100);
 		int lockResponse = connection.lockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");
 		if(lockResponse < 0)
 		{
 			JOptionPane.showMessageDialog(frame, RHErrors.getErrorDescription(lockResponse));
-			new KioskLogin();
+			new PatientLogin(connection,emp);
 			frame.dispose();
+			return;
 		}
 		int response = connection.receiveFromServer("Patient_" + Constants.kioskNo + "_IdCount.txt",Constants.dataPath + "PatientIdCount.txt");
 		if(response >= 0)
@@ -238,7 +236,7 @@ public class RegisterNewPatient
 			{
 				ioe.printStackTrace();
 			}
-			String temp = "Patient_" + Constants.kioskNo + "_" + String.format("%02d",(countId++));
+			String temp = "Patient_" + Constants.kioskNo + "_" + String.format("%03d",(countId++));
 			patientId = temp;
 			if((new File(Constants.dataPath + "PatientIdCount.txt")).isFile())
 				(new File(Constants.dataPath + "PatientIdCount.txt")).delete();
@@ -250,8 +248,9 @@ public class RegisterNewPatient
 			else
 			{
 				JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(response));
-				new KioskLogin();
+				new PatientLogin(connection,emp);
 				frame.dispose();
+				return;
 			}
 		}
 	}
@@ -460,7 +459,12 @@ public class RegisterNewPatient
 				}
 			}
 		});
-		createId();
+
+		Date date = new Date();
+		SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yyyy");
+		this.dateVar = ft.format(date);
+		this.fileDirectory = Constants.dataPath + "";
+
 		imageFileName = patientId + "_image.jpg";
 
 
@@ -472,7 +476,7 @@ public class RegisterNewPatient
 		lblPatientId.setBounds(10, 70, 130, 23);
 		frame.add(lblPatientId);
 
-		lblPidvalue = new JLabel(patientId);
+		lblPidvalue = new JLabel();
 		lblPidvalue.setFont(new Font("Century Schoolbook L", Font.BOLD | Font.ITALIC, 16));
 		lblPidvalue.setForeground(Color.WHITE);
 		lblPidvalue.setBounds(140, 70, 230, 23);
@@ -796,6 +800,8 @@ public class RegisterNewPatient
 				
 		frame.add(Constants.JPANEL2);
 		frame.add(Constants.JPANEL1);
+		createId();
+		lblPidvalue.setText(patientId);
 	}
 
 	private void createPatientBasicData()
@@ -837,6 +843,7 @@ public class RegisterNewPatient
 			JOptionPane.showMessageDialog(frame,networkErrorMessage);
 			new PatientLogin(connection,emp);
 			frame.dispose();
+			return;
 		}
 	    int sendResponse;
 
@@ -848,6 +855,7 @@ public class RegisterNewPatient
 	    	JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
 	    	new PatientLogin(connection,emp);
 	    	frame.dispose();
+	    	return;
 	    }
 	    if(imageFile.isFile())
 		    imageFile.delete();
@@ -862,6 +870,7 @@ public class RegisterNewPatient
 	    	JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
 	    	new PatientLogin(connection,emp);
 	    	frame.dispose();
+	    	return;
 	    }
 	    (new File(Constants.dataPath + "tempPatient.xml")).delete();
 	}

@@ -1,0 +1,20 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>suusus</address>
+      <age>62</age>
+      <bloodGroup>O</bloodGroup>
+      <date>30-10-2015</date>
+      <familyhistory></familyhistory>
+      <gender>Female</gender>
+      <height>771</height>
+      <id>Patient_01_05</id>
+      <image>Patient_01_05_image.jpg</image>
+      <medicalhistory>sjjsjs</medicalhistory>
+      <name>jxjsjh</name>
+      <occupation>uss</occupation>
+      <phone>6266662622</phone>
+      <reference>Wife of hshs</reference>
+      <status>New</status>
+   </PatientBasicData>
+   <Reports/>
+</PatientReport>

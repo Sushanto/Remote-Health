@@ -1,52 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <PatientReport>
-   <PatientBasicData>
-      <address>hhsh</address>
-      <age>64</age>
-      <bloodGroup>AB</bloodGroup>
-      <date>29-10-2015</date>
-      <gender>Male</gender>
-      <height>77</height>
-      <id>Patient_01_02</id>
-      <image>Patient_01_02_image.jpg</image>
-      <medicalhistory>hdhhs</medicalhistory>
-      <name>hdjjd</name>
-      <occupation>hshysus</occupation>
-      <phone>6367378282</phone>
-      <reference>Son of hshhs</reference>
-      <status>Review</status>
-   </PatientBasicData>
-   <Reports>
-      <Report>
-         <doctorPrescription/>
-         <patientComplaint>
-            <bmi></bmi>
-            <bp></bp>
-            <complaint>Pain
-Where --&gt; Breast-Right
-Where --&gt; Breast-Right
-Where --&gt; Legs-Thigh
-Where --&gt; Legs-Leg
-Where --&gt; Abdomen-Upper
-Type --&gt; Sometimes
-Brought On By --&gt; Passing Urine
-Relieved By --&gt; Vomiting
-Fever
-Whole Day --&gt; Yes
-Timing --&gt; Morning
-Timing --&gt; Night
-Eye
-Injury Location --&gt; Right
-</complaint>
-            <complaint_date>29-10-2015</complaint_date>
-            <fileNames></fileNames>
-            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
-            <otherResults></otherResults>
-            <prevDiagnosis></prevDiagnosis>
-            <pulse></pulse>
-            <spo2></spo2>
-            <temperature></temperature>
-            <weight></weight>
-         </patientComplaint>
-      </Report>
-   </Reports>
+    <PatientBasicData>
+        <id>Patient_01_02</id>
+        <date>29-10-2015</date>
+        <name>Sushanto Halder</name>
+        <bloodGroup>AB</bloodGroup>
+        <image>Patient_01_02_image.jpg</image>
+        <reference>Son of kaushik</reference>
+        <gender>Male</gender>
+        <age>20</age>
+        <phone>7377828828</phone>
+        <address>hshyhs</address>
+        <occupation>sjsjjs</occupation>
+        <status>New</status>
+        <height>156</height>
+        <familyhistory>hhshs</familyhistory>
+        <medicalhistory>bsghhs</medicalhistory>
+    </PatientBasicData>
+    <Reports>
+        <Report>
+            <patientComplaint>
+                <complaint>7jtjt</complaint>
+                <complaint_date>30-10-2015</complaint_date>
+                <weight>45</weight>
+                <bmi>18.49</bmi>
+                <bp>45455</bp>
+                <pulse>4545</pulse>
+                <temperature>45</temperature>
+                <spo2>54</spo2>
+                <otherResults>hththtAnemia
+Edema
+</otherResults>
+                <fileNames>Patient_01_02_15_10_30_01_22_01_0.pdf</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>no</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>30-10-2015</prescription_date>
+                <provisionalDiagnosis>efef</provisionalDiagnosis>
+                <finalDiagnosis>ef</finalDiagnosis>
+                <advice>efef</advice>
+                <medication>fe</medication>
+                <diagnosis>efe</diagnosis>
+                <referral>fefe</referral>
+            </doctorPrescription>
+        </Report>
+    </Reports>
 </PatientReport>

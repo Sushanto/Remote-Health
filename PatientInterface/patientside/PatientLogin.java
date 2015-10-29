@@ -179,8 +179,8 @@ public class PatientLogin
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				new RegisterNewPatient(connection,employee);
 				patientLoginFrame.dispose();
+				new RegisterNewPatient(connection,employee);
 			}
 		});
 
@@ -266,8 +266,8 @@ public class PatientLogin
 					{
 						warningLabel.setVisible(false);
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
-						new KioskLogin();
-						patientLoginFrame.dispose();
+						// new KioskLogin();
+						// patientLoginFrame.dispose();
 					}
 				}
 			}

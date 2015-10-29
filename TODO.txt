@@ -1,7 +1,8 @@
 LocalServer:  		Final documentation
 					Fix .tmp bug(Not so important)
+					Config file into datapath
 
-PatientInterface:	Range validation
-					Waiting gif(least concern)
+PatientInterface:	Waiting gif(least concern)
+					Config file into datapath
 
-DoctorInterface:	None
+DoctorInterface:	Config file into datapath
