@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_02</id>
+        <date>29-10-2015</date>
+        <name>amir khan</name>
+        <image>Patient_01_02_image.jpg</image>
+        <reference>Son of nasiruddin khan</reference>
+        <gender>Male</gender>
+        <age>56</age>
+        <phone>5682822623</phone>
+        <address>mumbai</address>
+        <occupation>director</occupation>
+        <status>Review</status>
+        <height>175</height>
+        <familyhistory>film star</familyhistory>
+    </PatientBasicData>
+    <Reports>
+        <Report>
+            <patientComplaint>
+                <complaint></complaint>
+                <complaint_date>29-10-2015</complaint_date>
+                <weight></weight>
+                <bmi></bmi>
+                <bp></bp>
+                <pulse></pulse>
+                <temperature></temperature>
+                <spo2></spo2>
+                <otherResults></otherResults>
+                <fileNames></fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis></prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription/>
+        </Report>
+    </Reports>
+</PatientReport>

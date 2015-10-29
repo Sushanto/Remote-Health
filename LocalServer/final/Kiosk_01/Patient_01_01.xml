@@ -2,159 +2,40 @@
 <PatientReport>
     <PatientBasicData>
         <id>Patient_01_01</id>
-        <date>15-10-2015</date>
+        <date>29-10-2015</date>
         <name>Sushanto Halder</name>
-        <image>Patient_01_01_image.jpg</image>
-        <reference>Son of Mr Halder</reference>
+        <reference>Son of wdh</reference>
         <gender>Male</gender>
-        <age>20</age>
-        <phone>8276851718</phone>
-        <address>Jadavpur</address>
-        <occupation>Student</occupation>
-        <status>Review</status>
-        <height>156</height>
-        <familyhistory>None</familyhistory>
-        <medicalhistory>Respiration problem</medicalhistory>
+        <age>787</age>
+        <phone>4578</phone>
+        <address>h	hg</address>
+        <occupation>jhjh</occupation>
+        <status>New</status>
+        <height>987</height>
+        <familyhistory>b</familyhistory>
+        <medicalhistory>gh</medicalhistory>
     </PatientBasicData>
     <Reports>
         <Report>
             <patientComplaint>
-                <complaint>Swelling
-Where --&gt; Head-Front
-Where --&gt; Teeth
-
-</complaint>
-                <complaint_date>15-10-2015</complaint_date>
-                <weight>68</weight>
-                <bmi>50</bmi>
-                <bp>80/130</bp>
-                <pulse>55</pulse>
-                <temperature>38</temperature>
-                <spo2>97</spo2>
-                <otherResults>Anemia
-Jaundice
-</otherResults>
-                <fileNames>Patient_01_01_15_10_15_03_13_11_0.pdf</fileNames>
-                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
-                <prevDiagnosis>No</prevDiagnosis>
-            </patientComplaint>
-            <doctorPrescription>
-                <doctorName>Sushanto Halder</doctorName>
-                <prescription_date>15-10-2015</prescription_date>
-                <provisionalDiagnosis>Nothing much</provisionalDiagnosis>
-                <finalDiagnosis>U will be okay</finalDiagnosis>
-                <advice>Rest in puja</advice>
-                <medication>Tablet: ACAREX, 1 time(s) in a day(After Food) X 1 Day(s)</medication>
-                <diagnosis>Dont need any</diagnosis>
-                <referral>Come to me next time</referral>
-            </doctorPrescription>
-        </Report>
-        <Report>
-            <patientComplaint>
-                <complaint>Pain
-Where --&gt; Head-Whole
-Where --&gt; Teeth
-Type --&gt; Sometimes
-Brought On By --&gt; Injury
-Relieved By --&gt; Food
-
-</complaint>
-                <complaint_date>15-10-2015</complaint_date>
-                <weight>68</weight>
-                <bmi>50</bmi>
-                <bp>80/130</bp>
-                <pulse>55</pulse>
-                <temperature>38</temperature>
-                <spo2>97</spo2>
-                <otherResults>Anemia
-</otherResults>
-                <fileNames>Patient_01_01_15_10_15_22_34_18_0.png</fileNames>
+                <complaint>hbhbh	bh	</complaint>
+                <complaint_date>29-10-2015</complaint_date>
+                <weight>88</weight>
+                <bmi>0.90</bmi>
+                <bp>8</bp>
+                <pulse>8</pulse>
+                <temperature>8</temperature>
+                <spo2>8</spo2>
+                <otherResults>bhb</otherResults>
                 <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
                 <prevDiagnosis>no</prevDiagnosis>
             </patientComplaint>
             <doctorPrescription>
                 <doctorName>Sushanto Halder</doctorName>
-                <prescription_date>15-10-2015</prescription_date>
-                <provisionalDiagnosis>pd</provisionalDiagnosis>
-                <finalDiagnosis>fd</finalDiagnosis>
-                <advice>ad</advice>
-                <medication>md
-Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
-Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
-                <diagnosis>dt</diagnosis>
-                <referral>rf</referral>
+                <prescription_date>29-10-2015</prescription_date>
+                <provisionalDiagnosis>rrg	hg	h	gh	gh	gh	gh	g</provisionalDiagnosis>
+                <finalDiagnosis>jbb</finalDiagnosis>
             </doctorPrescription>
-        </Report>
-        <Report>
-            <patientComplaint>
-                <complaint>Kichu hyni</complaint>
-                <complaint_date>18-10-2015</complaint_date>
-                <weight>68</weight>
-                <bmi>50</bmi>
-                <bp>80/130</bp>
-                <pulse>55</pulse>
-                <temperature>38</temperature>
-                <spo2>97</spo2>
-                <otherResults>Emni elam</otherResults>
-                <fileNames>Patient_01_01_15_10_18_18_39_46_0.pdf</fileNames>
-                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
-                <prevDiagnosis>no</prevDiagnosis>
-            </patientComplaint>
-            <doctorPrescription>
-                <doctorName>Sushanto Halder</doctorName>
-                <prescription_date>18-10-2015</prescription_date>
-                <provisionalDiagnosis>pd</provisionalDiagnosis>
-                <finalDiagnosis>fd</finalDiagnosis>
-                <advice>ad</advice>
-                <medication>md
-Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
-Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
-                <diagnosis>dt</diagnosis>
-                <referral>rf</referral>
-            </doctorPrescription>
-        </Report>
-        <Report>
-            <patientComplaint>
-                <complaint>af</complaint>
-                <complaint_date>18-10-2015</complaint_date>
-                <weight>68</weight>
-                <bmi>50</bmi>
-                <bp>80/130</bp>
-                <pulse>55</pulse>
-                <temperature>38</temperature>
-                <spo2>97</spo2>
-                <otherResults>sd</otherResults>
-                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
-                <prevDiagnosis>no</prevDiagnosis>
-            </patientComplaint>
-            <doctorPrescription>
-                <doctorName>Sushanto Halder</doctorName>
-                <prescription_date>18-10-2015</prescription_date>
-                <provisionalDiagnosis>pd</provisionalDiagnosis>
-                <finalDiagnosis>fd</finalDiagnosis>
-                <advice>ad</advice>
-                <medication>md
-Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
-Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
-                <diagnosis>dt</diagnosis>
-                <referral>rf</referral>
-            </doctorPrescription>
-        </Report>
-        <Report>
-            <patientComplaint>
-                <complaint>ggd</complaint>
-                <complaint_date>18-10-2015</complaint_date>
-                <weight>68</weight>
-                <bmi>50</bmi>
-                <bp>80/130</bp>
-                <pulse>55</pulse>
-                <temperature>38</temperature>
-                <spo2>97</spo2>
-                <otherResults>df</otherResults>
-                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
-                <prevDiagnosis>dfdf</prevDiagnosis>
-            </patientComplaint>
-            <doctorPrescription/>
         </Report>
     </Reports>
 </PatientReport>

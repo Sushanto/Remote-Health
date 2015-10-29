@@ -263,7 +263,7 @@ public class RegisterNewPatient
 	{
 		try
 		{
-			Process ps = Runtime.getRuntime().exec("java "/*-cp PatientApp.jar*/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
+			Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
 			ps.waitFor();
 		}
 		catch(InterruptedException ie)
@@ -839,13 +839,22 @@ public class RegisterNewPatient
 		}
 	    int sendResponse;
 
-	    if((sendResponse = connection.sendToServer(Constants.dataPath + imageFileName,Constants.tempDataPath + imageFileName)) < 0)
+	    // try
+	    // {
+    	File imageFile = new File(Constants.dataPath + imageFileName);
+	    if(imageFile.isFile() && (sendResponse = connection.sendToServer(Constants.dataPath + imageFileName,Constants.tempDataPath + imageFileName)) < 0)
 	    {
 	    	JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
 	    	new PatientLogin(connection,emp);
 	    	frame.dispose();
 	    }
-	    (new File(Constants.dataPath + imageFileName)).delete();
+	    if(imageFile.isFile())
+		    imageFile.delete();
+		// }
+		// catch(Exception e)
+		// {
+		// 	e.printStackTrace();
+		// }
 
 	    if((sendResponse = connection.sendToServer(Constants.dataPath + "tempPatient.xml",Constants.tempDataPath + patientId + ".xml")) < 0)
 	    {

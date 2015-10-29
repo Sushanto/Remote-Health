@@ -1,7 +1,7 @@
 LocalServer:  		Final documentation
-					Fix .tmp bug
+					Fix .tmp bug(Not so important)
 
-PatientInterface:	Range validation and bmi
+PatientInterface:	Range validation
 					Waiting gif(least concern)
 
-DoctorInterface:	Fix prevDateComboBox bug
+DoctorInterface:	None

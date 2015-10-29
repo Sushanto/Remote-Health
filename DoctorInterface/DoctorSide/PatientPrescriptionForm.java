@@ -1877,7 +1877,8 @@ public class PatientPrescriptionForm
 		height_field.setText(patientReport.getPatientBasicData().getHeight());
 		family_history_area.setText(patientReport.getPatientBasicData().getFamilyhistory());
 		medical_history_area.setText(patientReport.getPatientBasicData().getMedicalhistory());
-
+		
+		prevDateComboBox.removeAllItems();
 		if(!patientReport.getReports().isEmpty())
 		{
 			current_report_count = patientReport.getReports().size()-1;

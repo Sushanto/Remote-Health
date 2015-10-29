@@ -45,8 +45,6 @@ public class Connection extends Thread
 		try
 		{
 			clientSocket=socket;
-			outStream=new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-			inStream=new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
 			strWriter=new PrintWriter(clientSocket.getOutputStream(),true);
 			strReader=new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		}

@@ -1013,6 +1013,10 @@ public class PatientForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				Float heightValue = Float.parseFloat(height_field.getText());
+				Float weightValue = Float.parseFloat(weight_field.getText());
+				Float bmiValue = (weightValue * 10000) / (heightValue * heightValue);
+				bmi_field.setText(String.format("%.2f", bmiValue));
 				if(validatePatientComplaint())
 				{
 					if(update_log())
@@ -1276,7 +1280,7 @@ public class PatientForm
 				String imageFileName = reg_no_field.getText() + "_image.jpg";
 				try
 				{
-					Process ps = Runtime.getRuntime().exec("java "/*-cp PatientApp.jar*/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
+					Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
 					ps.waitFor();
 				}
 				catch(IOException ioe)
@@ -2011,7 +2015,7 @@ public class PatientForm
 	private void getPatientComplaint()
 	throws IOException
 	{
-		Process ps = Runtime.getRuntime().exec("java "/*-cp PatientApp.jar*/ + "projecttrialv5.PatientBasicInfo");
+		Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "projecttrialv5.PatientBasicInfo");
 		try
 		{
 			ps.waitFor();

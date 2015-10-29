@@ -10,11 +10,11 @@ import javax.xml.bind.annotation.XmlType;
 * @author Sushanto Halder
 */
 @XmlRootElement(name="PatientBasicData")
-@XmlType(propOrder={"id","date","name","image","reference","gender","age","phone","address","occupation","status","height",
+@XmlType(propOrder={"id","date","name","bloodGroup","image","reference","gender","age","phone","address","occupation","status","height",
 "familyhistory","medicalhistory"})
 
 public class PatientBasicData{
-	private String name,phone,address,id,gender,image,
+	private String name,bloodGroup,phone,address,id,gender,image,
 	reference,age,occupation,status,height,
 	familyhistory,medicalhistory,date;
 
@@ -34,6 +34,24 @@ public class PatientBasicData{
 	protected void setName(String name)
 	{
 		this.name=name;
+	}
+
+	/**
+	* Get patient's bloodGroup
+	* @return Patient's bloodGroup
+	*/
+	protected String getBloodGroup()
+	{
+		return bloodGroup;
+	}
+	/**
+	* Set patient's bloodGroup
+	* @param bloodGroup BloodGroup of patient
+	*/
+	@XmlElement
+	protected void setBloodGroup(String bloodGroup)
+	{
+		this.bloodGroup=bloodGroup;
 	}
 
 	/**
@@ -267,4 +285,7 @@ public class PatientBasicData{
 	{
 		this.medicalhistory=medicalHistory;
 	}
+
+	
+
 }
