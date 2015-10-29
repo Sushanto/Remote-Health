@@ -761,6 +761,7 @@ public class RegisterNewPatient
 			public void actionPerformed(ActionEvent arg0) {
 				if(new File(Constants.dataPath + imageFileName).exists())
 					new File(Constants.dataPath + imageFileName).delete();
+				connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");
 				new PatientLogin(connection,emp);
 				frame.dispose();
 			}

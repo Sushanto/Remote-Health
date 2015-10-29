@@ -13,9 +13,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder={"Emergency","Normal"})
 public class PatientLog
 {
-	@XmlElement
+	@XmlList
 	private ArrayList<String> Emergency = new ArrayList<String>();
-	@XmlElement
+	@XmlList
 	private ArrayList<String> Normal = new  ArrayList<String>();
 
 	/**

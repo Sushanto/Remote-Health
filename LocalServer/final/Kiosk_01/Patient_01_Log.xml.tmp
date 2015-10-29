@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <patientLog>
-    <Normal>Patient_01_01</Normal>
+   <Emergency>
+      <string>Patient_01_02</string>
+   </Emergency>
+   <Normal/>
 </patientLog>
