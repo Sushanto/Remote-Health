@@ -1295,7 +1295,7 @@ public class PatientForm
 				String imageFileName = reg_no_field.getText() + "_image.jpg";
 				try
 				{
-					Process ps = Runtime.getRuntime().exec("java "/* + "-cp PatientApp.jar "*//**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
+					Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
 					ps.waitFor();
 				}
 				catch(IOException ioe)
@@ -1800,7 +1800,7 @@ public class PatientForm
 	{
 		boolean weightcheck = !weight_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(weight_field.getText()) >= 3 && Float.parseFloat(weight_field.getText()) <= 100;
 		boolean bmicheck = !bmi_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(bmi_field.getText()) >= 17 && Float.parseFloat(bmi_field.getText()) <= 35;
-		boolean bpcheck = !bp_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat((bp_field.getText().split("/"))[0]) >= 40 && Float.parseFloat((bp_field.getText().split("/"))[1]) <= 200;
+		boolean bpcheck = !bp_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat((bp_field.getText().split("/"))[0]) >= 40 && Float.parseFloat((bp_field.getText().split("/"))[0]) <= 200;
 		boolean pulsecheck = !pulse_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(pulse_field.getText()) >= 30 && Float.parseFloat(pulse_field.getText()) <= 120;
 		boolean temperaturecheck = !temperature_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(temperature_field.getText()) >= 13 && Float.parseFloat(temperature_field.getText()) <= 45;
 		boolean spO2check = !spO2_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(spO2_field.getText()) >= 90 && Float.parseFloat(spO2_field.getText()) <= 100;
@@ -2039,7 +2039,7 @@ public class PatientForm
 	private void getPatientComplaint()
 	throws IOException
 	{
-		Process ps = Runtime.getRuntime().exec("java "/* + "-cp PatientApp.jar "*//**/ + "projecttrialv5.PatientBasicInfo");
+		Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "projecttrialv5.PatientBasicInfo");
 		try
 		{
 			ps.waitFor();

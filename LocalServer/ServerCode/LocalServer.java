@@ -43,6 +43,10 @@ public class LocalServer
 			connections = new ArrayList<Connection>();
 			filelocks = new HashMap<String , String>();
 			// client=new KioskClientSync(kioskId,serverHostName,serverPort,syncFolder);
+			if(!(new File(finalDataPath).exists()))
+				(new File(finalDataPath)).mkdirs();
+			if(!(new File(tempDataPath).exists()))
+				(new File(tempDataPath)).mkdirs();
 			client = new KioskClient(kioskId,serverHostName,serverPort,syncFolder);
 			client.loginRequest(loginUsername,loginPassword);
 			System.out.println("Local server is running....");

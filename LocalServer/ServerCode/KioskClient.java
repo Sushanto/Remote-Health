@@ -121,7 +121,7 @@ public class KioskClient
 		Process gdproc = null;
 		String[] command = new String[commandArguments.length + 2];
 		command[0] = "python";
-		command[1] = "gdrive_simple.py";
+		command[1] = "rh_gdrive.py";
 		for (int i = 2, j = 0; j < commandArguments.length; i++, j++) {
 			command[i] = commandArguments[j];
 		}
