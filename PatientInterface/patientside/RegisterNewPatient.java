@@ -465,7 +465,6 @@ public class RegisterNewPatient
 		this.dateVar = ft.format(date);
 		this.fileDirectory = Constants.dataPath + "";
 
-		imageFileName = patientId + "_image.jpg";
 
 
 		//patient id
@@ -803,6 +802,7 @@ public class RegisterNewPatient
 		frame.add(Constants.JPANEL2);
 		frame.add(Constants.JPANEL1);
 		createId();
+		imageFileName = patientId + "_image.jpg";
 		lblPidvalue.setText(patientId);
 	}
 

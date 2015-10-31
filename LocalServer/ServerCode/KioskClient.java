@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import java.util.Scanner;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,6 +29,7 @@ public class KioskClient
 	private String mode = null;	 		/* Either "DS"(directly connected to data server) or "GD" (connected via google drive) */
 	private String syncpath = null;			/* Where to put sync files */
 	private static String logintype = "KOP";	/* This will only run at the kiosk end */
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
 
 	/**
 	* Initiate a kiosk object with an ID(specific to machine), server name, port and syncfolder location
@@ -39,10 +42,10 @@ public class KioskClient
 		Socket sock = connectToServer(serverHostName, port);
 		if (sock != null) {
 			this.con = new ClientConnection(sock, id);
-			System.out.println("Set DC mode to DS");
+			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Set DC mode to DS");
 			this.mode = "DS";
 		} else {
-			System.out.println("Set DC mode to GD");
+			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Set DC mode to GD");
 			this.mode = "GD";
 		}
 		this.syncpath = syncfolder;
@@ -169,7 +172,7 @@ public class KioskClient
 			checkAndDecode(localFileName);
 			return resp;
 		} else {
-			System.out.println("get(): Falling back to GD script");
+			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> get(): Falling back to GD script");
 			return runGDScript(new String[]{"get", serverFileName, localFileName});
 		}
 	}
@@ -197,7 +200,7 @@ public class KioskClient
 			}
 			return resp;
 		} else {
-			System.out.println("put(): Falling back to GD script");
+			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> put(): Falling back to GD script");
 			return runGDScript(new String[]{"put", serverFileName, localFileName});
 		}
 	}
@@ -308,7 +311,7 @@ public class KioskClient
 			{
 				e.printStackTrace();
 			}
-			System.out.println("copy file...");
+			// System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> copy file...");
 			return file;
 		default:
 			FileConverter.encodeFile(inFileName, inFileName + ".tmp");
@@ -330,9 +333,9 @@ public class KioskClient
 	{
 		Path src = Paths.get(source);
 		Path dst = Paths.get(destination);
-		System.out.println("in copy file function...");
+		// System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> in copy file function...");
 		Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
-		System.out.println("file copied...");
+		System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> file copied...");
 		File copied = dst.toFile();
 		return copied;
 	}

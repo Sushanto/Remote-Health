@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,6 +37,7 @@ public class Connection extends Thread
 	private BufferedReader strReader;
 	private static final int FILE_SIZE=6022386;
 	private String connectionId;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
 
 	/**
 	* Initialize socket and input output streams
@@ -81,23 +84,23 @@ public class Connection extends Thread
 			while(true)
 			{
 				String request=receiveString();
-				System.out.println(request);
+				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Request : " + request);
 				try
 				{
-					System.out.println("Setting mode....");
+					System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Check mode......................." + LocalServer.client.getMode());
 					if(LocalServer.client.getMode().equals("GD"))
 					{
-						System.out.println("Trying to connect to DS...");
+						System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Trying to connect to DS...");
 						Socket sock;
 						if((sock=LocalServer.client.connectToServer(LocalServer.serverHostName,LocalServer.serverPort))!=null)
 						{
-							System.out.println("Connected to DS...");
+							System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Connected to DS...");
 							sock.close();
 							// LocalServer.client = new KioskClientSync(LocalServer.kioskId,LocalServer.serverHostName,LocalServer.serverPort,LocalServer.syncFolder);
 							LocalServer.client = new KioskClient(LocalServer.kioskId,LocalServer.serverHostName,LocalServer.serverPort,LocalServer.syncFolder);
 							LocalServer.client.loginRequest(LocalServer.loginUsername,LocalServer.loginPassword);
 						}
-						else System.out.println("Connected to GD....");
+						else System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Connected to GD....");
 					}
 				}
 				catch(Exception e)
@@ -119,13 +122,14 @@ public class Connection extends Thread
 						unlockFile();
 						break;
 				}
+				System.out.println("_________________________________________________________________________________________________________");
 			}
 		}
 		catch(IOException e)
 		{
 			// e.printStackTrace();
 			disconnect();
-			LocalServer.remove(this);
+			LocalServer.remove(this,connectionId);
 			LocalServer.removeLocks(connectionId);
 		}
 	}
@@ -139,7 +143,7 @@ public class Connection extends Thread
 		try
 		{
 			String fileName = receiveString();
-			System.out.println("Lock request: " + fileName);
+			System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Lock request: " + fileName);
 			int response = LocalServer.lockFile(fileName , connectionId);
 			sendInt(response);
 			return true;
@@ -160,7 +164,7 @@ public class Connection extends Thread
 		try
 		{
 			String fileName = receiveString();
-			System.out.println("Unlock request: " + fileName);
+			System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Unlock request: " + fileName);
 			int response = LocalServer.unlockFile(fileName , connectionId);
 			sendInt(response);
 			return true;
@@ -183,20 +187,20 @@ public class Connection extends Thread
 			String localFileName=receiveString();
 			String[] fileInfo=localFileName.split(" ");
 			String[] folders=fileInfo[0].split("/");
-			System.out.println("Requested file: "+localFileName);
+			System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Requested file: "+localFileName);
 
 			String lockerID = LocalServer.getLockerID(folders[folders.length - 1]);
 			if (lockerID != null && !connectionId.equals(lockerID))
 			{
 				sendInt(RHErrors.RHE_OP_LOCKED);
-				System.out.println(RHErrors.RHE_OP_LOCKED);
+				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> " + RHErrors.RHE_OP_LOCKED);
 				return false;
 			}
 			else sendInt(0);
 
 			receiveFile1(fileInfo[0],Integer.parseInt(fileInfo[1]));
 			checkAndDecode(fileInfo[0]);
-			System.out.println("File received: "+localFileName);
+			System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> File received from client : " + localFileName);
 			sendInt(0);
 			if((folders[0]+"/"+folders[1]).equals(LocalServer.finalDataPath))
 			{
@@ -204,9 +208,9 @@ public class Connection extends Thread
 				if(file.isFile())
 					file.delete();
 				Thread.sleep(3000);
-				System.out.println("Syncing...");
+				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Sending to server....");
 				LocalServer.client.putRequest(fileInfo[0],folders[folders.length - 1]);
-				System.out.println("Sync complete...");
+				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Send complete...");
 			}
 			return true;
 		}
@@ -226,13 +230,13 @@ public class Connection extends Thread
 		try
 		{
 			String localFileName=receiveString();
-			System.out.println("Requested file: "+localFileName);
+			System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Requested file: "+localFileName);
 
 			String lockerID = LocalServer.getLockerID(localFileName);
 			if (lockerID != null && !connectionId.equals(lockerID))
 			{
 				sendInt(RHErrors.RHE_OP_LOCKED);
-				System.out.println(RHErrors.RHE_OP_LOCKED);
+				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> " + RHErrors.RHE_OP_LOCKED);
 				return false;
 			}
 			else sendInt(0);
@@ -244,15 +248,15 @@ public class Connection extends Thread
 				tempFile = checkAndEncode(LocalServer.tempDataPath+"/"+localFileName);
 				sendFile1(tempFile);
 				tempFile.delete();
-				System.out.println("File sent: "+localFileName);
+				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> File sent to client : "+localFileName);
 				return true;
 			}
 			else
 			{
-				System.out.println("Syncing....");
+				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Receiving from server....");
 				int response=LocalServer.client.getRequest(localFileName,LocalServer.finalDataPath+"/"+localFileName);
-				System.out.println("Sync complete....");
-				System.out.println("Response: "+response);
+				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Receive complete....");
+				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Receive response: "+response);
 				File finalFile= new File(LocalServer.finalDataPath+"/"+localFileName);
 				if(response>=0)
 				{
@@ -260,7 +264,7 @@ public class Connection extends Thread
 					finalFile = checkAndEncode(LocalServer.finalDataPath+"/"+localFileName);
 					sendFile1(finalFile);
 					finalFile.delete();
-					System.out.println("File sent: "+localFileName);
+					System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> File sent to client : "+localFileName);
 					return true;
 				}
 				else
@@ -372,7 +376,7 @@ public class Connection extends Thread
 	*/
 	protected void finalize()
 	{
-		System.out.println("Garbage Collected: Connection");
+		System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Garbage Collected: Connection");
 	}
 
 	/**
@@ -490,7 +494,7 @@ public class Connection extends Thread
 			{
 				e.printStackTrace();
 			}
-			System.out.println("copy file...");
+			// System.out.println("copy file...");
 			return file;
 		default:
 			FileConverter.encodeFile(inFileName, inFileName + ".tmp");
@@ -512,9 +516,9 @@ public class Connection extends Thread
 	{
 		Path src = Paths.get(source);
 		Path dst = Paths.get(destination);
-		System.out.println("in copy file function...");
+		// System.out.println("in copy file function...");
 		Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
-		System.out.println("file copied...");
+		System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> file copied...");
 		File copied = dst.toFile();
 		return copied;
 	}

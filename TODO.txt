@@ -1,8 +1,6 @@
 LocalServer:  		Final documentation
 					Fix .tmp bug(Not so important)
-					Config file into datapath
 
 PatientInterface:	Waiting gif(least concern)
-					Config file into datapath
 
-DoctorInterface:	Config file into datapath
+DoctorInterface:	None

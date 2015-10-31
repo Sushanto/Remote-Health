@@ -6,6 +6,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collections;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 
 public class LocalServer
@@ -30,12 +32,17 @@ public class LocalServer
 	protected static String tempDataPath = "temp";
 	protected static String finalDataPath = "final/Kiosk_01";
 	protected static String logintype = null;
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
 
 
 	private static ArrayList<Connection> connections;
 
 	private LocalServer()
 	{
+		System.out.println("_________________________________________________________________________________________________________");
+		System.out.println("_________________________________________________________________________________________________________");
+		System.out.println("_________________________________________________________________________________________________________");
+		System.out.println("_________________________________________________________________________________________________________");
 		readInfo();
 		try
 		{
@@ -49,7 +56,7 @@ public class LocalServer
 				(new File(tempDataPath)).mkdirs();
 			client = new KioskClient(kioskId,serverHostName,serverPort,syncFolder);
 			client.loginRequest(loginUsername,loginPassword);
-			System.out.println("Local server is running....");
+			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Local server is running....");
 		}
 		catch(Exception e)
 		{
@@ -142,7 +149,7 @@ public class LocalServer
 		{
 			FileReader fReader = new FileReader(new File("KioskMetadata.cfg"));
 			BufferedReader bReader = new BufferedReader(fReader);
-			System.out.println("Kiosk Information reading....");
+			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Kiosk Information reading....");
 
 			String line;
 			while((line=bReader.readLine())!=null)
@@ -201,12 +208,13 @@ public class LocalServer
 	{
 		try
 		{
-			System.out.println("Listening.....");
+			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Listening.....");
+			System.out.println("_________________________________________________________________________________________________________");
 
 			Socket clientSocket = serverSocket.accept();
 			Connection newCon = new Connection(clientSocket);
 			connections.add(newCon);
-			System.out.println("Connection Added : " + connections.size());
+			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Connection Added : " + connections.size());
 
 			if(!newCon.login())
 				newCon.disconnect();
@@ -219,11 +227,13 @@ public class LocalServer
 		}
 	}
 
-	protected static synchronized void remove(Connection oldCon)
+	protected static synchronized void remove(Connection oldCon, String connectionId)
 	{
 		connections.remove(oldCon);
 		oldCon = null;
-		System.out.println("Connection Removed : "+connections.size());
+		System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Connection Removed : " + connectionId);
+		System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Total connections : " + connections.size());
+		System.out.println("_________________________________________________________________________________________________________");
 	}
 
 	public static void main(String args[])
