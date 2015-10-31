@@ -262,7 +262,7 @@ public class RegisterNewPatient
 	{
 		try
 		{
-			Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
+			Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp " + Constants.workingPath + "PatientApp.jar "/**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
 			ps.waitFor();
 		}
 		catch(InterruptedException ie)
@@ -792,9 +792,11 @@ public class RegisterNewPatient
 		lblImage.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				lblImage.setEnabled(false);
 				takePicture();
 				setImage();
 				
+				lblImage.setEnabled(true);
 			}
 		});
 				

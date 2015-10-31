@@ -516,7 +516,7 @@ public class PatientPrescriptionForm
 		form_label.setBounds(300, 10, 1000, 40);
 		picture.setBounds(10,60,140,140);
 		reg_no.setBounds(160,60,65,20);
-		reg_no_field.setBounds(220,60,105,27);
+		reg_no_field.setBounds(220,60,108,27);
 		status.setBounds(330,60,60,20);
 		status_field.setBounds(380,60,60,27);
 		date.setBounds(450,60,140,20);
@@ -956,6 +956,7 @@ public class PatientPrescriptionForm
 			*/
 			public void actionPerformed(ActionEvent ae)
 			{
+				prescriptionButton.setEnabled(false);
 				PrescriptionInformation info = new PrescriptionInformation();
 				info.date = doctor_date_field.getText();
 				info.doctor_name = doctor_name_field.getText();
@@ -986,6 +987,7 @@ public class PatientPrescriptionForm
 				info.doctor_diagnostic = diagnostic_test_area.getText();
 				info.kiosk_coordinator_name = kiosk_coordinator_name_field.getText();
 				new GeneralPrescription(info);
+				prescriptionButton.setEnabled(true);
 			}
 		});
 
@@ -1874,7 +1876,7 @@ public class PatientPrescriptionForm
 					if(imageFile.isFile())
 						imageFile.delete();
 					pictureDownloadButton.setVisible(false);
-					JOptionPane.showMessageDialog(patientPrescriptionFormFrame,"No picture found!");
+					// JOptionPane.showMessageDialog(patientPrescriptionFormFrame,"No picture found!");
 				}
 			}
 		}

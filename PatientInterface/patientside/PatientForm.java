@@ -687,7 +687,7 @@ public class PatientForm
 		form_label.setBounds(300, 10, 1000, 40);
 		picture.setBounds(10,60,140,140);
 		reg_no.setBounds(160,60,65,20);
-		reg_no_field.setBounds(220,60,105,27);
+		reg_no_field.setBounds(220,60,108,27);
 		status.setBounds(330,60,60,20);
 		status_field.setBounds(380,60,60,27);
 		date.setBounds(450,60,140,20);
@@ -937,6 +937,7 @@ public class PatientForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				choose_button.setEnabled(false);
 				try
 				{
 					getPatientComplaint();
@@ -945,6 +946,7 @@ public class PatientForm
 				{
 					ioe.printStackTrace();
 				}
+				choose_button.setEnabled(true);
 			}
 		});
 
@@ -952,6 +954,7 @@ public class PatientForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				print_button.setEnabled(false);
 				PrescriptionInformation info = new PrescriptionInformation();
 				info.date = doctor_date_field.getText();
 				info.doctor_name = doctor_name_field.getText();
@@ -982,6 +985,7 @@ public class PatientForm
 				info.doctor_diagnostic = diagnostic_test_area.getText();
 				info.kiosk_coordinator_name = kiosk_coordinator_name_field.getText();
 				GeneralPrescription FRAME_TO_PRINT = new GeneralPrescription(info);
+				print_button.setEnabled(true);
 			}
 		});
 
@@ -1295,7 +1299,7 @@ public class PatientForm
 				String imageFileName = reg_no_field.getText() + "_image.jpg";
 				try
 				{
-					Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
+					Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp " + Constants.workingPath + "PatientApp.jar "/**/ + "patientside.CaptureImage " + Constants.dataPath + imageFileName);
 					ps.waitFor();
 				}
 				catch(IOException ioe)
@@ -2039,7 +2043,7 @@ public class PatientForm
 	private void getPatientComplaint()
 	throws IOException
 	{
-		Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp PatientApp.jar "/**/ + "projecttrialv5.PatientBasicInfo");
+		Process ps = Runtime.getRuntime().exec("java "/**/ + "-cp " + Constants.workingPath + "PatientApp.jar "/**/ + "projecttrialv5.PatientBasicInfo");
 		try
 		{
 			ps.waitFor();
@@ -2251,7 +2255,7 @@ public class PatientForm
 					if(imageFile.isFile())
 						imageFile.delete();
 					pictureDownloadButton.setVisible(false);
-					JOptionPane.showMessageDialog(patientFormFrame,"No picture found!");
+					// JOptionPane.showMessageDialog(patientFormFrame,"No picture found!");
 				}
 			}
 		}

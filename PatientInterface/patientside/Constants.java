@@ -23,7 +23,7 @@ public class Constants
 	protected static Color HEADERCOLOR1,JPANELCOLOR2;
 	protected static JLabel NAME_LABEL;
 	protected static Font HEADERFONT,SMALLLABELFONT,SMALLBUTTONFONT,BENGALILABELFONT,BENGALIBUTTONFONT;
-	protected static String tempDataPath = "temp/", finalDataPath = "final/Kiosk_01/", dataPath = "tempFolder/";
+	protected static String tempDataPath = "temp/", finalDataPath = "final/Kiosk_01/", dataPath = "tempFolder/", workingPath = "";
 	protected static String localServerHostName = "127.0.0.1";
 	protected static String kioskNo = "0x",deviceId;
 	protected static int localServerPort = 36698;
@@ -108,6 +108,9 @@ public class Constants
 						break;
 					case "DATA_FOLDER":
 						dataPath = tokens[1];
+						break;
+					case "WORKING_FOLDER":
+						workingPath = tokens[1];
 						break;
 					case "LANGUAGE":
 						language = tokens[1];
