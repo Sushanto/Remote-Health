@@ -13,6 +13,17 @@ class RHDrive:
 		"""
 		self.gauth = GoogleAuth()	#initiate authenticator for OAuth2
 		self.drive = None
+		self.data_id = None
+
+	def get_data_id(self):
+		"""
+		populate data_id with id of folder called 'Data'
+		"""
+		filelist = self.get_files()
+		for file in filelist:
+			if file['title'] == 'Data':
+				self.data_id = file['id']
+				return
 
 	def get_auth_link(self):
 		"""
@@ -62,18 +73,19 @@ class RHDrive:
 				return True
 		return False
 
-	def get_files(self):
+	def get_files(self, parent='root'):
 		"""
 		Get iterable list of files in root folder of GoogleDrive
 		"""
-		files = self.drive.ListFile({'q':'"root" in parents and trashed=false'}).GetList()
+		query = '"' + parent + '" in parents and trashed = false'
+		files = self.drive.ListFile({'q':query}).GetList()
 		return files
 
 	def write_filelist(self, local_filename):
 		"""
 		write the names of the files in GoogleDrive to local_filename
 		"""
-		filelist = self.get_files()
+		filelist = self.get_files(self.data_id)
 		f = open(local_filename, 'w')
 		for file in filelist:
 			f.write(file['title'] + '\n')
@@ -83,7 +95,7 @@ class RHDrive:
 		"""
 		Update the file called server_filename with the contents of local_filename
 		"""
-		filelist = self.get_files()
+		filelist = self.get_files(self.data_id)
 		toupdate = None
 		for file in filelist:
 			if file['title'] == server_filename:
@@ -98,7 +110,7 @@ class RHDrive:
 		"""
 		Upload a new file by name and content of filename, may cause naming conflict, should be unique
 		"""
-		newfile = self.drive.CreateFile()
+		newfile = self.drive.CreateFile({'parents': [{"kind": "drive#fileLink", "id": self.data_id}]})
 		newfile.SetContentFile(filename)
 		newfile.Upload()
 
@@ -106,7 +118,7 @@ class RHDrive:
 		"""
 		Get file called server_filename from GoogleDrive and save as local_filename
 		"""
-		filelist = self.get_files()
+		filelist = self.get_files(self.data_id)
 		toget = None
 		for file in filelist:
 			if file['title'] == server_filename:
@@ -126,14 +138,22 @@ def main():
 							5. new (Upload new file)
 	See individual command calls for aguments
 	"""
+	f = open("pylog", "a")
 	rhd = RHDrive()	#initiate
 	rhd.authorize()	#authorize
 	#check if logged in to correct account
 	if not rhd.check_login_email():
+		f.write("Wrong email addresss!\n")
+		f.close()
 		sys.exit(1)
-
+	else:
+		f.write("Valid email\n")
+	rhd.get_data_id()
+	f.write("Command and arguments: " + str(sys.argv[1:]))
 	command = sys.argv[1]
 	if command not in ['get', 'put', 'link', 'list', 'new']:
+		f.write("Bad command!\n")
+		f.close()
 		sys.exit(1)
 	if command == 'get':
 		#get <server_filename> <local_filename>
@@ -141,14 +161,22 @@ def main():
 		l_filename = sys.argv[3]
 		f = rhd.retrieve_file(s_filename, l_filename)
 		if not f:
+			f.write("Could not download file!\n")
+			f.close()
 			sys.exit(1)
+		else:
+			f.write("Downloaded file\n")
 	elif command == 'put':
 		#put <server_filename> <local_filename>
 		s_filename = sys.argv[2]
 		l_filename = sys.argv[3]
 		f = rhd.update_file(s_filename, l_filename)
 		if not f:
+			f.write("Could not upload file!\n")
+			f.close()
 			sys.exit(1)
+		else:
+			f.write("Updated file");
 	elif command == 'link':
 		#link <filename>
 		rhd.write_auth_link(sys.argv[2])
@@ -158,7 +186,11 @@ def main():
 	else:
 		filename = sys.argv[2]
 		rhd.upload_file(filename)
+		f.write("New file created\n")
+	f.write("Done\n")
+	f.close()
 
 
 if __name__=='__main__':
 	main()
+	sys.exit(0)

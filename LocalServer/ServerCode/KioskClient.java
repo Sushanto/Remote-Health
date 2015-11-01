@@ -185,7 +185,7 @@ public class KioskClient
 	* @throws Exception if socket was closed before receiving reply,
 	* in case of error, try to reconnect by re-making the DoctorClient object
 	*/
-	public int putRequest(String localFileName, String serverFileName) throws Exception
+	public int putRequest(String localFileName, String serverFileName, boolean newfile) throws Exception
 	{
 		File localFile=new File(localFileName);
 		if (this.mode.equals("DS")) {
@@ -194,14 +194,16 @@ public class KioskClient
 			int resp = RHErrors.RHE_GENERAL;
 			if (localFile.exists()) {
 				con.sendString(command);
-				localFile = checkAndEncode(localFileName);
 				con.sendFileln(localFile);
 				resp = con.receiveInt();
 			}
 			return resp;
 		} else {
-			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> put(): Falling back to GD script");
-			return runGDScript(new String[]{"put", serverFileName, localFileName});
+			System.out.println("put(): Falling back to GD script");
+			if (newfile)
+				return runGDScript(new String[]{"put", serverFileName, localFileName});
+			else
+				return runGDScript(new String[]{"new", localFileName});
 		}
 	}
 

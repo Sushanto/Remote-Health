@@ -85,28 +85,28 @@ public class Connection extends Thread
 			{
 				String request=receiveString();
 				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Request : " + request);
-				try
-				{
+				// try
+				// {
 					System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Check mode......................." + LocalServer.client.getMode());
-					if(LocalServer.client.getMode().equals("GD"))
-					{
-						System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Trying to connect to DS...");
-						Socket sock;
-						if((sock=LocalServer.client.connectToServer(LocalServer.serverHostName,LocalServer.serverPort))!=null)
-						{
-							System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Connected to DS...");
-							sock.close();
-							// LocalServer.client = new KioskClientSync(LocalServer.kioskId,LocalServer.serverHostName,LocalServer.serverPort,LocalServer.syncFolder);
-							LocalServer.client = new KioskClient(LocalServer.kioskId,LocalServer.serverHostName,LocalServer.serverPort,LocalServer.syncFolder);
-							LocalServer.client.loginRequest(LocalServer.loginUsername,LocalServer.loginPassword);
-						}
-						else System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Connected to GD....");
-					}
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+					// if(LocalServer.client.getMode().equals("GD"))
+					// {
+					// 	System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Trying to connect to DS...");
+					// 	Socket sock;
+					// 	if((sock=LocalServer.client.connectToServer(LocalServer.serverHostName,LocalServer.serverPort))!=null)
+					// 	{
+					// 		System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Connected to DS...");
+					// 		sock.close();
+					// 		// LocalServer.client = new KioskClientSync(LocalServer.kioskId,LocalServer.serverHostName,LocalServer.serverPort,LocalServer.syncFolder);
+					// 		LocalServer.client = new KioskClient(LocalServer.kioskId,LocalServer.serverHostName,LocalServer.serverPort,LocalServer.syncFolder);
+					// 		LocalServer.client.loginRequest(LocalServer.loginUsername,LocalServer.loginPassword);
+					// 	}
+					// 	else System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Connected to GD....");
+					// }
+				// }
+				// catch(Exception e)
+				// {
+				// 	e.printStackTrace();
+				// }
 				switch(request)
 				{
 					case "SEND_FILE":
@@ -204,12 +204,20 @@ public class Connection extends Thread
 			sendInt(0);
 			if((folders[0]+"/"+folders[1]).equals(LocalServer.finalDataPath))
 			{
+				boolean newFile = false;
+				String[] fileNameParts = folders[folders.length - 1].split("\\.");
+				String extension = fileNameParts[fileNameParts.length - 1];
+				if(!extension.equals("xml") && !extension.equals("txt"))
+					newFile |= true;
 				File file=new File(LocalServer.tempDataPath+"/"+folders[folders.length - 1]);
 				if(file.isFile())
+				{
+					newFile |= true;
 					file.delete();
+				}
 				Thread.sleep(3000);
 				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Sending to server....");
-				LocalServer.client.putRequest(fileInfo[0],folders[folders.length - 1]);
+				LocalServer.client.putRequest(fileInfo[0],folders[folders.length - 1],newFile);
 				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Send complete...");
 			}
 			return true;
