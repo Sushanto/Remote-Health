@@ -1,0 +1,54 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>yrdrdfg</address>
+      <age>25</age>
+      <bloodGroup>B+</bloodGroup>
+      <date>03-11-2015</date>
+      <gender>Female</gender>
+      <height>152</height>
+      <id>Patient_01_004</id>
+      <image>Patient_01_004_image.jpg</image>
+      <name>roshni</name>
+      <occupation>service</occupation>
+      <phone>3455</phone>
+      <reference>Daughter of sarmistha</reference>
+      <status>New</status>
+   </PatientBasicData>
+   <Reports>
+      <Report>
+         <doctorPrescription/>
+         <patientComplaint>
+            <bmi>27</bmi>
+            <bp>120/80</bp>
+            <complaint>Pain
+Where --&gt; Head-Back
+Type --&gt; Sometimes
+Brought On By --&gt; Food
+Relieved By --&gt; Food
+Fever
+Whole Day --&gt; No
+Shivers --&gt; No
+Temperature Average --&gt; 100
+Type --&gt; Some Days
+Timing --&gt; Night
+Eye
+Cannot see --&gt; yes
+Injury When --&gt; reading
+Injury Location --&gt; Right
+Other
+Description --&gt; htyth
+</complaint>
+            <complaint_date>03-11-2015</complaint_date>
+            <fileNames>Patient_01_004_effected_image.jpg
+</fileNames>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults>anemia</otherResults>
+            <prevDiagnosis></prevDiagnosis>
+            <pulse>70</pulse>
+            <spo2>89</spo2>
+            <temperature></temperature>
+            <weight></weight>
+         </patientComplaint>
+      </Report>
+   </Reports>
+</PatientReport>

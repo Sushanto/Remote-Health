@@ -1,0 +1,140 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>Jadavpur</address>
+      <age>20</age>
+      <date>03-11-2015</date>
+      <familyhistory>None</familyhistory>
+      <gender>Male</gender>
+      <height>156</height>
+      <id>Patient_01_001</id>
+      <image>Patient_01_001_image.jpg</image>
+      <name>Sushanto Halder</name>
+      <occupation>Student</occupation>
+      <phone>8276851718</phone>
+      <reference>Son of Mr. Halder</reference>
+      <status>Review</status>
+   </PatientBasicData>
+   <Reports>
+      <Report>
+         <doctorPrescription>
+            <advice>oiahroweuhqeor</advice>
+            <diagnosis>pisdhfoweiufhowuerh</diagnosis>
+            <doctorName>Sushanto Halder</doctorName>
+            <finalDiagnosis>zsdgiusadgasih</finalDiagnosis>
+            <medication>Tablet: T- BACT, 1 time(s) in a day() X 1 Day(s)
+Tablet: RELAXYL SPRAY, 1 time(s) in a day() X 1 Day(s)
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)</medication>
+            <prescription_date>03-11-2015</prescription_date>
+            <provisionalDiagnosis>slkhfasjdfhsa</provisionalDiagnosis>
+            <referral>ksderhowuerhweiurg</referral>
+         </doctorPrescription>
+         <patientComplaint>
+            <bmi>27.94</bmi>
+            <bp>80/130</bp>
+            <complaint>Pain
+Where --&gt; Head-Front
+Where --&gt; Teeth
+
+Swelling
+
+</complaint>
+            <complaint_date>03-11-2015</complaint_date>
+            <fileNames>Patient_01_001_15_11_03_14_03_19_0.cfg
+</fileNames>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults>Anemia
+</otherResults>
+            <prevDiagnosis>No</prevDiagnosis>
+            <pulse>55</pulse>
+            <spo2>95</spo2>
+            <temperature>38</temperature>
+            <weight>68</weight>
+         </patientComplaint>
+      </Report>
+      <Report>
+         <doctorPrescription>
+            <advice>08eyousadhfajshdb</advice>
+            <diagnosis>iausgdisyagd</diagnosis>
+            <doctorName>Sushanto Halder</doctorName>
+            <finalDiagnosis>asuhdiusqgdh</finalDiagnosis>
+            <medication>asyd97qergiaducbdia
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)</medication>
+            <prescription_date>03-11-2015</prescription_date>
+            <provisionalDiagnosis>osahdoiusahd</provisionalDiagnosis>
+            <referral>osudgiusagd</referral>
+         </doctorPrescription>
+         <patientComplaint>
+            <bmi>27.94</bmi>
+            <bp>80/130</bp>
+            <complaint>hgfhgf</complaint>
+            <complaint_date>03-11-2015</complaint_date>
+            <fileNames>Patient_01_001_15_11_03_14_06_14_0.jar</fileNames>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults>Anemia
+</otherResults>
+            <prevDiagnosis>ys</prevDiagnosis>
+            <pulse>55</pulse>
+            <spo2>95</spo2>
+            <temperature>38</temperature>
+            <weight>68</weight>
+         </patientComplaint>
+      </Report>
+      <Report>
+         <doctorPrescription>
+            <advice>oishsahfiashd089qshfosai</advice>
+            <diagnosis>osabdousabcjsabdou</diagnosis>
+            <doctorName>Sushanto Halder</doctorName>
+            <finalDiagnosis>oiahfoisahdfoiashd</finalDiagnosis>
+            <medication>oaishd08sahdipshc08saud8
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+            <prescription_date>03-11-2015</prescription_date>
+            <provisionalDiagnosis>iehfipeqhfoieqh</provisionalDiagnosis>
+            <referral>oiashd98qgojdabfou</referral>
+         </doctorPrescription>
+         <patientComplaint>
+            <bmi>27.94</bmi>
+            <bp>80/130</bp>
+            <complaint>df</complaint>
+            <complaint_date>03-11-2015</complaint_date>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <prevDiagnosis>dfd</prevDiagnosis>
+            <pulse>55</pulse>
+            <spo2>95</spo2>
+            <temperature>38</temperature>
+            <weight>68</weight>
+         </patientComplaint>
+      </Report>
+      <Report>
+         <doctorPrescription/>
+         <patientComplaint>
+            <bmi></bmi>
+            <bp></bp>
+            <complaint>Pain
+Where --&gt; Head-Back
+Where --&gt; Arm-Arm
+Where --&gt; Arm-Forearm
+Fever
+Whole Day --&gt; Yes
+Shivers --&gt; Yes
+Eye
+Cannot see --&gt; rtege
+Other
+Description --&gt; hwhw
+</complaint>
+            <complaint_date>03-11-2015</complaint_date>
+            <fileNames>Patient_01_001_effected_image.jpg
+</fileNames>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults>anemia</otherResults>
+            <prevDiagnosis></prevDiagnosis>
+            <pulse></pulse>
+            <spo2></spo2>
+            <temperature></temperature>
+            <weight></weight>
+         </patientComplaint>
+      </Report>
+   </Reports>
+</PatientReport>

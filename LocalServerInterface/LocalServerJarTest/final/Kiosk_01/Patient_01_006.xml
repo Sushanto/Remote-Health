@@ -1,0 +1,70 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>rt</address>
+      <age>45</age>
+      <bloodGroup>O-</bloodGroup>
+      <date>03-11-2015</date>
+      <familyhistory>r</familyhistory>
+      <gender>Male</gender>
+      <height>45</height>
+      <id>Patient_01_006</id>
+      <image>Patient_01_006_image.jpg</image>
+      <medicalhistory>y</medicalhistory>
+      <name>j</name>
+      <occupation>er</occupation>
+      <phone>34578</phone>
+      <reference>Son of n</reference>
+      <status>New</status>
+   </PatientBasicData>
+   <Reports>
+      <Report>
+         <doctorPrescription>
+            <advice>rest</advice>
+            <doctorName>Sushanto Halder</doctorName>
+            <medication>Tablet: QUIGYL-DS, 1 time(s) in a day(After Food) X 1 Day(s)</medication>
+            <prescription_date>03-11-2015</prescription_date>
+            <provisionalDiagnosis>Malaria</provisionalDiagnosis>
+         </doctorPrescription>
+         <patientComplaint>
+            <complaint>Pain
+Where --&gt; Head-Back
+Ear
+Pain --&gt; Left
+Discharge --&gt; Left
+Other
+Description --&gt; ijjji
+</complaint>
+            <complaint_date>03-11-2015</complaint_date>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults>anemia
+jaundice</otherResults>
+            <temperature>35</temperature>
+            <weight>67</weight>
+         </patientComplaint>
+      </Report>
+      <Report>
+         <doctorPrescription/>
+         <patientComplaint>
+            <bmi></bmi>
+            <bp></bp>
+            <complaint>Pain
+Where --&gt; Breast-Right
+Where --&gt; Breast-Right
+Where --&gt; Scortum-Right
+Eye
+Injury Location --&gt; Left
+</complaint>
+            <complaint_date>03-11-2015</complaint_date>
+            <fileNames></fileNames>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults>
+edema</otherResults>
+            <prevDiagnosis></prevDiagnosis>
+            <pulse></pulse>
+            <spo2></spo2>
+            <temperature>35</temperature>
+            <weight>45</weight>
+         </patientComplaint>
+      </Report>
+   </Reports>
+</PatientReport>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_002</id>
+        <date>03-11-2015</date>
+        <name>jhg</name>
+        <bloodGroup></bloodGroup>
+        <image>Patient_01_002_image.jpg</image>
+        <reference>Son of jgjg</reference>
+        <gender>Male</gender>
+        <age>56</age>
+        <phone>64637646</phone>
+        <address>jggjfj</address>
+        <occupation>jg</occupation>
+        <status>New</status>
+        <height>130</height>
+        <familyhistory></familyhistory>
+        <medicalhistory></medicalhistory>
+    </PatientBasicData>
+    <Reports>
+        <Report>
+            <patientComplaint>
+                <complaint>edd</complaint>
+                <complaint_date>03-11-2015</complaint_date>
+                <weight>45</weight>
+                <bmi>26.63</bmi>
+                <bp>45</bp>
+                <pulse>45</pulse>
+                <temperature>45</temperature>
+                <spo2>90</spo2>
+                <otherResults>Anemia
+</otherResults>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>sd</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription/>
+        </Report>
+    </Reports>
+</PatientReport>

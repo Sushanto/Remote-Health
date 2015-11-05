@@ -1,0 +1,36 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>vaa</address>
+      <age>12</age>
+      <bloodGroup>AB</bloodGroup>
+      <date>05-11-2015</date>
+      <gender>Male</gender>
+      <height>52</height>
+      <id>Patient_01_009</id>
+      <image>Patient_01_009_image.jpg</image>
+      <name>ysyss</name>
+      <occupation>hshha</occupation>
+      <phone>8525</phone>
+      <reference>Son of fsts</reference>
+      <status>New</status>
+   </PatientBasicData>
+   <Reports>
+      <Report>
+         <doctorPrescription/>
+         <patientComplaint>
+            <bmi>25</bmi>
+            <bp>45</bp>
+            <complaint></complaint>
+            <complaint_date>05-11-2015</complaint_date>
+            <fileNames></fileNames>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults></otherResults>
+            <prevDiagnosis></prevDiagnosis>
+            <pulse>45</pulse>
+            <spo2>45</spo2>
+            <temperature>36</temperature>
+            <weight>56</weight>
+         </patientComplaint>
+      </Report>
+   </Reports>
+</PatientReport>

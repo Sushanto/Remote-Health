@@ -1,0 +1,20 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>ju</address>
+      <age>48</age>
+      <bloodGroup>B+</bloodGroup>
+      <date>03-11-2015</date>
+      <familyhistory>ghj</familyhistory>
+      <gender>Male</gender>
+      <height>165</height>
+      <id>Patient_01_005</id>
+      <image>Patient_01_005_image.jpg</image>
+      <medicalhistory>uio</medicalhistory>
+      <name>n k mukherjee</name>
+      <occupation>service</occupation>
+      <phone>1234567890</phone>
+      <reference>Son of s k mukherjee</reference>
+      <status>New</status>
+   </PatientBasicData>
+   <Reports/>
+</PatientReport>

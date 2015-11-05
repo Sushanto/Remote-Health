@@ -1,0 +1,20 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>hddu</address>
+      <age>54</age>
+      <bloodGroup>O</bloodGroup>
+      <date>03-11-2015</date>
+      <familyhistory></familyhistory>
+      <gender>Male</gender>
+      <height>76</height>
+      <id>Patient_01_007</id>
+      <image>Patient_01_007_image.jpg</image>
+      <medicalhistory></medicalhistory>
+      <name>hdh</name>
+      <occupation>gdgd</occupation>
+      <phone>7474774</phone>
+      <reference>Son of ggd</reference>
+      <status>New</status>
+   </PatientBasicData>
+   <Reports/>
+</PatientReport>

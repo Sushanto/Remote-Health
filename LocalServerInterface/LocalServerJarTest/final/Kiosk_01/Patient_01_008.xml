@@ -1,0 +1,63 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>hjgsbncs</address>
+      <age>135</age>
+      <date>05-11-2015</date>
+      <familyhistory>none	</familyhistory>
+      <gender>Male</gender>
+      <height>2400</height>
+      <id>Patient_01_008</id>
+      <medicalhistory>n/a</medicalhistory>
+      <name>test p</name>
+      <occupation>mhgcvs</occupation>
+      <phone>+910099</phone>
+      <reference>Wife of test g </reference>
+      <status>New</status>
+   </PatientBasicData>
+   <Reports>
+      <Report>
+         <doctorPrescription>
+            <doctorName>Sushanto Halder</doctorName>
+            <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day(4.00AM/4.00PM) X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day(After Food/After Dinner) X 1 Day(s)</medication>
+            <prescription_date>05-11-2015</prescription_date>
+         </doctorPrescription>
+         <patientComplaint>
+            <complaint>Fever
+Whole Day --&gt; No
+Shivers --&gt; No
+Temperature Minimum --&gt; na
+Temperature Average --&gt; no
+Temperature Maximum --&gt; idea
+Type --&gt; Every Day
+Timing --&gt; Morning
+Timing --&gt; Night
+</complaint>
+            <complaint_date>05-11-2015</complaint_date>
+            <fileNames>Patient_01_008_effected_image.jpg
+</fileNames>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults>anemia
+edema</otherResults>
+         </patientComplaint>
+      </Report>
+      <Report>
+         <doctorPrescription/>
+         <patientComplaint>
+            <bmi>25</bmi>
+            <bp>45</bp>
+            <complaint></complaint>
+            <complaint_date>05-11-2015</complaint_date>
+            <fileNames></fileNames>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults></otherResults>
+            <prevDiagnosis></prevDiagnosis>
+            <pulse>45</pulse>
+            <spo2>45</spo2>
+            <temperature>36</temperature>
+            <weight>25</weight>
+         </patientComplaint>
+      </Report>
+   </Reports>
+</PatientReport>
