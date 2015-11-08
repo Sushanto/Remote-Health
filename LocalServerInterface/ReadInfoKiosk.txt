@@ -1,0 +1,25 @@
+
+Initialize:
+1. Extract LocalServer.zip
+2. Go to LocalServer directory
+3. Change extension of LocalServer from txt to jar(i.e, rename LocalServer.txt to LocalServer.jar)
+4. Copy KioskMetadata.cfg and other files to-
+4a. "home/user" for linux
+
+To execute:
+1. Go to LocalServer directory
+2. Open terminal
+3. java -jar LocalServer.jar
+Or simply double-click on the jar file
+
+
+To change IP and other configurations:
+1. Go to LocalServer directory
+2. Open KioskMetadata.cfg in plaint-text mode
+3. Change IP and ports if neccessary
+
+Cautions:
+1. Do not delete any files in LocalServer directory
+2. In KioskMetadata.cfg file-
+2a. Use # for comment
+2b. Do not use space between key value pair

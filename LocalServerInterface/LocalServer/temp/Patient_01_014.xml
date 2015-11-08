@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_014</id>
+        <date>06-11-2015</date>
+        <name>sgsdg</name>
+        <reference>Son of dsgdfdf</reference>
+        <gender>Male</gender>
+        <age>56</age>
+        <phone>56456456</phone>
+        <address>fdgfgfg</address>
+        <occupation>fgfg</occupation>
+        <status>New</status>
+        <height>56</height>
+        <familyhistory>fgfgf</familyhistory>
+        <medicalhistory>gfg</medicalhistory>
+    </PatientBasicData>
+    <Reports/>
+</PatientReport>

@@ -58,14 +58,14 @@ import javax.imageio.ImageIO;
 public class PatientForm
 {
 	private JFrame patientFormFrame;
-	private JLabel form_label, picture, reg_no, status, date,emergency, name, sdw_of, occupation, ph_no, address, age, year, gender,bloodGroupLabel, height, cm, bmi, bp, weight, kg, pulse, spO2,percent, temperature, celcius, family_history, medical_history, prev_diagnosis, complaint_of, on_examination,anemia,edema,jaundice, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name,kiosk_coordinator_sign, kiosk_coordinator_date,doctor, doctor_name,doctor_sign,doctor_date;
+	private JLabel form_label, picture, reg_no, status, date,emergency, name, sdw_of, occupation, ph_no, address, age, year, gender,bloodGroupLabel, height, cm, bmi, bp, weight, kg, pulse, spO2,percent, temperature, celcius, family_history, medical_history, prev_diagnosis, complaint_of, on_examination,anemia,edema,jaundice, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name,kiosk_coordinator_sign, kiosk_coordinator_date,doctor, doctor_name,doctor_sign,signatureImage,doctorImage,doctor_date;
 	
 	private JTextField reg_no_field, status_field, date_field, name_field, sdw_of_field, occupation_field, ph_no_field, age_field, gender_field,bloodGroupField, height_field, bmi_field, bp_field, weight_field, pulse_field, spO2_field, temperature_field, prev_diagnosis_field,final_diagnosis_field,kiosk_coordinator_name_field, kiosk_coordinator_date_field, doctor_name_field,doctor_date_field;
 	
 	private JTextArea address_area,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, filename_area,advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area,  kiosk_coordinator_area, doctor_area;
 	
 	private JScrollPane address_pane,family_history_pane, medical_history_pane, complaint_of_pane,  on_examination_pane,filename_pane, advice_pane, medication_pane, diagnostic_test_pane, provisional_diagnosis_pane, final_diagnosis_pane, referral_pane;
-	private JButton refresh_button,back_button,back2_button,submit_button,next_button,prev_button,newcomplaint_button,choose_button,print_button,patientBasicDataEdit_button,patientBasicDataSave_button,patientBasicDataCancel_button,changePicture_button,pictureDownloadButton,addFile_button,cancelFile_button,patientComplaintEdit_button,patientComplaintSave_button,patientComplaintCancel_button;
+	private JButton refresh_button,back_button,back2_button,submit_button,next_button,prev_button,newcomplaint_button,choose_button,print_button,patientBasicDataEdit_button,patientBasicDataSave_button,patientBasicDataCancel_button,changePicture_button,pictureDownloadButton,signatureDownloadButton,doctorImageDownloadButton,addFile_button,cancelFile_button,patientComplaintEdit_button,patientComplaintSave_button,patientComplaintCancel_button;
 	private JCheckBox emergency_box,anemia_box,edema_box,jaundice_box;
 	private JPanel BasicDataPanel,HealthInfoPanel,DoctorPrescriptionPanel,KioskCoordinatorPanel,DoctorPanel,ButtonPanel,CommunicationPanel;
 	private PatientReport patientReport;
@@ -73,7 +73,7 @@ public class PatientForm
 	private Font font;
 	private int current_report_count = -1;
 	private boolean PatientBasicDataEditMode = false;
-	private String imgstr;
+	private String imgstr,doctorRegistrationNo,signatureFileName;
 	private String confirmMessage,networkErrorMessage,newComplaintErrorMessage,imageString = null;
 	private ArrayList < File >  selectedFiles = new ArrayList < File > ();
 	private final Connection connection;
@@ -204,11 +204,13 @@ public class PatientForm
             newcomplaint_button.setText("নতুন সমস্যা");
             choose_button.setText("নির্বাচন");
             print_button.setText("প্রিন্ট করুন");
+            signatureDownloadButton.setText("ডাউনলোড");
+            doctorImageDownloadButton.setText("ডাউনলোড");
 	        patientBasicDataEdit_button.setText("লিখুন");
 	        patientBasicDataSave_button.setText("নিশ্চিত");
 	        patientBasicDataCancel_button.setText("বাতিল");
 	        changePicture_button.setText("ছবি পরিবর্তন");
-	        pictureDownloadButton.setText("Download");
+	        pictureDownloadButton.setText("ডাউনলোড");
 	        addFile_button.setText("ফাইল আপলোড");
 	        cancelFile_button.setText("বাতিল");
 	        patientComplaintEdit_button.setText("লিখুন");
@@ -224,6 +226,8 @@ public class PatientForm
             newcomplaint_button.setFont(Constants.BENGALIBUTTONFONT);
     		choose_button.setFont(Constants.BENGALIBUTTONFONT);
             print_button.setFont(Constants.BENGALIBUTTONFONT);
+            signatureDownloadButton.setFont(Constants.BENGALIBUTTONFONT);
+            doctorImageDownloadButton.setFont(Constants.BENGALIBUTTONFONT);
             patientBasicDataEdit_button.setFont(Constants.BENGALIBUTTONFONT);
             patientBasicDataSave_button.setFont(Constants.BENGALIBUTTONFONT);
             patientBasicDataCancel_button.setFont(Constants.BENGALIBUTTONFONT);
@@ -347,6 +351,8 @@ public class PatientForm
             newcomplaint_button.setText("New Complaint");
             choose_button.setText("Choose");
             print_button.setText("Print");
+            signatureDownloadButton.setText("Download");
+            doctorImageDownloadButton.setText("Download");
 	        patientBasicDataEdit_button.setText("Edit");
 	        patientBasicDataSave_button.setText("Save");
 	        patientBasicDataCancel_button.setText("Cancel");
@@ -368,6 +374,8 @@ public class PatientForm
             newcomplaint_button.setFont(Constants.SMALLBUTTONFONT);
     		choose_button.setFont(Constants.SMALLBUTTONFONT);
             print_button.setFont(Constants.SMALLBUTTONFONT);
+            signatureDownloadButton.setFont(Constants.SMALLBUTTONFONT);
+            doctorImageDownloadButton.setFont(Constants.SMALLBUTTONFONT);
             patientBasicDataEdit_button.setFont(Constants.SMALLBUTTONFONT);
             patientBasicDataSave_button.setFont(Constants.SMALLBUTTONFONT);
             patientBasicDataCancel_button.setFont(Constants.SMALLBUTTONFONT);
@@ -510,6 +518,8 @@ public class PatientForm
         doctor = new JLabel("ডাক্তার:");
         doctor_name = new JLabel("নাম:");
         doctor_sign = new JLabel("স্বাক্ষর:");
+        signatureImage = new JLabel();
+        doctorImage = new JLabel();
         doctor_date = new JLabel("তারিখ:");
 
     //initialize text fields
@@ -547,6 +557,8 @@ public class PatientForm
         newcomplaint_button = new JButton("নতুন সমস্যা");
         choose_button = new JButton("নির্বাচন");
         print_button = new JButton("প্রিন্ট করুন");
+        signatureDownloadButton = new JButton("প্রিন্ট করুন");
+        doctorImageDownloadButton = new JButton("প্রিন্ট করুন");
         patientBasicDataEdit_button = new JButton("লিখুন");
         patientBasicDataSave_button = new JButton("নিশ্চিত");
         patientBasicDataCancel_button = new JButton("বাতিল");
@@ -607,6 +619,8 @@ public class PatientForm
 		submit_button.setVisible(false);
 		choose_button.setVisible(false);
 		print_button.setVisible(false);
+		signatureDownloadButton.setVisible(false);
+		doctorImageDownloadButton.setVisible(false);
 		patientBasicDataSave_button.setVisible(false);
 		patientBasicDataCancel_button.setVisible(false);
 		changePicture_button.setVisible(false);
@@ -648,6 +662,8 @@ public class PatientForm
 
 		filename_area.setBackground(new Color(0,0,0,0));
 		picture.setBorder(BorderFactory.createLineBorder(Color.black));
+		signatureImage.setBorder(BorderFactory.createLineBorder(Color.black));
+		doctorImage.setBorder(BorderFactory.createLineBorder(Color.black));
 
 
 	//Text area set Editable
@@ -774,6 +790,8 @@ public class PatientForm
 		doctor_name.setBounds(390,570,50,20);
 		doctor_name_field.setBounds(450,570,200,23);
 		doctor_sign.setBounds(390,590,300,20);
+		signatureImage.setBounds(390,615,260,50);
+		doctorImage.setBounds(660,555,140,135);
 		doctor_date.setBounds(390,670,50,20);
 		doctor_date_field.setBounds(450,670,100,23);
 		
@@ -788,6 +806,8 @@ public class PatientForm
 		submit_button.setBounds(690,710,100,25);
 		choose_button.setBounds(50,510,80,30);
 		print_button.setBounds(240,710,100,25);
+		signatureDownloadButton.setBounds(470,640,100,25);
+		doctorImageDownloadButton.setBounds(680,665,100,25);
 		patientBasicDataEdit_button.setBounds(680,60,100,25);
 		patientBasicDataSave_button.setBounds(670,60,60,25);
 		patientBasicDataCancel_button.setBounds(730,60,80,25);
@@ -966,6 +986,14 @@ public class PatientForm
 				{
 					npe.printStackTrace();
 				}
+				try
+				{
+					info.doctorSignatureImage=((ImageIcon)signatureImage.getIcon()).getImage();
+				}
+				catch(NullPointerException npe)
+				{
+					npe.printStackTrace();
+				}
 				// info.patient_image = picture.getIcon();
 				// info.doctor_degree = 
 				// info.doctor_hospital = 
@@ -982,6 +1010,7 @@ public class PatientForm
 				info.doctor_advice = advice_area.getText();
 				info.doctor_medication = medication_area.getText();
 				info.doctor_referal = referral_area.getText();
+				info.doctorRegistrationNo = doctorRegistrationNo;
 				info.doctor_diagnostic = diagnostic_test_area.getText();
 				info.kiosk_coordinator_name = kiosk_coordinator_name_field.getText();
 				GeneralPrescription FRAME_TO_PRINT = new GeneralPrescription(info);
@@ -1142,6 +1171,8 @@ public class PatientForm
 				next_button.setVisible(false);
 				newcomplaint_button.setVisible(false);
 				print_button.setVisible(false);
+				signatureDownloadButton.setVisible(false);
+				doctorImageDownloadButton.setVisible(false);
 				patientComplaintEdit_button.setVisible(false);
 			}
 		});
@@ -1184,6 +1215,8 @@ public class PatientForm
 					next_button.setVisible(true);
 					newcomplaint_button.setVisible(true);
 					print_button.setVisible(true);
+					signatureDownloadButton.setVisible(true);
+					doctorImageDownloadButton.setVisible(true);
 					patientComplaintEdit_button.setVisible(true);
 
 					patientReport.getPatientBasicData().setName(name_field.getText());
@@ -1279,6 +1312,8 @@ public class PatientForm
 				next_button.setVisible(true);
 				newcomplaint_button.setVisible(true);
 				print_button.setVisible(true);
+				signatureDownloadButton.setVisible(true);
+				doctorImageDownloadButton.setVisible(true);
 				patientComplaintEdit_button.setVisible(true);
 
 				
@@ -1359,6 +1394,68 @@ public class PatientForm
 			}
 		});
 
+		signatureDownloadButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent ae)
+			{
+				System.out.println("signatureFileName : " + signatureFileName);
+				int response = connection.receiveFromServer(signatureFileName , Constants.dataPath + signatureFileName);
+				File signatureFile = new File(Constants.dataPath + signatureFileName);
+				if(response >= 0)
+				{
+					ImageIcon imageIcon = new ImageIcon(Constants.dataPath + signatureFileName); // load the image to a imageIcon
+					int h = signatureImage.getHeight();
+					int w = signatureImage.getWidth();
+
+					Image image = imageIcon.getImage(); // transform it 
+					Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+					imageIcon = new ImageIcon(newimg);
+					signatureImage.setIcon(imageIcon);
+					signatureFile.delete();
+					signatureDownloadButton.setVisible(false);
+				}
+				else
+				{
+					if(signatureFile.isFile())
+						signatureFile.delete();
+					signatureDownloadButton.setVisible(false);
+					JOptionPane.showMessageDialog(patientFormFrame,"No signature found!");
+				}
+			}
+		});
+
+		doctorImageDownloadButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent ae)
+			{
+				String doctorSignatureParts[] = signatureFileName.split("_");
+				String doctorImageFileName = doctorSignatureParts[0] + "_" + doctorSignatureParts[1] + "_image.jpg";
+				System.out.println("doctorImageFileName : " + doctorImageFileName);
+				int response = connection.receiveFromServer(doctorImageFileName , Constants.dataPath + doctorImageFileName);
+				File doctorImageFile = new File(Constants.dataPath + doctorImageFileName);
+				if(response >= 0)
+				{
+					ImageIcon imageIcon = new ImageIcon(Constants.dataPath + doctorImageFileName); // load the image to a imageIcon
+					int h = doctorImage.getHeight();
+					int w = doctorImage.getWidth();
+
+					Image image = imageIcon.getImage(); // transform it 
+					Image newimg = image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+					imageIcon = new ImageIcon(newimg);
+					doctorImage.setIcon(imageIcon);
+					doctorImageFile.delete();
+					doctorImageDownloadButton.setVisible(false);
+				}
+				else
+				{
+					if(doctorImageFile.isFile())
+						doctorImageFile.delete();
+					doctorImageDownloadButton.setVisible(false);
+					JOptionPane.showMessageDialog(patientFormFrame,"Doctor image not found!");
+				}
+			}
+		});
+
 		patientComplaintEdit_button.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent ae)
@@ -1392,7 +1489,7 @@ public class PatientForm
 				complaint_of.setForeground(Color.WHITE);
 				on_examination.setForeground(Color.WHITE);
 
-				bmi_field.setEditable(true);
+				bmi_field.setEditable(false);
 				bp_field.setEditable(true);
 				weight_field.setEditable(true);
 				pulse_field.setEditable(true);
@@ -1413,6 +1510,8 @@ public class PatientForm
 				newcomplaint_button.setVisible(false);
 				choose_button.setVisible(true);
 				print_button.setVisible(false);
+				signatureDownloadButton.setVisible(false);
+				doctorImageDownloadButton.setVisible(false);
 				patientBasicDataEdit_button.setVisible(false);
 
 				patientComplaintEdit_button.setVisible(false);
@@ -1527,6 +1626,8 @@ public class PatientForm
 					newcomplaint_button.setVisible(true);
 					choose_button.setVisible(false);
 					print_button.setVisible(false);
+					signatureDownloadButton.setVisible(false);
+					doctorImageDownloadButton.setVisible(false);
 					patientBasicDataEdit_button.setVisible(true);
 
 					patientComplaintEdit_button.setVisible(true);
@@ -1577,6 +1678,8 @@ public class PatientForm
 				newcomplaint_button.setVisible(true);
 				choose_button.setVisible(false);
 				print_button.setVisible(false);
+				signatureDownloadButton.setVisible(false);
+				doctorImageDownloadButton.setVisible(false);
 				patientBasicDataEdit_button.setVisible(true);
 
 				patientComplaintEdit_button.setVisible(true);
@@ -1679,6 +1782,8 @@ public class PatientForm
 		patientFormFrame.add(doctor_name);
 		patientFormFrame.add(doctor_name_field);
 		patientFormFrame.add(doctor_sign);
+		patientFormFrame.add(signatureImage);
+		patientFormFrame.add(doctorImage);
 		patientFormFrame.add(doctor_date);
 		patientFormFrame.add(doctor_date_field);
 
@@ -1693,6 +1798,8 @@ public class PatientForm
 		patientFormFrame.add(submit_button);
 		patientFormFrame.add(choose_button);
 		patientFormFrame.add(print_button);
+		patientFormFrame.add(signatureDownloadButton);
+		patientFormFrame.add(doctorImageDownloadButton);
 		patientFormFrame.add(patientBasicDataEdit_button);
 		patientFormFrame.add(patientBasicDataSave_button);
 		patientFormFrame.add(patientBasicDataCancel_button);
@@ -1802,18 +1909,19 @@ public class PatientForm
 	*/
 	private boolean validatePatientComplaint()
 	{
-		boolean weightcheck = !weight_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(weight_field.getText()) >= 3 && Float.parseFloat(weight_field.getText()) <= 100;
-		boolean bmicheck = !bmi_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(bmi_field.getText()) >= 17 && Float.parseFloat(bmi_field.getText()) <= 35;
-		boolean bpcheck = !bp_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat((bp_field.getText().split("/"))[0]) >= 40 && Float.parseFloat((bp_field.getText().split("/"))[0]) <= 200;
-		boolean pulsecheck = !pulse_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(pulse_field.getText()) >= 30 && Float.parseFloat(pulse_field.getText()) <= 120;
+		boolean weightcheck = !weight_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(weight_field.getText()) >= 3 && Float.parseFloat(weight_field.getText()) <= 200;
+		// boolean bmicheck = !bmi_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(bmi_field.getText()) >= 17 && Float.parseFloat(bmi_field.getText()) <= 35;
+		String bpParts[] = bp_field.getText().split("/");
+		boolean bpcheck = bpParts.length ==2 && !bp_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(bpParts[0]) >= 40 && Float.parseFloat(bpParts[0]) <= 200 && Float.parseFloat(bpParts[1]) >= 40 && Float.parseFloat(bpParts[1]) <= 200;
+		boolean pulsecheck = !pulse_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(pulse_field.getText()) >= 30 && Float.parseFloat(pulse_field.getText()) <= 240;
 		boolean temperaturecheck = !temperature_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(temperature_field.getText()) >= 13 && Float.parseFloat(temperature_field.getText()) <= 45;
 		boolean spO2check = !spO2_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(spO2_field.getText()) >= 90 && Float.parseFloat(spO2_field.getText()) <= 100;
 		if(weightcheck)
 			weight_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		else weight_field.setBorder(BorderFactory.createLineBorder(Color.red));
-		if(bmicheck)
-			bmi_field.setBorder(BorderFactory.createLineBorder(Color.black));
-		else bmi_field.setBorder(BorderFactory.createLineBorder(Color.red));
+		// if(bmicheck)
+		// 	bmi_field.setBorder(BorderFactory.createLineBorder(Color.black));
+		// else bmi_field.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(bpcheck)
 			bp_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		else bp_field.setBorder(BorderFactory.createLineBorder(Color.red));
@@ -1827,7 +1935,7 @@ public class PatientForm
 			spO2_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		else spO2_field.setBorder(BorderFactory.createLineBorder(Color.red));
 
-		return (weightcheck & bmicheck & bpcheck & pulsecheck & temperaturecheck & spO2check);
+		return (weightcheck & bpcheck & pulsecheck & temperaturecheck & spO2check);
 	}
 
 	/**
@@ -1844,7 +1952,21 @@ public class PatientForm
 		boolean phoneCheck = !ph_no_field.getText().matches(".*[a-zA-Z]+.*");
 		boolean ageCheck = !age_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(age_field.getText()) >= 0 && Float.parseFloat(age_field.getText()) <= 120;
 		boolean heightCheck = !height_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(height_field.getText()) >= 30 && Float.parseFloat(height_field.getText()) <= 240;
+		String referenceParts[] = sdw_of_field.getText().split(" ");
+		String referenceVar = referenceParts[0];
+		boolean relationCheck = (gender_field.getText().equals("Male") && referenceVar.equals("Son")) || (gender_field.getText().equals("Female") && (referenceVar.equals("Daughter") || referenceVar.equals("Wife")));
 
+
+		if(relationCheck)
+		{
+			sdw_of_field.setBorder(reg_no_field.getBorder());
+			gender_field.setBorder(reg_no_field.getBorder());
+		}
+		else
+		{
+			sdw_of_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			gender_field.setBorder(BorderFactory.createLineBorder(Color.red));
+		}
 		if(nameCheck)
 			name_field.setBorder(reg_no_field.getBorder());
 		else
@@ -1878,7 +2000,7 @@ public class PatientForm
 		else
 			height_field.setBorder(BorderFactory.createLineBorder(Color.red));
 
-		return (nameCheck & sdwCheck & occupationCheck & genderCheck & bloodGroupCheck & phoneCheck & ageCheck & heightCheck);
+		return (nameCheck & sdwCheck & occupationCheck & genderCheck & bloodGroupCheck & phoneCheck & ageCheck & heightCheck & relationCheck);
 	}
 //neccessary methods
 
@@ -2101,6 +2223,8 @@ public class PatientForm
 				medication_area.setText(report.getDoctorPrescription().getMedication());
 				diagnostic_test_area.setText(report.getDoctorPrescription().getDiagnosis());
 				referral_area.setText(report.getDoctorPrescription().getReferral());
+				doctorRegistrationNo = report.getDoctorPrescription().getRegistration_number();
+				signatureFileName = report.getDoctorPrescription().getSignature();
 			}
 			else
 			{
@@ -2112,18 +2236,26 @@ public class PatientForm
 				referral_area.setText("");
 				doctor_name_field.setText("");
 				doctor_date_field.setText("");
+				doctorRegistrationNo = "";
+				signatureFileName = "";
 			}
 		}
 		if(doctor_name_field.getText().equals(""))
 		{
 			print_button.setVisible(false);
+			signatureDownloadButton.setVisible(false);
+			doctorImageDownloadButton.setVisible(false);
 			patientComplaintEdit_button.setVisible(true);
 		}
 		else
 		{
 			print_button.setVisible(true);
+			signatureDownloadButton.setVisible(true);
+			doctorImageDownloadButton.setVisible(true);
 			patientComplaintEdit_button.setVisible(false);
 		}
+		signatureImage.setIcon(null);
+		doctorImage.setIcon(null);
 	}
 
 	/**
@@ -2321,7 +2453,7 @@ public class PatientForm
 		on_examination_area.setText("");
 		filename_area.setText("");
 
-		bmi_field.setEditable(true);
+		bmi_field.setEditable(false);
 		bp_field.setEditable(true);
 		weight_field.setEditable(true);
 		pulse_field.setEditable(true);
@@ -2385,6 +2517,8 @@ public class PatientForm
 		newcomplaint_button.setVisible(false);
 		choose_button.setVisible(true);
 		print_button.setVisible(false);
+		signatureDownloadButton.setVisible(false);
+		doctorImageDownloadButton.setVisible(false);
 	}
 
 /**********************************************************************************************************************************/

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_008</id>
+        <date>05-11-2015</date>
+        <name>test p</name>
+        <reference>Wife of test g </reference>
+        <gender>Male</gender>
+        <age>135</age>
+        <phone>+910099</phone>
+        <address>hjgsbncs</address>
+        <occupation>mhgcvs</occupation>
+        <status>Review</status>
+        <height>2400</height>
+        <familyhistory>none	</familyhistory>
+        <medicalhistory>n/a</medicalhistory>
+    </PatientBasicData>
+    <Reports>
+        <Report>
+            <patientComplaint>
+                <complaint>Fever
+Whole Day --&gt; No
+Shivers --&gt; No
+Temperature Minimum --&gt; na
+Temperature Average --&gt; no
+Temperature Maximum --&gt; idea
+Type --&gt; Every Day
+Timing --&gt; Morning
+Timing --&gt; Night
+</complaint>
+                <complaint_date>05-11-2015</complaint_date>
+                <otherResults>anemia
+edema</otherResults>
+                <fileNames>Patient_01_008_effected_image.jpg
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>05-11-2015</prescription_date>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day(4.00AM/4.00PM) X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day(After Food/After Dinner) X 1 Day(s)</medication>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint_date>05-11-2015</complaint_date>
+                <weight>25</weight>
+                <bmi>25</bmi>
+                <bp>45</bp>
+                <pulse>45</pulse>
+                <temperature>36</temperature>
+                <spo2>45</spo2>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Dr. S.B Acharya</doctorName>
+                <prescription_date>06-11-2015</prescription_date>
+                <provisionalDiagnosis>d</provisionalDiagnosis>
+                <finalDiagnosis>fdf</finalDiagnosis>
+                <advice>dfd</advice>
+                <medication>df</medication>
+                <diagnosis>fdf</diagnosis>
+                <referral>dfdf</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>Pain
+Where --&gt; Throat
+Where --&gt; Joints-Shoulder
+Where --&gt; Joints-Wrist
+</complaint>
+                <complaint_date>06-11-2015</complaint_date>
+                <weight>25</weight>
+                <bmi>25</bmi>
+                <bp>45</bp>
+                <pulse>45</pulse>
+                <temperature>36</temperature>
+                <spo2>45</spo2>
+                <otherResults>anemia
+jaundice</otherResults>
+                <fileNames></fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis></prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Dr. S.B Acharya</doctorName>
+                <prescription_date>06-11-2015</prescription_date>
+                <provisionalDiagnosis>jk</provisionalDiagnosis>
+                <finalDiagnosis>jyj</finalDiagnosis>
+                <advice>jy</advice>
+                <medication>jyj
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>jyj</diagnosis>
+                <referral>yjy</referral>
+                <signature>Doctor_01_signature.jpg</signature>
+                <registration_number>43972</registration_number>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>thth</complaint>
+                <complaint_date>06-11-2015</complaint_date>
+                <weight>25</weight>
+                <bmi>0.04</bmi>
+                <bp>45/120</bp>
+                <pulse>45</pulse>
+                <temperature>36</temperature>
+                <spo2>90</spo2>
+                <otherResults>ththtAnemia
+Edema
+</otherResults>
+                <fileNames>Patient_01_008_15_11_06_20_17_40_0.pdf</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>ht</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Dr. S.B Acharya</doctorName>
+                <prescription_date>06-11-2015</prescription_date>
+                <provisionalDiagnosis>rgr</provisionalDiagnosis>
+                <finalDiagnosis>grg</finalDiagnosis>
+                <advice>rgrg</advice>
+                <medication>r</medication>
+                <diagnosis>rg</diagnosis>
+                <referral>rgrg</referral>
+                <signature>Doctor_01_signature.jpg</signature>
+                <registration_number> MBBS , MD/Reg No. 43972</registration_number>
+            </doctorPrescription>
+        </Report>
+    </Reports>
+</PatientReport>

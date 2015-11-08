@@ -205,7 +205,7 @@ public class GeneralPrescription
 		sdw_of_label.setBounds(320,65,200,15);
 		age1.setBounds(120,85,40,15);
 		age2.setBounds(180,85,50,15);
-		years.setBounds(200,85,40,15);
+		years.setBounds(205,85,40,15);
 		gender1.setBounds(120,105,70,15);
 		gender2.setBounds(180,105,70,15);
 		ph_no1.setBounds(120,125,70,15);

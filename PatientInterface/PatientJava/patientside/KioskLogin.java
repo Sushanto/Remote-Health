@@ -209,6 +209,20 @@ public class KioskLogin
 				connection = createNewConnection();
 				String username = useridBox.getText();
 				String password = new String(passwordBox.getPassword());
+				try
+				{
+					String usernameParts[] = username.split("_");
+					if(!usernameParts[1].equals(Constants.kioskNo))
+					{
+						JOptionPane.showMessageDialog(kioskLoginFrame, "Cannot login here! Wrong Kiosk!");
+						return;
+					}
+				}
+				catch(Exception e)
+				{
+					JOptionPane.showMessageDialog(kioskLoginFrame, "Username not valid!");
+					return;
+				}
 
 				if(connection != null && connection.login(Constants.deviceId,password))
 				{

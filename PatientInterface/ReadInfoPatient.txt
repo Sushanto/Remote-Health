@@ -1,0 +1,25 @@
+
+Initialize:
+1. Extract Patient.zip
+2. Go to Patient directory
+3. Change extension of PatientApp from txt to jar(i.e, rename PatientApp.txt to PatientApp.jar)
+4. Copy DeviceMetadata.cfg to-
+4a. "home/user/" for linux
+
+To execute:
+1. Go to Patient directory
+2. Open terminal
+3. java -jar PatientApp.jar
+Or simply double-click on the jar file
+
+
+To change IP and other configurations:
+1. Go to Patient directory
+2. Open DeviceMetadata.cfg in plaint-text mode
+3. Change IP and ports if neccessary
+
+Cautions:
+1. Do not delete any files in Patient directory
+2. In DeviceMetadata.cfg file-
+2a. Use # for comment
+2b. Do not use space between key value pair

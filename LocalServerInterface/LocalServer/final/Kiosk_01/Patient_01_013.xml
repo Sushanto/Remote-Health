@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_013</id>
+        <date>06-11-2015</date>
+        <name>Sushanto Halder</name>
+        <bloodGroup></bloodGroup>
+        <image>Patient_01_013_image.jpg</image>
+        <reference>Son of Mr. Halder</reference>
+        <gender>Male</gender>
+        <age>20</age>
+        <phone>8276851718</phone>
+        <address>Jadavpur</address>
+        <occupation>Software Engineer</occupation>
+        <status>New</status>
+        <height>165</height>
+        <familyhistory>N/A</familyhistory>
+        <medicalhistory>N/A</medicalhistory>
+    </PatientBasicData>
+    <Reports/>
+</PatientReport>

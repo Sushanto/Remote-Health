@@ -1,0 +1,25 @@
+
+Initialize:
+1. Extract Doctor.zip
+2. Go to Doctor directory
+3. Change extension of DoctorApp from txt to jar(i.e, rename DoctorApp.txt to DoctorApp.jar)
+4. Copy DoctorMetadata.cfg and other files to-
+4a. "home/user" for linux
+
+To execute:
+1. Go to Doctor directory
+2. Open terminal
+3. java -jar DoctorApp.jar
+Or simply double-click on the jar file
+
+
+To change IP and other configurations:
+1. Go to Doctor directory
+2. Open DoctorMetadata.cfg in plaint-text mode
+3. Change IP and ports if neccessary
+
+Cautions:
+1. Do not delete any files in Doctor directory
+2. In DoctorMetadata.cfg file-
+2a. Use # for comment
+2b. Do not use space between key value pair

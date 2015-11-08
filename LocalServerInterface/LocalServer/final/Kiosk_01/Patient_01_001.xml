@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_001</id>
+        <date>03-11-2015</date>
+        <name>Sushanto Halder</name>
+        <image>Patient_01_001_image.jpg</image>
+        <reference>Son of Mr. Halder</reference>
+        <gender>Male</gender>
+        <age>20</age>
+        <phone>8276851718</phone>
+        <address>Jadavpur</address>
+        <occupation>Student</occupation>
+        <status>Review</status>
+        <height>156</height>
+        <familyhistory>None</familyhistory>
+    </PatientBasicData>
+    <Reports>
+        <Report>
+            <patientComplaint>
+                <complaint>Pain
+Where --&gt; Head-Front
+Where --&gt; Teeth
+
+Swelling
+
+</complaint>
+                <complaint_date>03-11-2015</complaint_date>
+                <weight>68</weight>
+                <bmi>27.94</bmi>
+                <bp>80/130</bp>
+                <pulse>55</pulse>
+                <temperature>38</temperature>
+                <spo2>95</spo2>
+                <otherResults>Anemia
+</otherResults>
+                <fileNames>Patient_01_001_15_11_03_14_03_19_0.cfg
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>No</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>03-11-2015</prescription_date>
+                <provisionalDiagnosis>slkhfasjdfhsa</provisionalDiagnosis>
+                <finalDiagnosis>zsdgiusadgasih</finalDiagnosis>
+                <advice>oiahroweuhqeor</advice>
+                <medication>Tablet: T- BACT, 1 time(s) in a day() X 1 Day(s)
+Tablet: RELAXYL SPRAY, 1 time(s) in a day() X 1 Day(s)
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>pisdhfoweiufhowuerh</diagnosis>
+                <referral>ksderhowuerhweiurg</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>hgfhgf</complaint>
+                <complaint_date>03-11-2015</complaint_date>
+                <weight>68</weight>
+                <bmi>27.94</bmi>
+                <bp>80/130</bp>
+                <pulse>55</pulse>
+                <temperature>38</temperature>
+                <spo2>95</spo2>
+                <otherResults>Anemia
+</otherResults>
+                <fileNames>Patient_01_001_15_11_03_14_06_14_0.jar</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>ys</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>03-11-2015</prescription_date>
+                <provisionalDiagnosis>osahdoiusahd</provisionalDiagnosis>
+                <finalDiagnosis>asuhdiusqgdh</finalDiagnosis>
+                <advice>08eyousadhfajshdb</advice>
+                <medication>asyd97qergiaducbdia
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>iausgdisyagd</diagnosis>
+                <referral>osudgiusagd</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>df</complaint>
+                <complaint_date>03-11-2015</complaint_date>
+                <weight>68</weight>
+                <bmi>27.94</bmi>
+                <bp>80/130</bp>
+                <pulse>55</pulse>
+                <temperature>38</temperature>
+                <spo2>95</spo2>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>dfd</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>03-11-2015</prescription_date>
+                <provisionalDiagnosis>iehfipeqhfoieqh</provisionalDiagnosis>
+                <finalDiagnosis>oiahfoisahdfoiashd</finalDiagnosis>
+                <advice>oishsahfiashd089qshfosai</advice>
+                <medication>oaishd08sahdipshc08saud8
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>osabdousabcjsabdou</diagnosis>
+                <referral>oiashd98qgojdabfou</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>Pain
+Where --&gt; Head-Back
+Where --&gt; Arm-Arm
+Where --&gt; Arm-Forearm
+Fever
+Whole Day --&gt; Yes
+Shivers --&gt; Yes
+Eye
+Cannot see --&gt; rtege
+Other
+Description --&gt; hwhw
+</complaint>
+                <complaint_date>03-11-2015</complaint_date>
+                <weight></weight>
+                <bmi></bmi>
+                <bp></bp>
+                <pulse></pulse>
+                <temperature></temperature>
+                <spo2></spo2>
+                <otherResults>anemia</otherResults>
+                <fileNames>Patient_01_001_effected_image.jpg
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis></prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Dr. S.B Acharya</doctorName>
+                <prescription_date>06-11-2015</prescription_date>
+                <provisionalDiagnosis>efe</provisionalDiagnosis>
+                <finalDiagnosis>fef</finalDiagnosis>
+                <advice>efefe</advice>
+                <medication>f</medication>
+                <diagnosis>fe</diagnosis>
+                <referral>fefe</referral>
+                <signature>Doctor_01_signature.jpg</signature>
+                <registration_number> MBBS , MD/Reg No. 43972</registration_number>
+            </doctorPrescription>
+        </Report>
+    </Reports>
+</PatientReport>

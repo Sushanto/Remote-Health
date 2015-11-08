@@ -15,6 +15,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
@@ -53,11 +54,12 @@ public class RegisterNewPatient
 	private JTextArea addressArea,familyHisArea,medicalHisArea;
 	private JButton btnSubmit,btnReset,btnBack;
 	private JRadioButton rdbtnMale,rdbtnFemale;
-	private JLabel warnField,lblPidvalue,lblOccupation,lblStatus,lblReview,lblHeight,heightUnit_label,lblFamilyHistory,lblMedicalHistory;
+	private JLabel warnField,lblPidvalue,lblOccupation,lblStatus,lblReview,lblHeight,heightUnit_label,lblFamilyHistory,lblMedicalHistory,lblBloodGroup;
 	private JCheckBox chckbxSon,chckbxDaughter,chckbxW;
 	private JLabel status_value,lblImage;
 	private JLabel lblPatientId,lblBasicInformation,lblName,lblDate,lblDateValue,lblGender,lblAge,ageUnit_label,lblPhoneNumber,lblAddress;
 	private Font LABELFONT = new Font("Serif",Font.BOLD,16);
+	private JComboBox<String> bloodGroupComboBox;
 
 	private String patientId,fileDirectory,confirmMessage = "আপনি কি নিশ্চিত?",networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
 	private String submissionConfirmMessage = "তথ্য সংরক্ষিত করা হয়েছে";
@@ -86,7 +88,27 @@ public class RegisterNewPatient
 		boolean phoneCheck = !phoneField.getText().matches(".*[a-zA-Z]+.*");
 		boolean ageCheck = !ageVar.matches(".*[a-zA-Z]+.*") && Float.parseFloat(ageVar) >= 0 && Float.parseFloat(ageVar) <= 120;
 		boolean heightCheck = !heightVar.matches(".*[a-zA-Z]+.*") && Float.parseFloat(heightVar) >= 30 && Float.parseFloat(heightVar) <= 240;
+		boolean relationCheck = (genVar.equals("Male") && referenceVar.equals("Son")) || (genVar.equals("Female") && (referenceVar.equals("Daughter") || referenceVar.equals("Wife")));
 
+
+		if(relationCheck)
+		{
+			lblGender.setForeground(Color.black);
+			rdbtnMale.setForeground(Color.black);
+			rdbtnFemale.setForeground(Color.black);
+			chckbxSon.setForeground(Color.black);
+			chckbxDaughter.setForeground(Color.black);
+			chckbxW.setForeground(Color.black);
+		}
+		else
+		{
+			lblGender.setForeground(Color.red);
+			rdbtnMale.setForeground(Color.red);
+			rdbtnFemale.setForeground(Color.red);
+			chckbxSon.setForeground(Color.red);
+			chckbxDaughter.setForeground(Color.red);
+			chckbxW.setForeground(Color.red);
+		}
 		if(nameCheck)
 			nameField.setBorder(BorderFactory.createLineBorder(Color.black));
 		else
@@ -112,7 +134,7 @@ public class RegisterNewPatient
 		else
 			heightField.setBorder(BorderFactory.createLineBorder(Color.red));
 
-		return (emptyCheck & nameCheck & sdwCheck & occupationCheck & phoneCheck & ageCheck & heightCheck);
+		return (emptyCheck & nameCheck & sdwCheck & occupationCheck & phoneCheck & ageCheck & heightCheck & relationCheck);
 	}
 
 	/**
@@ -314,10 +336,11 @@ public class RegisterNewPatient
 			rdbtnMale.setText("পুরুষ");
 			rdbtnFemale.setText("মহিলা");
 			lblAge.setText("বয়স :");
+			lblBloodGroup.setText("রক্তের গ্রুপ :");
 			ageUnit_label.setText("বছর");
 			lblPhoneNumber.setText("ফোন নম্বর : ");
 			lblAddress.setText("ঠিকানা : ");
-			warnField.setText("*** সব ক্ষেত্র পূর্ণ করা আবশ্যক");
+			warnField.setText("*** লাল চিহ্নিত ক্ষেত্র চেক করবেন");
 			lblOccupation.setText("পেশা :");
 			lblStatus.setText("অবস্থা : ");
 			lblReview.setText("নতুন");
@@ -340,6 +363,7 @@ public class RegisterNewPatient
 			rdbtnMale.setFont(Constants.BENGALILABELFONT);
 			rdbtnFemale.setFont(Constants.BENGALILABELFONT);
 			lblAge.setFont(Constants.BENGALILABELFONT);
+			lblBloodGroup.setFont(Constants.BENGALILABELFONT);
 			ageUnit_label.setFont(Constants.BENGALILABELFONT);
 			lblPhoneNumber.setFont(Constants.BENGALILABELFONT);
 			lblAddress.setFont(Constants.BENGALILABELFONT);
@@ -375,10 +399,11 @@ public class RegisterNewPatient
 			rdbtnMale.setText("Male");
 			rdbtnFemale.setText("Female");
 			lblAge.setText("Age :");
+			lblBloodGroup.setText("Blood Group :");
 			ageUnit_label.setText("Years");
 			lblPhoneNumber.setText("Phone: ");
 			lblAddress.setText("Address: ");
-			warnField.setText("*** All fields are mandatory");
+			warnField.setText("*** Check red marked fields");
 			lblOccupation.setText("Occup :");
 			lblStatus.setText("Status: ");
 			lblReview.setText("New");
@@ -401,6 +426,7 @@ public class RegisterNewPatient
 			rdbtnMale.setFont(Constants.SMALLLABELFONT);
 			rdbtnFemale.setFont(Constants.SMALLLABELFONT);
 			lblAge.setFont(Constants.SMALLLABELFONT);
+			lblBloodGroup.setFont(Constants.SMALLLABELFONT);
 			ageUnit_label.setFont(Constants.SMALLLABELFONT);
 			lblPhoneNumber.setFont(Constants.SMALLLABELFONT);
 			lblAddress.setFont(Constants.SMALLLABELFONT);
@@ -580,19 +606,31 @@ public class RegisterNewPatient
 		lblAge = new JLabel("বয়স :");
 		lblAge.setFont(LABELFONT);
 		lblAge.setForeground(Color.BLACK);
-		lblAge.setBounds(430, 160, 50, 23);
+		lblAge.setBounds(380, 160, 50, 23);
 		frame.add(lblAge);
 		
 		ageField = new JTextField();
-		ageField.setBounds(470, 160, 90, 30);
+		ageField.setBounds(420, 160, 50, 30);
 		frame.add(ageField);
 		ageField.setColumns(10);
 
 		ageUnit_label = new JLabel("বছর");
 		ageUnit_label.setFont(LABELFONT);
 		ageUnit_label.setForeground(Color.BLACK);
-		ageUnit_label.setBounds(562,160,48,23);
+		ageUnit_label.setBounds(472,160,48,23);
 		frame.add(ageUnit_label);
+
+		lblBloodGroup = new JLabel();
+		lblBloodGroup.setFont(LABELFONT);
+		lblBloodGroup.setForeground(Color.BLACK);
+		lblBloodGroup.setBounds(530,160,100,23);
+		frame.add(lblBloodGroup);
+
+		String[] bloodGroups = {"N/A","A+","A-","B+","B-","AB+","AB-","O+","O-"};
+		bloodGroupComboBox = new JComboBox<String>(bloodGroups);
+		bloodGroupComboBox.setBounds(630,160,60,23);
+		frame.add(bloodGroupComboBox);
+
 
 		//PHONE NUMBER
 		lblPhoneNumber = new JLabel("ফোন নম্বর : ");
@@ -673,11 +711,11 @@ public class RegisterNewPatient
 		lblHeight = new JLabel("উচ্চতা :");
 		lblHeight.setForeground(Color.BLACK);
 		lblHeight.setFont(LABELFONT);
-		lblHeight.setBounds(630, 160, 55, 23);
+		lblHeight.setBounds(700, 160, 55, 23);
 		frame.add(lblHeight);
 		
 		heightField = new JTextField();
-		heightField.setBounds(680, 160, 115, 30);
+		heightField.setBounds(750, 160, 45, 30);
 		frame.add(heightField);
 		heightField.setColumns(10);
 
@@ -821,6 +859,7 @@ public class RegisterNewPatient
 		patientReport.getPatientBasicData().setGender(genVar);
 		patientReport.getPatientBasicData().setReference(reNameVar);
 		patientReport.getPatientBasicData().setAge(ageVar);
+		patientReport.getPatientBasicData().setBloodGroup(bloodGroupComboBox.getSelectedItem().toString());
 		patientReport.getPatientBasicData().setOccupation(occuVar);
 		patientReport.getPatientBasicData().setStatus(statusVar);
 		patientReport.getPatientBasicData().setHeight(heightVar);

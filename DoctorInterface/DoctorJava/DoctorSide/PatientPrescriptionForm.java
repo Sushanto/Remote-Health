@@ -1375,6 +1375,8 @@ public class PatientPrescriptionForm
 		docPrescription.setDiagnosis( checkNullString(diagnostic_test_area.getText()) );
 		docPrescription.setReferral( checkNullString(referral_area.getText()) );
 		docPrescription.setPrescription_date( checkNullString(doctor_date_field.getText()) );
+		docPrescription.setSignature( checkNullString(doctor.getDoctorSignature()));
+		docPrescription.setRegistration_number( checkNullString(doctor.getDoctorRegistrationNumber()));
 
 		patientReport.getReports().get(patientReport.getReports().size()-1).setDoctorPrescription(docPrescription);
 

@@ -155,7 +155,7 @@ public class PatientSelect
 		group1PatientSelectButton = new JButton();
 		group3PatientSelectButton = new JButton();
 
-		String[] kioskList = {"01","02","03"};
+		String[] kioskList = {"01-Borha","02-Bali","03-Seuri"};
 		group2KioskSelectComboBox = new JComboBox<String>(kioskList);
 		group2PatientSelectComboBox = new JComboBox<String>();
 		group1PatientSelectComboBox = new JComboBox<String>();
@@ -314,7 +314,7 @@ public class PatientSelect
 				int response=0;
 				try
 				{
-					response = connection.getRequest("Patient_"+(String)group2KioskSelectComboBox.getSelectedItem()+"_Log.xml",fileName);
+					response = connection.getRequest("Patient_"+(((String)group2KioskSelectComboBox.getSelectedItem()).split("-"))[0]+"_Log.xml",fileName);
 				}
 				catch(Exception e)
 				{
@@ -362,7 +362,7 @@ public class PatientSelect
 					if(file.isFile())
 						file.delete();
 					if(response == -2)
-						JOptionPane.showMessageDialog(jframe,"No log file found!!");
+						JOptionPane.showMessageDialog(jframe,"Kiosk is not ready yet!!");
 					else
 					{
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));

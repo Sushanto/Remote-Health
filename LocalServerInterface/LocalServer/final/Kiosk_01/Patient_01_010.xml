@@ -1,0 +1,36 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>kdjdi</address>
+      <age>41</age>
+      <bloodGroup>O</bloodGroup>
+      <date>05-11-2015</date>
+      <gender>Female</gender>
+      <height>28</height>
+      <id>Patient_01_010</id>
+      <image>Patient_01_010_image.jpg</image>
+      <name>sam</name>
+      <occupation>jdjd</occupation>
+      <phone>3664645454</phone>
+      <reference>Daughter of mam</reference>
+      <status>Review</status>
+   </PatientBasicData>
+   <Reports>
+      <Report>
+         <doctorPrescription/>
+         <patientComplaint>
+            <bmi>25</bmi>
+            <bp>45</bp>
+            <complaint></complaint>
+            <complaint_date>05-11-2015</complaint_date>
+            <fileNames></fileNames>
+            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            <otherResults></otherResults>
+            <prevDiagnosis></prevDiagnosis>
+            <pulse>45</pulse>
+            <spo2>36</spo2>
+            <temperature>35</temperature>
+            <weight>25</weight>
+         </patientComplaint>
+      </Report>
+   </Reports>
+</PatientReport>

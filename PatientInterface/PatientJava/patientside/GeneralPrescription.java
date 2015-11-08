@@ -32,7 +32,7 @@ import java.awt.print.PrinterJob;
 public class GeneralPrescription
 {
 	JFrame generalPrescriptionFrame;
-	private JLabel form_label,patient_picture_label, date1, date2, regno,regno_label,name1, name2,sdw_of_label,age1, age2, years, gender1, gender2, ph_no1, ph_no2, address, complaint1, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name1, kiosk_coordinator_name2,  kiosk_coordinator_date, doctor_name1, doctor_name2,doctor_sign,degree,hospital,doctor_ph_no1,doctor_ph_no2;
+	private JLabel form_label,patient_picture_label,signatureImage, date1, date2, regno,regno_label,name1, name2,sdw_of_label,age1, age2, years, gender1, gender2, ph_no1, ph_no2, address, complaint1, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name1, kiosk_coordinator_name2,  kiosk_coordinator_date,  doctor_name,doctor_sign,degree,doctor_ph_no1,doctor_ph_no2;
 	
 	private JTextArea address_area, complaint2,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area;
 	
@@ -56,15 +56,14 @@ public class GeneralPrescription
        	form_label.setFont(new Font("Serif", Font.BOLD, 15));	
        	
        	patient_picture_label = new JLabel();
+       	signatureImage = new JLabel();
        	date1 = new JLabel("Date:");
         date2 = new JLabel("-date-");
                	
         //DOCTOR LABELS
         	
-        doctor_name1 = new JLabel("Dr.");
-        doctor_name2 = new JLabel("-name-");
+        doctor_name = new JLabel("-name-");
         degree = new JLabel("-Degree-");
-        hospital = new JLabel("-Hospital-");
         doctor_sign = new JLabel("Signature : ");
         doctor_ph_no1 = new JLabel("Ph.No.:");
         doctor_ph_no2 = new JLabel("-number-");
@@ -169,9 +168,8 @@ public class GeneralPrescription
 
 		address_area.setBorder(null);
 
-		doctor_name1.setFont(font);
+		doctor_name.setFont(font);
 		degree.setFont(font);
-		hospital.setFont(font);
 
 		date1.setFont(font);
 		regno.setFont(font);
@@ -209,7 +207,7 @@ public class GeneralPrescription
 		sdw_of_label.setBounds(320,65,200,15);
 		age1.setBounds(120,85,40,15);
 		age2.setBounds(180,85,50,15);
-		years.setBounds(200,85,40,15);
+		years.setBounds(205,85,40,15);
 		gender1.setBounds(120,105,70,15);
 		gender2.setBounds(180,105,70,15);
 		ph_no1.setBounds(120,125,70,15);
@@ -249,11 +247,22 @@ public class GeneralPrescription
 		// patient_picture_label.setIcon(info.patient_image);
 
 		// patient_picture_label.setIcon(new ImageIcon(info.patient_image));
+		String degreeText = "";
+		try
+		{
+			String registrationParts[] = info.doctorRegistrationNo.split("/");
+			degreeText = registrationParts[0];
+			if(registrationParts.length == 2)
+				degreeText += "<br>" + registrationParts[1];
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		date2.setText(info.date);
 		regno_label.setText(info.patient_regno);
-		doctor_name2.setText(info.doctor_name);
-		degree.setText(info.doctor_degree);
-		hospital.setText(info.doctor_hospital);
+		doctor_name.setText(info.doctor_name);
+		degree.setText("<html>" + degreeText + "<html>");
 		name2.setText(info.patient_name);
 		sdw_of_label.setText(info.patient_sdw);
 		address_area.setText(info.patient_address);
@@ -421,11 +430,9 @@ public class GeneralPrescription
 		generalPrescriptionFrame.add(form_label);
 		generalPrescriptionFrame.add(date1);
 		generalPrescriptionFrame.add(date2);
-		generalPrescriptionFrame.add(doctor_name1);
-		generalPrescriptionFrame.add(doctor_name2);
+		generalPrescriptionFrame.add(doctor_name);
 		generalPrescriptionFrame.add(doctor_sign);
 		generalPrescriptionFrame.add(degree);
-		generalPrescriptionFrame.add(hospital);
 		generalPrescriptionFrame.add(doctor_ph_no1);
 		generalPrescriptionFrame.add(doctor_ph_no2);
 		generalPrescriptionFrame.add(regno);
@@ -458,6 +465,7 @@ public class GeneralPrescription
         generalPrescriptionFrame.add(diagnostic_test_area);
         generalPrescriptionFrame.add(kiosk_coordinator_name1);
         generalPrescriptionFrame.add(kiosk_coordinator_name2);
+        generalPrescriptionFrame.add(signatureImage);
 
         //you dont have to touch generalPrescriptionFrame one
         JPANEL1 = new JPanel();
@@ -474,13 +482,44 @@ public class GeneralPrescription
 		JPANEL5.setLayout(new BorderLayout());
 		JPANEL6.setLayout(new BorderLayout());
 		
-		doctor_name1.setBounds(280,JPANEL6Y+10,25,15);
-		doctor_name2.setBounds(305,JPANEL6Y+10,200,15);
-		degree.setBounds(280,JPANEL6Y+30,250,15);
-		// hospital.setBounds(10,80,250,15);
+		doctor_name.setBounds(280,JPANEL6Y+10,200,15);
+		degree.setBounds(280,JPANEL6Y+30,250,30);
+
+
+		signatureImage.setBorder(new LineBorder(Color.black, 1));
+
 		// doctor_ph_no1.setBounds(280,40,50,15);
 		// doctor_ph_no2.setBounds(330,40,100,15);	
 		doctor_sign.setBounds(280,JPANEL6Y+50,100,30);
+		signatureImage.setBounds(280,JPANEL6Y+80,200,50);
+
+		/**
+		* scale and set picture
+		*/
+		try
+		{
+			BufferedImage newImg = ((ToolkitImage)(info.doctorSignatureImage)).getBufferedImage();
+			(new File(Constants.dataPath + "doctorSignature.jpg")).createNewFile();
+			ImageIO.write(newImg, "jpg", new File(Constants.dataPath + "doctorSignature.jpg"));
+			ImageIcon imageIcon  =  new ImageIcon(Constants.dataPath + "doctorSignature.jpg"); // load the image to a imageIcon
+			int h = signatureImage.getHeight();
+			int w = signatureImage.getWidth();
+			Image image  =  imageIcon.getImage(); // transform it 
+			Image newimg  =  image.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			imageIcon  =  new ImageIcon(newimg);
+			signatureImage.setIcon(imageIcon);
+			(new File(Constants.dataPath + "doctorSignature.jpg")).delete();
+		}
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
+			signatureImage.setText("No Signature");
+		}
+		catch(NullPointerException npe)
+		{
+			npe.printStackTrace();
+			signatureImage.setText("No Signature");
+		}
 
 		//KIOSK COORDINATOR
 		kiosk_coordinator_name1.setBounds(10,JPANEL6Y+10,200,15);
@@ -491,7 +530,7 @@ public class GeneralPrescription
 		JPANEL3.setBounds(0,35,595,120);
 		JPANEL4.setBounds(0,150,270,JPANEL6Y-145);
 		JPANEL5.setBounds(265,150,330,JPANEL6Y-145);
-		JPANEL6.setBounds(0,JPANEL6Y,595,120);
+		JPANEL6.setBounds(0,JPANEL6Y,595,140);
 
 
 		JPANEL1.setBackground(Color.green.darker().darker());
@@ -515,7 +554,7 @@ public class GeneralPrescription
 		// generalPrescriptionFrame.add(JPANEL2);
 		generalPrescriptionFrame.add(JPANEL1);
 
-		jframe.setSize(595,JPANEL6Y+150);
+		jframe.setSize(595,JPANEL6Y+170);
 
 		try
 		{

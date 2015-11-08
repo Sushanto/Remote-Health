@@ -1,0 +1,20 @@
+<PatientReport>
+   <PatientBasicData>
+      <address>dggd</address>
+      <age>54</age>
+      <bloodGroup>AB</bloodGroup>
+      <date>06-11-2015</date>
+      <familyhistory>wdgwg</familyhistory>
+      <gender>Male</gender>
+      <height>54</height>
+      <id>Patient_01_016</id>
+      <image>Patient_01_016_image.jpg</image>
+      <medicalhistory>dfvhfg</medicalhistory>
+      <name>dsd</name>
+      <occupation>ygdugd</occupation>
+      <phone>455888</phone>
+      <reference>Son of gf</reference>
+      <status>New</status>
+   </PatientBasicData>
+   <Reports/>
+</PatientReport>
