@@ -213,6 +213,8 @@ public class Connection extends Thread
 				if(file.isFile())
 				{
 					newFile |= true;
+					FileReader fReader = new FileReader(file);
+					fReader.close();
 					file.delete();
 				}
 				Thread.sleep(3000);
