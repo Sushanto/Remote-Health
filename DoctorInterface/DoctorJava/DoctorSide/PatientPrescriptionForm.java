@@ -53,19 +53,37 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 public class PatientPrescriptionForm
 {
 	private JFrame patientPrescriptionFormFrame;
-	private JLabel form_label, picture, reg_no, status, date, name, sdw_of, occupation, ph_no, address, age, year, gender,bloodGroupLabel, height, cm, bmi, bp, weight, kg, pulse, spO2,percent, temperature, celcius, family_history, medical_history, prev_diagnosis, complaint_of, on_examination, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name, kiosk_coordinator_date,doctorLabel, doctor_name,doctor_date;
+	private JLabel form_label, picture, reg_no, status, date, name, sdw_of, occupation, ph_no, address, age, year, gender,bloodGroupLabel, 
+	height, cm, bmi, bp, weight, kg, pulse, spO2,percent, temperature, celcius, family_history, medical_history, prev_diagnosis, complaint_of,
+	on_examination, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,
+	kiosk_coordinator_name, kiosk_coordinator_date,doctorLabel, doctor_name,doctor_date;
 	
-	private JTextField reg_no_field, status_field, date_field, name_field, sdw_of_field, occupation_field, ph_no_field, age_field, gender_field,bloodGroupField, height_field, bmi_field, bp_field, weight_field, pulse_field, spO2_field, temperature_field, prev_diagnosis_field,final_diagnosis_field,kiosk_coordinator_name_field, kiosk_coordinator_date_field, doctor_name_field,doctor_date_field;
+	private JTextField reg_no_field, status_field, date_field, name_field, sdw_of_field, occupation_field, ph_no_field, age_field,
+	 gender_field,bloodGroupField, height_field, bmi_field, bp_field, weight_field, pulse_field, spO2_field, temperature_field,
+	  prev_diagnosis_field,final_diagnosis_field,kiosk_coordinator_name_field, kiosk_coordinator_date_field, doctor_name_field,
+	  doctor_date_field;
 	
-	private JTextArea address_area,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area,  kiosk_coordinator_area, doctor_area;
+	private JTextArea address_area,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area,
+	 medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area,  kiosk_coordinator_area,
+	  doctor_area;
 	
-	private JScrollPane address_pane,family_history_pane, medical_history_pane, complaint_of_pane,  on_examination_pane, advice_pane, medication_pane, diagnostic_test_pane, provisional_diagnosis_pane, final_diagnosis_pane, referral_pane;
-	private JButton refresh_button,pictureDownloadButton,back_button,back2_button,submit_button,next_button,prev_button,prescribeButton,prescriptionButton;
+	private JScrollPane address_pane,family_history_pane, medical_history_pane, complaint_of_pane,  on_examination_pane, advice_pane,
+	 medication_pane, diagnostic_test_pane, provisional_diagnosis_pane, final_diagnosis_pane, referral_pane;
+
+	private JButton refresh_button,pictureDownloadButton,back_button,back2_button,submit_button,next_button,prev_button,prescribeButton,
+	prescriptionButton;
+
 	private JPanel BasicDataPanel,HealthInfoPanel,DoctorPrescriptionPanel,KioskCoordinatorPanel,DoctorPanel,ButtonPanel,CommunicationPanel;
 	private JLabel medicationTypeLabel,medicationNameLabel,medicationDoseLabel,medicationDurationLabel,additionalReportsLabel,prevDateLabel;
-	private JComboBox<String> prevDateComboBox,additionalReportsComboBox,medicationTypeComboBox,medicationNameComboBox,medicationDoseComboBox,medicationInstructionComboBox1,medicationInstructionComboBox2,medicationTimeComboBox1,medicationTimeComboBox2,medicationDurationComboBox1,medicationDurationComboBox2;
+	private JComboBox<String> prevDateComboBox,additionalReportsComboBox,medicationTypeComboBox,medicationNameComboBox,medicationDoseComboBox,
+	medicationInstructionComboBox1,medicationInstructionComboBox2,medicationTimeComboBox1,medicationTimeComboBox2,medicationDurationComboBox1,
+	medicationDurationComboBox2;
+
 	private JTextField medicationTimeField,medicationInstructionField;
-	private JButton prevDateButton,medicationTimeButton,medicationInstructionButton,medicationSelectButton,medicationResetButton,additionalReportsButton;
+
+	private JButton prevDateButton,medicationTimeButton,medicationInstructionButton,medicationSelectButton,medicationResetButton,
+	additionalReportsButton;
+
 	private JRadioButton medicationTimeRadioButton,medicationInstructionRadioButton;
 	private ButtonGroup medicationButtonGroup;
 	private PatientReport patientReport;
@@ -570,8 +588,8 @@ public class PatientPrescriptionForm
 		on_examination.setBounds(380,370,120,20);
 		on_examination_area.setBounds(500,370,290,130);
 		additionalReportsLabel.setBounds(380,490,120,40);
-		additionalReportsComboBox.setBounds(500,510,150,25);
-		additionalReportsButton.setBounds(660,510,130,25);
+		additionalReportsComboBox.setBounds(500,510,200,25);
+		additionalReportsButton.setBounds(710,510,80,25);
 
 		provisional_diagnosis.setBounds(835,60,170,20);
 		provisional_diagnosis_area.setBounds(830,80,250,95);
@@ -977,8 +995,11 @@ public class PatientPrescriptionForm
 				info.patient_age = age_field.getText();
 				info.patient_gender = gender_field.getText();
 				info.patient_address = address_area.getText();
+				info.family_history = family_history_area.getText();
+				info.medical_history = medical_history_area.getText();
 				info.patient_phone = ph_no_field.getText();
 				info.complaint = complaint_of_area.getText();
+				info.on_examination = on_examination_area.getText();
 				info.provisional_diagnosis = provisional_diagnosis_area.getText();
 				info.final_diagnosis = final_diagnosis_area.getText();
 				info.doctor_advice = advice_area.getText();
@@ -1005,8 +1026,9 @@ public class PatientPrescriptionForm
 				*	Set normal mode
 				* end if
 				*/
-				if(provisional_diagnosis_area.getText().equals("") && final_diagnosis_area.getText().equals("") && advice_area.getText().equals("")
-					&& diagnostic_test_area.getText().equals("") && referral_area.getText().equals("") && medication_area.getText().equals(""))
+				if(provisional_diagnosis_area.getText().equals("") && final_diagnosis_area.getText().equals("") 
+					&& advice_area.getText().equals("")	&& diagnostic_test_area.getText().equals("") && referral_area.getText().equals("")
+					 && medication_area.getText().equals(""))
 					JOptionPane.showMessageDialog(jframe,"Patient is not prescribed");
 				else if(JOptionPane.showConfirmDialog(jframe,"Are you sure to submit?") == JOptionPane.OK_OPTION)
 				{
@@ -1057,9 +1079,11 @@ public class PatientPrescriptionForm
 			public void actionPerformed(ActionEvent ae)
 			{
 				if(medicationTimeField.getText().equals(""))
-					medicationTimeField.setText((String)medicationTimeComboBox1.getSelectedItem()+(String)medicationTimeComboBox2.getSelectedItem());
+					medicationTimeField.setText((String)medicationTimeComboBox1.getSelectedItem()
+						+(String)medicationTimeComboBox2.getSelectedItem());
 				else
-					medicationTimeField.setText(medicationTimeField.getText()+"/"+(String)medicationTimeComboBox1.getSelectedItem()+(String)medicationTimeComboBox2.getSelectedItem());
+					medicationTimeField.setText(medicationTimeField.getText()+"/"+(String)medicationTimeComboBox1.getSelectedItem()
+						+(String)medicationTimeComboBox2.getSelectedItem());
 			}
 		});
 
@@ -1068,9 +1092,12 @@ public class PatientPrescriptionForm
 			public void actionPerformed(ActionEvent ae)
 			{
 				if(medicationInstructionField.getText().equals(""))
-					medicationInstructionField.setText((String)medicationInstructionComboBox1.getSelectedItem()+" "+(String)medicationInstructionComboBox2.getSelectedItem());
+					medicationInstructionField.setText((String)medicationInstructionComboBox1.getSelectedItem()
+						+" "+(String)medicationInstructionComboBox2.getSelectedItem());
 				else
-					medicationInstructionField.setText(medicationInstructionField.getText()+"/"+(String)medicationInstructionComboBox1.getSelectedItem()+" "+(String)medicationInstructionComboBox2.getSelectedItem());
+					medicationInstructionField.setText(medicationInstructionField.getText()
+						+"/"+(String)medicationInstructionComboBox1.getSelectedItem()+" "
+						+(String)medicationInstructionComboBox2.getSelectedItem());
 			}
 		});
 
@@ -1563,7 +1590,8 @@ public class PatientPrescriptionForm
 
 			if(report.getPatientComplaint().getFileNames() != null && !report.getPatientComplaint().getFileNames().equals(""))
 			{
-				DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<String>(report.getPatientComplaint().getFileNames().split("\n"));
+				DefaultComboBoxModel<String> defaultComboBoxModel 
+				= new DefaultComboBoxModel<String>(report.getPatientComplaint().getFileNames().split("\n"));
 				additionalReportsComboBox.setModel(defaultComboBoxModel);
 				additionalReportsButton.setEnabled(true);
 				additionalReportsComboBox.setEnabled(true);

@@ -61,7 +61,7 @@ public class RegisterNewPatient
 	private Font LABELFONT = new Font("Serif",Font.BOLD,16);
 	private JComboBox<String> bloodGroupComboBox;
 
-	private String patientId,fileDirectory,confirmMessage = "আপনি কি নিশ্চিত?",networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
+	private String patientId,fileDirectory,pictureMessage,confirmMessage = "আপনি কি নিশ্চিত?",networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
 	private String submissionConfirmMessage = "তথ্য সংরক্ষিত করা হয়েছে";
 	private String imageFileName;
 
@@ -78,16 +78,24 @@ public class RegisterNewPatient
 	*/
 	private boolean checkField()
 	{
-		boolean emptyCheck = !(nameVar.trim().isEmpty() || addressVar.trim().isEmpty() 
-		 || occuVar.trim().isEmpty() || referenceField.getText().trim().isEmpty() || ageVar.trim().isEmpty()
-		 || heightVar.trim().isEmpty());
-
-		boolean nameCheck = !nameVar.matches(".*[0-9]+.*");
-		boolean sdwCheck = !referenceField.getText().matches(".*[0-9]+.*");
-		boolean occupationCheck = !occuVar.matches(".*[0-9]+.*");
+		boolean ageCheck = true, heightCheck = true;
+		boolean addrCheck = !addressVar.trim().isEmpty();
+		boolean nameCheck = !nameVar.trim().isEmpty() && !nameVar.matches(".*[0-9]+.*");
+		boolean sdwCheck = !referenceField.getText().trim().isEmpty() && !referenceField.getText().matches(".*[0-9]+.*");
+		boolean occupationCheck = !occuVar.trim().isEmpty() && !occuVar.matches(".*[0-9]+.*");
 		boolean phoneCheck = !phoneField.getText().matches(".*[a-zA-Z]+.*");
-		boolean ageCheck = !ageVar.matches(".*[a-zA-Z]+.*") && Float.parseFloat(ageVar) >= 0 && Float.parseFloat(ageVar) <= 120;
-		boolean heightCheck = !heightVar.matches(".*[a-zA-Z]+.*") && Float.parseFloat(heightVar) >= 30 && Float.parseFloat(heightVar) <= 240;
+		try
+		{
+			ageCheck = !ageVar.trim().isEmpty() && !ageVar.matches(".*[a-zA-Z]+.*") && Float.parseFloat(ageVar) >= 0 && Float.parseFloat(ageVar) <= 120;
+		}
+		catch(Exception e){}
+
+		try
+		{
+			heightCheck = !heightVar.trim().isEmpty() && !heightVar.matches(".*[a-zA-Z]+.*") && Float.parseFloat(heightVar) >= 30 && Float.parseFloat(heightVar) <= 240;
+		}
+		catch(Exception e){}
+
 		boolean relationCheck = (genVar.equals("Male") && referenceVar.equals("Son")) || (genVar.equals("Female") && (referenceVar.equals("Daughter") || referenceVar.equals("Wife")));
 
 
@@ -109,6 +117,10 @@ public class RegisterNewPatient
 			chckbxDaughter.setForeground(Color.red);
 			chckbxW.setForeground(Color.red);
 		}
+		if(addrCheck)
+			addressArea.setBorder(BorderFactory.createLineBorder(Color.black));
+		else
+			addressArea.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(nameCheck)
 			nameField.setBorder(BorderFactory.createLineBorder(Color.black));
 		else
@@ -134,7 +146,7 @@ public class RegisterNewPatient
 		else
 			heightField.setBorder(BorderFactory.createLineBorder(Color.red));
 
-		return (emptyCheck & nameCheck & sdwCheck & occupationCheck & phoneCheck & ageCheck & heightCheck & relationCheck);
+		return (addrCheck & nameCheck & sdwCheck & occupationCheck & phoneCheck & ageCheck & heightCheck & relationCheck);
 	}
 
 	/**
@@ -380,6 +392,7 @@ public class RegisterNewPatient
 			btnReset.setFont(Constants.BENGALILABELFONT);
 
 
+			pictureMessage = "কোন ছবি নেই! আপনি ছবি ছাড়া এগিয়ে যেতে চান ?";
 			confirmMessage = "আপনি কি নিশ্চিত?";
 			networkErrorMessage = "নেটওয়ার্ক সমস্যা! পরে আবার চেষ্টা করুন";
 			submissionConfirmMessage = "তথ্য সংরক্ষিত করা হয়েছে";
@@ -442,6 +455,7 @@ public class RegisterNewPatient
 			btnBack.setFont(Constants.SMALLLABELFONT);
 			btnReset.setFont(Constants.SMALLLABELFONT);
 
+			pictureMessage = "There is no picture! Are you sure you want to proceed without picture?";
 			confirmMessage = "Are you sure?";
 			networkErrorMessage = "Connection error! Try again later!";
 			submissionConfirmMessage = "Data Saved";
@@ -771,7 +785,11 @@ public class RegisterNewPatient
 
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
+				if(lblImage.getIcon() == null)
+					if(JOptionPane.showConfirmDialog(frame, pictureMessage) != JOptionPane.OK_OPTION)
+						return;
+
 				getValues();
 
 				if(checkField())

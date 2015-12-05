@@ -1003,8 +1003,11 @@ public class PatientForm
 				info.patient_age = age_field.getText();
 				info.patient_gender = gender_field.getText();
 				info.patient_address = address_area.getText();
+				info.family_history = family_history_area.getText();
+				info.medical_history = medical_history_area.getText();
 				info.patient_phone = ph_no_field.getText();
 				info.complaint = complaint_of_area.getText();
+				info.on_examination = on_examination_area.getText();
 				info.provisional_diagnosis = provisional_diagnosis_area.getText();
 				info.final_diagnosis = final_diagnosis_area.getText();
 				info.doctor_advice = advice_area.getText();
@@ -1055,10 +1058,15 @@ public class PatientForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				Float heightValue = Float.parseFloat(height_field.getText());
-				Float weightValue = Float.parseFloat(weight_field.getText());
-				Float bmiValue = (weightValue * 10000) / (heightValue * heightValue);
-				bmi_field.setText(String.format("%.2f", bmiValue));
+				try
+				{
+					Float heightValue = Float.parseFloat(height_field.getText());
+					Float weightValue = Float.parseFloat(weight_field.getText());
+					Float bmiValue = (weightValue * 10000) / (heightValue * heightValue);
+					bmi_field.setText(String.format("%.2f", bmiValue));
+				}
+				catch(Exception e){}
+
 				if(validatePatientComplaint())
 				{
 					if(update_log())
@@ -1539,24 +1547,37 @@ public class PatientForm
 					report.getPatientComplaint().setSpo2(spO2_field.getText());
 					report.getPatientComplaint().setOtherResults(on_examination_area.getText());
 
-					SimpleDateFormat fileDate = new SimpleDateFormat("yy_MM_dd_HH_mm_ss");
+					SimpleDateFormat fileDate = new SimpleDateFormat("yyMMddHHmmss");
 
 					boolean FileSendingComplete = true;
+
 					String tempFileNames = "";
 					for(int i = 0;i < selectedFiles.size();i++)
 					{
+						try
+						{
+							Thread.sleep(2000);
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						String[] regNoParts = reg_no_field.getText().split("_");
 						String[] fileNameParts = selectedFiles.get(i).getName().split("\\.");
+						String origFileName = fileNameParts[0];
+						for(int j = 1 ; j < fileNameParts.length - 1 ; j++)
+							origFileName += "." + fileNameParts[j];
 						String fileExtension = fileNameParts[fileNameParts.length - 1];
-						String fileName = reg_no_field.getText() + "_" + fileDate.format(new Date()) + "_" + i + "." + fileExtension;
-						if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + fileName) < 0)
+						String newFileName = origFileName + regNoParts[1] + regNoParts[2] + fileDate.format(new Date()) + i + "." + fileExtension;
+						if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + newFileName) < 0)
 						{
 							FileSendingComplete = false;
 							JOptionPane.showMessageDialog(jframe,"File upload failed : " + selectedFiles.get(i).getName());
 						}
 						else if(tempFileNames.equals(""))
-							tempFileNames = fileName;
+							tempFileNames = newFileName;
 						else 
-							tempFileNames += "\n" + fileName;
+							tempFileNames += "\n" + newFileName;
 					}
 					// selectedFiles = null;
 					// selectedFiles = new ArrayList < File > ();
@@ -1909,13 +1930,39 @@ public class PatientForm
 	*/
 	private boolean validatePatientComplaint()
 	{
-		boolean weightcheck = !weight_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(weight_field.getText()) >= 3 && Float.parseFloat(weight_field.getText()) <= 200;
-		// boolean bmicheck = !bmi_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(bmi_field.getText()) >= 17 && Float.parseFloat(bmi_field.getText()) <= 35;
+		boolean weightcheck = true, bpcheck = true, pulsecheck = true, temperaturecheck = true, spO2check = true;
+		try
+		{
+			weightcheck = !weight_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(weight_field.getText()) >= 3 && Float.parseFloat(weight_field.getText()) <= 200;
+		}
+		catch(Exception e){}
+
 		String bpParts[] = bp_field.getText().split("/");
-		boolean bpcheck = bpParts.length ==2 && !bp_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(bpParts[0]) >= 40 && Float.parseFloat(bpParts[0]) <= 200 && Float.parseFloat(bpParts[1]) >= 40 && Float.parseFloat(bpParts[1]) <= 200;
-		boolean pulsecheck = !pulse_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(pulse_field.getText()) >= 30 && Float.parseFloat(pulse_field.getText()) <= 240;
-		boolean temperaturecheck = !temperature_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(temperature_field.getText()) >= 13 && Float.parseFloat(temperature_field.getText()) <= 45;
-		boolean spO2check = !spO2_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(spO2_field.getText()) >= 90 && Float.parseFloat(spO2_field.getText()) <= 100;
+		try
+		{
+			if(!bp_field.getText().equals(""))
+				bpcheck = bpParts.length ==2 && !bp_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(bpParts[0]) >= 40 && Float.parseFloat(bpParts[0]) <= 200 && Float.parseFloat(bpParts[1]) >= 40 && Float.parseFloat(bpParts[1]) <= 200;
+		}
+		catch(Exception e){}
+
+		try
+		{
+			pulsecheck = !pulse_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(pulse_field.getText()) >= 30 && Float.parseFloat(pulse_field.getText()) <= 240;
+		}
+		catch(Exception e){}
+
+		try
+		{
+			temperaturecheck = !temperature_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(temperature_field.getText()) >= 13 && Float.parseFloat(temperature_field.getText()) <= 45;
+		}
+		catch(Exception e){}
+
+		try
+		{
+			spO2check = !spO2_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(spO2_field.getText()) >= 90 && Float.parseFloat(spO2_field.getText()) <= 100;
+		}
+		catch(Exception e){}
+
 		if(weightcheck)
 			weight_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		else weight_field.setBorder(BorderFactory.createLineBorder(Color.red));
@@ -1944,14 +1991,25 @@ public class PatientForm
 	*/
 	private boolean validatePatientBasicData()
 	{
+		boolean ageCheck = true, heightCheck = true;
 		boolean nameCheck = !name_field.getText().matches(".*[0-9]+.*");
 		boolean sdwCheck = !sdw_of_field.getText().matches(".*[0-9]+.*");
 		boolean occupationCheck = !occupation_field.getText().matches(".*[0-9]+.*");
 		boolean genderCheck = !gender_field.getText().matches(".*[0-9]+.*");
 		boolean bloodGroupCheck = !bloodGroupField.getText().matches(".*[0-9]+.*");
 		boolean phoneCheck = !ph_no_field.getText().matches(".*[a-zA-Z]+.*");
-		boolean ageCheck = !age_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(age_field.getText()) >= 0 && Float.parseFloat(age_field.getText()) <= 120;
-		boolean heightCheck = !height_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(height_field.getText()) >= 30 && Float.parseFloat(height_field.getText()) <= 240;
+		try
+		{
+			ageCheck = !age_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(age_field.getText()) >= 0 && Float.parseFloat(age_field.getText()) <= 120;
+		}
+		catch(Exception e){}
+
+		try
+		{
+			heightCheck = !height_field.getText().matches(".*[a-zA-Z]+.*") && Float.parseFloat(height_field.getText()) >= 30 && Float.parseFloat(height_field.getText()) <= 240;
+		}
+		catch(Exception e){}
+
 		String referenceParts[] = sdw_of_field.getText().split(" ");
 		String referenceVar = referenceParts[0];
 		boolean relationCheck = (gender_field.getText().equals("Male") && referenceVar.equals("Son")) || (gender_field.getText().equals("Female") && (referenceVar.equals("Daughter") || referenceVar.equals("Wife")));
@@ -2063,7 +2121,7 @@ public class PatientForm
 
 
 
-		SimpleDateFormat fileDate = new SimpleDateFormat("yy_MM_dd_HH_mm_ss");
+		SimpleDateFormat fileDate = new SimpleDateFormat("yyMMddHHmmss");
 
 		boolean FileSendingComplete = true;
 		String tempFileNames = "";
@@ -2077,18 +2135,22 @@ public class PatientForm
 			{
 				e.printStackTrace();
 			}
+			String[] regNoParts = reg_no_field.getText().split("_");
 			String[] fileNameParts = selectedFiles.get(i).getName().split("\\.");
+			String origFileName = fileNameParts[0];
+			for(int j = 1 ; j < fileNameParts.length - 1 ; j++)
+				origFileName += "." + fileNameParts[j];
 			String fileExtension = fileNameParts[fileNameParts.length - 1];
-			String fileName = reg_no_field.getText() + "_" + fileDate.format(new Date()) + "_" + i + "." + fileExtension;
-			if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + fileName) < 0)
+			String newFileName = origFileName + regNoParts[1] + regNoParts[2] + fileDate.format(new Date()) + i + "." + fileExtension;
+			if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + newFileName) < 0)
 			{
 				FileSendingComplete = false;
 				JOptionPane.showMessageDialog(patientFormFrame,"File upload failed : " + selectedFiles.get(i).getName());
 			}
 			else if(tempFileNames.equals(""))
-				tempFileNames = fileName;
+				tempFileNames = newFileName;
 			else
-				tempFileNames += "\n" + fileName;
+				tempFileNames += "\n" + newFileName;
 		}
 		// selectedFiles = null;
 		// selectedFiles = new ArrayList < File > ();

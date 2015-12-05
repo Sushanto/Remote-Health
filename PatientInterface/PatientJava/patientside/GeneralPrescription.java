@@ -4,11 +4,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 import javax.swing.BorderFactory;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Dimension;
 import javax.imageio.ImageIO;
 import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
@@ -32,9 +34,13 @@ import java.awt.print.PrinterJob;
 public class GeneralPrescription
 {
 	JFrame generalPrescriptionFrame;
-	private JLabel form_label,patient_picture_label,signatureImage, date1, date2, regno,regno_label,name1, name2,sdw_of_label,age1, age2, years, gender1, gender2, ph_no1, ph_no2, address, complaint1, advice, medication, diagnostic_test, provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name1, kiosk_coordinator_name2,  kiosk_coordinator_date,  doctor_name,doctor_sign,degree,doctor_ph_no1,doctor_ph_no2;
+	private JLabel form_label,patient_picture_label,signatureImage, date1, date2, regno,regno_label,name1, name2,sdw_of_label,age1, 
+	age2, years, gender1, gender2, ph_no1, ph_no2, address, family_history_label, medical_history_label, complaint1, on_examination_label, advice, medication, diagnostic_test, 
+	provisional_diagnosis, referral, final_diagnosis, kiosk_coordinator,kiosk_coordinator_name1, kiosk_coordinator_name2,
+	kiosk_coordinator_date, doctor_name,doctor_sign,degree,doctor_ph_no1,doctor_ph_no2;
 	
-	private JTextArea address_area, complaint2,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area;
+	private JTextArea address_area, complaint2,  family_history_area, medical_history_area, complaint_of_area,  on_examination_area, 
+	advice_area, medication_area, diagnostic_test_area, provisional_diagnosis_area, final_diagnosis_area, referral_area;
 	
 	private JPanel JPANEL1,JPANEL3,JPANEL4,JPANEL5,JPANEL6;
 	private Font font = new Font("Serif",Font.BOLD,12);
@@ -49,7 +55,7 @@ public class GeneralPrescription
 		generalPrescriptionFrame = new JFrame();
 		final JFrame jframe = generalPrescriptionFrame;
 		generalPrescriptionFrame.setVisible(true);
-		generalPrescriptionFrame.setSize(595,852);
+		generalPrescriptionFrame.setSize(595,1024);
 		form_label = new JLabel("RURAL HEALTH KIOSK PRESCRIPTION");
 		form_label.setForeground(Color.WHITE);
 		form_label.setBackground(Color.white);
@@ -98,7 +104,10 @@ public class GeneralPrescription
      	ph_no1 = new JLabel("Ph.No. :");
         ph_no2 = new JLabel("-number-");
         address = new JLabel("Address :");
+        family_history_label = new JLabel("Family History :");
+        medical_history_label = new JLabel("Medical History :");
 		complaint1 = new JLabel("Complaint of :");
+		on_examination_label = new JLabel("On examination :");
 		provisional_diagnosis = new JLabel("Provisional Diagnosis");
 		final_diagnosis = new JLabel("Final Diagnosis :");
 		advice = new JLabel("Advice :");
@@ -111,7 +120,10 @@ public class GeneralPrescription
 
 
         address_area = new JTextArea("-Address-");
+        family_history_area = new JTextArea("Family History");
+        medical_history_area = new JTextArea("-Medical History-");
 		complaint2 = new JTextArea("-complaint-");
+		on_examination_area = new JTextArea("-on examination-");
 		provisional_diagnosis_area = new JTextArea("-provisional diagnosis-");
 		final_diagnosis_area = new JTextArea("-final diagnosis-");
 		advice_area = new JTextArea("-advice-");
@@ -124,7 +136,10 @@ public class GeneralPrescription
         * Set background
         */
 		address_area.setBackground(new Color(0, 0, 0, 0));
+		family_history_area.setBackground(new Color(0, 0, 0, 0));
+		medical_history_area.setBackground(new Color(0, 0, 0, 0));
 		complaint2.setBackground(new Color(0, 0, 0, 0));
+		on_examination_area.setBackground(new Color(0, 0, 0, 0));
 		provisional_diagnosis_area.setBackground(new Color(0, 0, 0, 0));
 		final_diagnosis_area.setBackground(new Color(0, 0, 0, 0));
 		advice_area.setBackground(new Color(0, 0, 0, 0));
@@ -139,7 +154,10 @@ public class GeneralPrescription
 		* Set non editable
 		*/
 		address_area.setEditable(false);
+		family_history_area.setEditable(false);
+		medical_history_area.setEditable(false);
 		complaint2.setEditable(false);
+		on_examination_area.setEditable(false);
 		provisional_diagnosis_area.setEditable(false);
 		final_diagnosis_area.setEditable(false);
 		advice_area.setEditable(false);
@@ -151,6 +169,9 @@ public class GeneralPrescription
 		* Set linewrap
 		*/
 		complaint2.setLineWrap(true);
+		family_history_area.setLineWrap(true);
+		medical_history_area.setLineWrap(true);
+		on_examination_area.setLineWrap(true);
 		provisional_diagnosis_area.setLineWrap(true);
 		final_diagnosis_area.setLineWrap(true);
 		advice_area.setLineWrap(true);
@@ -159,6 +180,9 @@ public class GeneralPrescription
 		diagnostic_test_area.setLineWrap(true);
 
 		complaint2.setWrapStyleWord(true);
+		family_history_area.setWrapStyleWord(true);
+		medical_history_area.setWrapStyleWord(true);
+		on_examination_area.setWrapStyleWord(true);
 		provisional_diagnosis_area.setWrapStyleWord(true);
 		final_diagnosis_area.setWrapStyleWord(true);
 		advice_area.setWrapStyleWord(true);
@@ -181,7 +205,10 @@ public class GeneralPrescription
 		ph_no1.setFont(font);
 		doctor_sign.setFont(font);
 		address.setFont(font);
+		family_history_label.setFont(font);
+		medical_history_label.setFont(font);
 		complaint1.setFont(font);
+		on_examination_label.setFont(font);
 		provisional_diagnosis.setFont(font);
 		final_diagnosis.setFont(font);
 		advice.setFont(font);
@@ -213,7 +240,10 @@ public class GeneralPrescription
 		ph_no1.setBounds(120,125,70,15);
 		ph_no2.setBounds(180,125,100,15);
 		address.setBounds(320,85,70,15);
+		family_history_label.setBounds(280,150,200,15);
+		medical_history_label.setBounds(10,150,200,15);
 		address_area.setBounds(390,85,150,60);
+
 
 		patient_picture_label.setBorder(new LineBorder(Color.black, 1));
 
@@ -266,11 +296,14 @@ public class GeneralPrescription
 		name2.setText(info.patient_name);
 		sdw_of_label.setText(info.patient_sdw);
 		address_area.setText(info.patient_address);
+		family_history_area.setText(info.family_history);
+		medical_history_area.setText(info.medical_history);
 		age2.setText(info.patient_age);
 		gender2.setText(info.patient_gender);
 		ph_no2.setText(info.patient_phone);
 
 		complaint2.setText(info.complaint);
+		on_examination_area.setText(info.on_examination);
 		provisional_diagnosis_area.setText(info.provisional_diagnosis);
 		final_diagnosis_area.setText(info.final_diagnosis);
 		advice_area.setText(info.doctor_advice);
@@ -296,12 +329,49 @@ public class GeneralPrescription
 
 		int JPANEL6Y = 630;
 
-		int ComplaintLabelY = 160;
+		int HistoryAreaY = 170;
+
+		int MedicalHistoryAreaH = getHeight(medical_history_area.getText(),LEFTSIDECOLUMN);
+		int FamilyHistoryAreaH = getHeight(family_history_area.getText(),LEFTSIDECOLUMN);
+		int HistoryAreaH = (MedicalHistoryAreaH > FamilyHistoryAreaH ? MedicalHistoryAreaH : FamilyHistoryAreaH);
+
+
+		if(isNullString(family_history_area.getText()) && isNullString(medical_history_area.getText()))
+		{
+			family_history_label.setVisible(false);
+			family_history_area.setVisible(false);
+
+			medical_history_label.setVisible(false);
+			medical_history_area.setVisible(false);
+
+			HistoryAreaY = 145;
+			HistoryAreaH = 0;
+		}
+
+
+		int ComplaintLabelY = HistoryAreaY + HistoryAreaH + 15;
 		int ComplaintLabelH = 15;
 		int ComplaintAreaY = ComplaintLabelY+ComplaintLabelH+5;
 		int ComplaintAreaH = getHeight(complaint2.getText(),LEFTSIDECOLUMN);
 
-		int ProvisionalDiagnosisLabelY = ComplaintAreaY+ComplaintAreaH+5;
+
+		int OnExamintionLabelY = ComplaintAreaY+ComplaintAreaH+5;
+		int OnExamintionLabelH = 15;
+		int OnExamintionAreaY = OnExamintionLabelY+OnExamintionLabelH+5;
+		int OnExamintionAreaH = getHeight(on_examination_area.getText(),LEFTSIDECOLUMN);
+
+		if(isNullString(on_examination_area.getText()))
+		{
+			on_examination_label.setVisible(false);
+			on_examination_area.setVisible(false);
+
+			OnExamintionLabelH = 0;
+			OnExamintionAreaY = OnExamintionLabelY+OnExamintionLabelH+5;
+			OnExamintionAreaH = -10;
+		}
+
+
+		int ProvisionalDiagnosisLabelY = OnExamintionAreaY+OnExamintionAreaH+5;
 		int ProvisionalDiagnosisLabelH = 15;
 		int ProvisionalDiagnosisAreaY = ProvisionalDiagnosisLabelY+ProvisionalDiagnosisLabelH+5;
 		int ProvisionalDiagnosisAreaH = getHeight(provisional_diagnosis_area.getText(),LEFTSIDECOLUMN);
@@ -338,7 +408,7 @@ public class GeneralPrescription
 			ReferralAreaH = -10;
 		}
 
-		int AdviceLabelY = 160;
+		int AdviceLabelY = HistoryAreaY + HistoryAreaH + 15;
 		int AdviceLabelH = 15;
 		int AdviceAreaY = AdviceLabelY+AdviceLabelH+5;
 		int AdviceAreaH = getHeight(advice_area.getText(),RIGHTSIDECOLUMN);
@@ -394,15 +464,23 @@ public class GeneralPrescription
 
 		int[] data = {JPANEL6Y,DiagnosticAreaY+DiagnosticAreaH,ReferralAreaY+ReferralAreaH,MedicationAreaY+MedicationAreaH,FinalDiagnosisAreaY+FinalDiagnosisAreaH};
 		Arrays.sort(data);
+		// for(int i = 0 ; i < 5 ; i++)
+		// 	System.out.println("" + data[i]);
 		JPANEL6Y = data[4]+10;
 
 		// setSize(595,950);
 
 		// setLocationRelativeTo(null);
 
+		medical_history_area.setBounds(LEFTSIDEX,HistoryAreaY,LEFTSIDEW,HistoryAreaH);
+		family_history_area.setBounds(RIGHTSIDEX,HistoryAreaY,RIGHTSIDEW,HistoryAreaH);
+
 		//COMPLAINT OF BOUNDS
 		complaint1.setBounds(LEFTSIDEX,ComplaintLabelY,200,ComplaintLabelH);
 		complaint2.setBounds(LEFTSIDEX,ComplaintAreaY,LEFTSIDEW,ComplaintAreaH);
+
+		on_examination_label.setBounds(LEFTSIDEX,OnExamintionLabelY,200,OnExamintionLabelH);
+		on_examination_area.setBounds(LEFTSIDEX,OnExamintionAreaY,LEFTSIDEW,OnExamintionAreaH);
 		//DIAGNOSIS BOUNDS
 		provisional_diagnosis.setBounds(LEFTSIDEX,ProvisionalDiagnosisLabelY,200,ProvisionalDiagnosisLabelH);
 		provisional_diagnosis_area.setBounds(LEFTSIDEX,ProvisionalDiagnosisAreaY,LEFTSIDEW,ProvisionalDiagnosisAreaH);
@@ -448,9 +526,15 @@ public class GeneralPrescription
         generalPrescriptionFrame.add(ph_no1);
         generalPrescriptionFrame.add(ph_no2);
         generalPrescriptionFrame.add(address);
+        generalPrescriptionFrame.add(family_history_label);
+        generalPrescriptionFrame.add(medical_history_label);
         generalPrescriptionFrame.add(address_area);
+        generalPrescriptionFrame.add(family_history_area);
+        generalPrescriptionFrame.add(medical_history_area);
         generalPrescriptionFrame.add(complaint1);
         generalPrescriptionFrame.add(complaint2);
+        generalPrescriptionFrame.add(on_examination_label);
+        generalPrescriptionFrame.add(on_examination_area);
         generalPrescriptionFrame.add(provisional_diagnosis);
         generalPrescriptionFrame.add(provisional_diagnosis_area);
         generalPrescriptionFrame.add(final_diagnosis);
@@ -527,9 +611,9 @@ public class GeneralPrescription
 	       
 		JPANEL1.setBounds(0,0,595,35);
 		// JPANEL2.setBounds(0,35,625,110);
-		JPANEL3.setBounds(0,35,595,120);
-		JPANEL4.setBounds(0,150,270,JPANEL6Y-145);
-		JPANEL5.setBounds(265,150,330,JPANEL6Y-145);
+		JPANEL3.setBounds(0,35,595,HistoryAreaY + HistoryAreaH - 25);
+		JPANEL4.setBounds(0,HistoryAreaY + HistoryAreaH + 5,270,JPANEL6Y- HistoryAreaY + HistoryAreaH);
+		JPANEL5.setBounds(265,HistoryAreaY + HistoryAreaH + 5,330,JPANEL6Y- HistoryAreaY + HistoryAreaH);
 		JPANEL6.setBounds(0,JPANEL6Y,595,140);
 
 
@@ -554,7 +638,14 @@ public class GeneralPrescription
 		// generalPrescriptionFrame.add(JPANEL2);
 		generalPrescriptionFrame.add(JPANEL1);
 
-		jframe.setSize(595,JPANEL6Y+170);
+		// JScrollPane pane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		// generalPrescriptionFrame.setContentPane(pane);
+
+		generalPrescriptionFrame.setSize(595,JPANEL6Y + 170);
+		generalPrescriptionFrame.setBounds(10,-15,595,JPANEL6Y + 170);
+		// generalPrescriptionFrame.setPreferredSize(new Dimension(595,1024));
+		// generalPrescriptionFrame.pack();
+		// generalPrescriptionFrame.setVisible(true);
 
 		try
 		{
@@ -576,6 +667,7 @@ public class GeneralPrescription
 			pe.printStackTrace();
 		}
 		generalPrescriptionFrame.dispose();
+		// System.out.println("" + JPANEL6Y);
 	}
 
 	/**
