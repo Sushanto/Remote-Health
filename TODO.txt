@@ -1,5 +1,5 @@
 LocalServer:  		Final documentation
-					Fix .tmp bug(Not so important)
+					
 
 PatientInterface:	Waiting gif(least concern)
 
