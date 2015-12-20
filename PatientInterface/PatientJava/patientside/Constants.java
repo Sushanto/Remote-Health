@@ -24,9 +24,9 @@ public class Constants
 	protected static JLabel NAME_LABEL;
 	protected static Font HEADERFONT,SMALLLABELFONT,SMALLBUTTONFONT,BENGALILABELFONT,BENGALIBUTTONFONT;
 	protected static String tempDataPath = "temp/", finalDataPath = "final/Kiosk_01/", dataPath = "tempFolder/", workingPath = "";
-	protected static String localServerHostName = "127.0.0.1";
+	protected static String serverHostName = "127.0.0.1";
 	protected static String kioskNo = "0x",deviceId;
-	protected static int localServerPort = 36698;
+	protected static int serverPort = 36698;
 	protected static String language = "Bengali";
 
 	static
@@ -95,10 +95,10 @@ public class Constants
 						kioskNo = tokens[1];
 						break;
 					case "LOCAL_SERVER_HOST_NAME":
-						localServerHostName = tokens[1];
+						serverHostName = tokens[1];
 						break;
 					case "LOCAL_SERVER_PORT":
-						localServerPort = Integer.parseInt(tokens[1]);
+						serverPort = Integer.parseInt(tokens[1]);
 						break;
 					case "FINAL_FOLDER":
 						finalDataPath = tokens[1];

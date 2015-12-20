@@ -34,7 +34,7 @@ public class PatientLogin
 	private Font font;
 	private PatientReport patientReport;
 	private String confirmMessage,networkErrorMessage,textFieldInfoMessage;
-	private final Connection connection;
+	private final KioskClient connection;
 	private final Employee employee;
 	
 	private void setLanguage(String str)
@@ -86,7 +86,7 @@ public class PatientLogin
 
 
 
-	public PatientLogin(Connection myCon,Employee emp)
+	public PatientLogin(KioskClient myCon,Employee emp)
 	{
 		patientLoginFrame = new JFrame();
 		connection = myCon;
@@ -169,7 +169,14 @@ public class PatientLogin
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				connection.disconnect();
+				try
+				{
+					connection.logoutRequest();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				new KioskLogin();
 				patientLoginFrame.dispose();
 			}
@@ -235,7 +242,15 @@ public class PatientLogin
 			{
 				String patientId = patientIdField.getText();
 				String filename = Constants.dataPath + "tempPatientReport.xml";
-				int response = connection.receiveFromServer(patientId + ".xml",filename);
+				int response = 0;
+				try
+				{
+					response = connection.getRequest(patientId + ".xml",filename);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				File file = new File(filename);
 				if(response >= 0)
 				{
@@ -266,8 +281,6 @@ public class PatientLogin
 					{
 						warningLabel.setVisible(false);
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
-						// new KioskLogin();
-						// patientLoginFrame.dispose();
 					}
 				}
 			}

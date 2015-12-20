@@ -52,7 +52,7 @@ public class KioskLogin
 	private JCheckBox showPassword;
 	private JComboBox languageComboBox;
 	private String confirmMessage,networkErrorMessage;
-	private Connection connection;
+	private KioskClient connection;
 	private Employee emp;
 
 	/**
@@ -224,19 +224,40 @@ public class KioskLogin
 					return;
 				}
 
-				if(connection != null && connection.login(Constants.deviceId,password))
+				if(connection != null)
 				{
 					if(check(username,password))
 					{
+						String filename = Constants.dataPath+"tempEmployee.xml";
 						errorLabel.setVisible(false);
-						new PatientLogin(connection,emp);
-						kioskLoginFrame.dispose();
+						final Employee employee = getEmployee(username);
+						if(employee != null)
+						{
+							SwingUtilities.invokeLater(new Runnable()
+							{
+								public void run()
+								{
+									new PatientLogin(connection,employee);
+								}
+							});
+							System.out.println("Success");
+							kioskLoginFrame.dispose();
+						}
 					}
 					else
 					{
 						errorLabel.setText("Invalid user-ID or password*");
 						errorLabel.setVisible(true);
-						connection.disconnect();
+						useridBox.setText(null);
+						passwordBox.setText(null);
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
 					}
 				}
 				else
@@ -368,24 +389,85 @@ public class KioskLogin
 	}
 
 	/**
-	* Creates new connection
-	* @return Connection object
+	* Get Employee's information
+	* @param username Employee's username
+	* @return Employee object, in case of any error return null
 	*/
-	private Connection createNewConnection()
+	private Employee getEmployee(String username)
+	{
+		/*
+		* Temporary employee file name
+		*/
+		String employeeFileName = Constants.dataPath+"tempDoctor.xml";
+		File employeeFile = new File(employeeFileName);
+		int response;
+		try
+		{
+			response = connection.getRequest(username+".xml",employeeFileName);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		if(response >= 0)
+		{
+			try
+			{
+				/*
+				* Parse with JAXB parser
+				*/
+				JAXBContext jc = JAXBContext.newInstance(Employee.class);
+				Unmarshaller jum = jc.createUnmarshaller();
+				Employee employee = (Employee)jum.unmarshal(employeeFile);
+				employeeFile.delete();
+				errorLabel.setVisible(false);
+				return employee;
+			}
+			catch(JAXBException jaxbe)
+			{
+				jaxbe.printStackTrace();
+				return null;
+			}
+		}
+		else
+		{
+			if(employeeFile.isFile())
+				employeeFile.delete();
+			try
+			{
+				connection.logoutRequest();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			connection = null;
+			if(response == -2)
+				errorLabel.setVisible(true);
+			else
+			{
+				errorLabel.setVisible(false);
+				JOptionPane.showMessageDialog(kioskLoginFrame,RHErrors.getErrorDescription(response));
+			}
+			return null;
+		}
+	}
+
+	/**
+	* Creates new connection
+	* @return KioskClient object
+	*/
+	private KioskClient createNewConnection()
 	{
 		try
 		{
-			Socket mySocket = new Socket(InetAddress.getByName(Constants.localServerHostName),Constants.localServerPort);
-			Connection myCon = new Connection(mySocket);
-			
+			KioskClient myCon = new KioskClient(Constants.deviceId,Constants.serverHostName,Constants.serverPort,"final/Kiosk_01");
 			return myCon;
 		}
-		catch(UnknownHostException uhe)
+		catch(Exception e)
 		{
-			return null;
-		}
-		catch(IOException ioe)
-		{
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -399,43 +481,17 @@ public class KioskLogin
 
 	private boolean check(String user,String pw)
 	{
-		String username = user;
-		String password = pw;
-		String serverFile = username + ".xml";
-		String localFile = Constants.dataPath + "tempEmployee.xml";
-		File file = new File(localFile);
-		int response = connection.receiveFromServer(serverFile,localFile);
-		if(response >= 0)
+		try
 		{
-			try
-			{
-				JAXBContext jc = JAXBContext.newInstance(Employee.class);
-				Unmarshaller jum = jc.createUnmarshaller();
-				emp = (Employee)jum.unmarshal(file);
-				file.delete();
-				if(password.equals(emp.getPassword()))
-					return true;
-				else
-					return false;
-			}
-			catch(JAXBException jaxbe)
-			{
-				jaxbe.printStackTrace();
-				JOptionPane.showMessageDialog(kioskLoginFrame, "XML parsing error");
-				return false;
-			}
+			int response = connection.loginRequest(user,pw);
+			if(response >= 0)
+				return true;
+			else JOptionPane.showMessageDialog(kioskLoginFrame, RHErrors.getErrorDescription(response));
+			return false;
 		}
-		else
+		catch(Exception e)
 		{
-			if(file.isFile())
-				file.delete();
-			if(response == -2)
-				errorLabel.setVisible(true);
-			else
-			{
-				JOptionPane.showMessageDialog(kioskLoginFrame,RHErrors.getErrorDescription(response));
-				errorLabel.setVisible(false);
-			}
+			e.printStackTrace();
 			return false;
 		}
 	}

@@ -76,7 +76,7 @@ public class PatientForm
 	private String imgstr,doctorRegistrationNo,signatureFileName;
 	private String confirmMessage,networkErrorMessage,newComplaintErrorMessage,imageString = null;
 	private ArrayList < File >  selectedFiles = new ArrayList < File > ();
-	private final Connection connection;
+	private final KioskClient connection;
 
     // Webcam webcam;
     // WebcamPanel webcamPanel;
@@ -344,7 +344,7 @@ public class PatientForm
 
             back_button.setText("Back");
             refresh_button.setText("Refresh");
-            back2_button.setText("Back");
+            back2_button.setText("Cancel");
             submit_button.setText("Submit");
             next_button.setText("Next");
             prev_button.setText("Prev");
@@ -396,11 +396,11 @@ public class PatientForm
 
 	/**
 	* Creates the GUI
-	* @param myCon Connection object, used for communication with the local server
+	* @param myCon KioskClient object, used for communication with the local server
 	* @param pr PatientReport object, contains all information of the patient
 	* @param e Employee object, contains information of an employee
 	*/
-	public PatientForm(Connection myCon,PatientReport pr,Employee e)
+	public PatientForm(KioskClient myCon,PatientReport pr,Employee e)
 	{
 	//initialize PatientForm
 		patientFormFrame = new JFrame();
@@ -842,7 +842,26 @@ public class PatientForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				connection.unlockFile(reg_no_field.getText() + ".xml");
+				int unlockResponse = 0;
+				try
+				{
+					unlockResponse = connection.unlockRequest(reg_no_field.getText() + ".xml");
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(unlockResponse));
+					try
+					{
+						connection.logoutRequest();
+					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					new KioskLogin();
+					patientFormFrame.dispose();
+				}
 
 				setReport(current_report_count);
 				prev_button.setVisible(true);
@@ -905,7 +924,15 @@ public class PatientForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				int lockResponse = connection.lockFile(reg_no_field.getText() + ".xml");
+				int lockResponse = 0;
+				try
+				{
+					lockResponse = connection.lockRequest(reg_no_field.getText() + ".xml");
+				}
+				catch(Exception le)
+				{
+
+				}
 				if(lockResponse >= 0)
 				{
 					getPatientReport(reg_no_field.getText());
@@ -915,8 +942,25 @@ public class PatientForm
 						newComplaintAction();
 					else
 					{
-						connection.unlockFile(reg_no_field.getText() + ".xml");
 						JOptionPane.showMessageDialog(jframe,newComplaintErrorMessage);
+						try
+						{
+							connection.unlockRequest(reg_no_field.getText() + ".xml");
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+							try
+							{
+								connection.logoutRequest();
+							}
+							catch(Exception ex)
+							{
+								ex.printStackTrace();
+							}
+							new KioskLogin();
+							patientFormFrame.dispose();
+						}
 					}
 				}
 				else JOptionPane.showMessageDialog(jframe, RHErrors.getErrorDescription(lockResponse));
@@ -1016,7 +1060,14 @@ public class PatientForm
 				info.doctorRegistrationNo = doctorRegistrationNo;
 				info.doctor_diagnostic = diagnostic_test_area.getText();
 				info.kiosk_coordinator_name = kiosk_coordinator_name_field.getText();
-				GeneralPrescription FRAME_TO_PRINT = new GeneralPrescription(info);
+				try
+				{
+					GeneralPrescription FRAME_TO_PRINT = new GeneralPrescription(info);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				print_button.setEnabled(true);
 			}
 		});
@@ -1072,7 +1123,25 @@ public class PatientForm
 					if(update_log())
 					{
 						addComplaintToFile();
-						connection.unlockFile(reg_no_field.getText() + ".xml");
+						try
+						{
+							connection.unlockRequest(reg_no_field.getText() + ".xml");
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+							try
+							{
+								connection.logoutRequest();
+							}
+							catch(Exception ex)
+							{
+								ex.printStackTrace();
+							}
+							new KioskLogin();
+							patientFormFrame.dispose();
+							return;
+						}
 						current_report_count = patientReport.getReports().size()-1;
 						next_button.setEnabled(false);
 						if(current_report_count == 0)
@@ -1130,6 +1199,7 @@ public class PatientForm
 						prev_diagnosis.setForeground(Color.BLACK);
 						complaint_of.setForeground(Color.BLACK);
 						on_examination.setForeground(Color.BLACK);
+						JOptionPane.showMessageDialog(patientFormFrame,"Complaint Added");
 					}
 				}
 			}
@@ -1139,7 +1209,15 @@ public class PatientForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				int lockResponse = connection.lockFile(reg_no_field.getText() + ".xml");
+				int lockResponse = 0;
+				try
+				{
+					lockResponse = connection.lockRequest(reg_no_field.getText() + ".xml");
+				}
+				catch(Exception le)
+				{
+
+				}
 				if(lockResponse < 0)
 				{
 					JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(lockResponse));
@@ -1257,8 +1335,16 @@ public class PatientForm
 					String imageFileName = reg_no_field.getText() + "_image.jpg";
 					if(new File(Constants.dataPath + imageFileName).isFile())
 					{
-						int sendResponse;
-						if((sendResponse = connection.sendToServer(Constants.dataPath + imageFileName,Constants.finalDataPath + imageFileName)) < 0)
+						int sendResponse = 0;
+						try
+						{
+							sendResponse = connection.putRequest(Constants.dataPath + imageFileName,imageFileName,false);
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						if(sendResponse < 0)
 						{
 							JOptionPane.showMessageDialog(jframe,"Error in changing picture! Try again later!");
 							picture.setIcon(null);
@@ -1267,14 +1353,40 @@ public class PatientForm
 						if(new File(Constants.dataPath + imageFileName).isFile())
 							new File(Constants.dataPath + imageFileName).delete();
 					}
-					int response = connection.sendToServer(Constants.dataPath + "tempPatientReport.xml",Constants.finalDataPath + reg_no_field.getText() + ".xml");
+					int response = 0;
+					try
+					{
+						response = connection.putRequest(Constants.dataPath + "tempPatientReport.xml",reg_no_field.getText() + ".xml",false);
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
 					if(response < 0)
 					{
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(response));
 					}
 					if(file.isFile())
 						file.delete();
-					connection.unlockFile(reg_no_field.getText() + ".xml");
+					try
+					{
+						connection.unlockRequest(reg_no_field.getText() + ".xml");
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception ex)
+						{
+							ex.printStackTrace();
+						}
+						new KioskLogin();
+						patientFormFrame.dispose();
+					}
+					JOptionPane.showMessageDialog(patientFormFrame,"Basic Data Updated");
 					setPatientReport();
 				}
 			}
@@ -1284,7 +1396,24 @@ public class PatientForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				connection.unlockFile(reg_no_field.getText() + ".xml");
+				try
+				{
+					connection.unlockRequest(reg_no_field.getText() + ".xml");
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					try
+					{
+						connection.logoutRequest();
+					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					new KioskLogin();
+					patientFormFrame.dispose();
+				}
 				reg_no.setForeground(Color.BLACK);
 				status.setForeground(Color.BLACK);
 				date.setForeground(Color.BLACK);
@@ -1377,7 +1506,15 @@ public class PatientForm
 			{
 				String imageFileName = patientReport.getPatientBasicData().getImage();
 				System.out.println("imageFileName : " + imageFileName);
-				int response = connection.receiveFromServer(imageFileName , Constants.dataPath + imageFileName);
+				int response = 0;
+				try
+				{
+					response = connection.getRequest(imageFileName , Constants.dataPath + imageFileName);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				File imageFile = new File(Constants.dataPath + imageFileName);
 				if(response >= 0)
 				{
@@ -1396,8 +1533,25 @@ public class PatientForm
 				{
 					if(imageFile.isFile())
 						imageFile.delete();
-					pictureDownloadButton.setVisible(false);
-					JOptionPane.showMessageDialog(patientFormFrame,"No picture found!");
+					if(response == -2)
+					{
+						pictureDownloadButton.setVisible(false);
+						JOptionPane.showMessageDialog(patientFormFrame,"No picture found!");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(response));
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						new KioskLogin();
+						patientFormFrame.dispose();
+					}
 				}
 			}
 		});
@@ -1407,7 +1561,15 @@ public class PatientForm
 			public void actionPerformed(ActionEvent ae)
 			{
 				System.out.println("signatureFileName : " + signatureFileName);
-				int response = connection.receiveFromServer(signatureFileName , Constants.dataPath + signatureFileName);
+				int response = 0;
+				try
+				{
+					response = connection.getRequest(signatureFileName , Constants.dataPath + signatureFileName);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				File signatureFile = new File(Constants.dataPath + signatureFileName);
 				if(response >= 0)
 				{
@@ -1427,7 +1589,22 @@ public class PatientForm
 					if(signatureFile.isFile())
 						signatureFile.delete();
 					signatureDownloadButton.setVisible(false);
-					JOptionPane.showMessageDialog(patientFormFrame,"No signature found!");
+					if(response == -2)
+						JOptionPane.showMessageDialog(patientFormFrame,"No signature found!");
+					else
+					{
+						JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(response));
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						new KioskLogin();
+						patientFormFrame.dispose();
+					}
 				}
 			}
 		});
@@ -1439,7 +1616,15 @@ public class PatientForm
 				String doctorSignatureParts[] = signatureFileName.split("_");
 				String doctorImageFileName = doctorSignatureParts[0] + "_" + doctorSignatureParts[1] + "_image.jpg";
 				System.out.println("doctorImageFileName : " + doctorImageFileName);
-				int response = connection.receiveFromServer(doctorImageFileName , Constants.dataPath + doctorImageFileName);
+				int response = 0;
+				try
+				{
+					response = connection.getRequest(doctorImageFileName , Constants.dataPath + doctorImageFileName);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				File doctorImageFile = new File(Constants.dataPath + doctorImageFileName);
 				if(response >= 0)
 				{
@@ -1458,8 +1643,25 @@ public class PatientForm
 				{
 					if(doctorImageFile.isFile())
 						doctorImageFile.delete();
-					doctorImageDownloadButton.setVisible(false);
-					JOptionPane.showMessageDialog(patientFormFrame,"Doctor image not found!");
+					if(response == -2)
+					{
+						doctorImageDownloadButton.setVisible(false);
+						JOptionPane.showMessageDialog(patientFormFrame,"Doctor image not found!");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(response));
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						new KioskLogin();
+						patientFormFrame.dispose();
+					}
 				}
 			}
 		});
@@ -1469,7 +1671,15 @@ public class PatientForm
 			public void actionPerformed(ActionEvent ae)
 			{
 
-				int lockResponse = connection.lockFile(reg_no_field.getText() + ".xml");
+				int lockResponse = 0;
+				try
+				{
+					lockResponse = connection.lockRequest(reg_no_field.getText() + ".xml");
+				}
+				catch(Exception le)
+				{
+
+				}
 				if(lockResponse < 0)
 				{
 					JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(lockResponse));
@@ -1479,7 +1689,24 @@ public class PatientForm
 				setPatientReport();
 				if(!doctor_name_field.getText().equals(""))
 				{
-					connection.unlockFile(reg_no_field.getText() + ".xml");
+					try
+					{
+						connection.unlockRequest(reg_no_field.getText() + ".xml");
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception ex)
+						{
+							ex.printStackTrace();
+						}
+						new KioskLogin();
+						patientFormFrame.dispose();
+					}
 					return;
 				}
 				HealthInfoPanel.setBackground(Color.GREEN.darker().darker());
@@ -1569,7 +1796,16 @@ public class PatientForm
 							origFileName += "." + fileNameParts[j];
 						String fileExtension = fileNameParts[fileNameParts.length - 1];
 						String newFileName = origFileName + regNoParts[1] + regNoParts[2] + fileDate.format(new Date()) + i + "." + fileExtension;
-						if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + newFileName) < 0)
+						int sendResponse = 0;
+						try
+						{
+							sendResponse = connection.putRequest(selectedFiles.get(i).getPath(),newFileName,true);
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						if(sendResponse < 0)
 						{
 							FileSendingComplete = false;
 							JOptionPane.showMessageDialog(jframe,"File upload failed : " + selectedFiles.get(i).getName());
@@ -1603,15 +1839,40 @@ public class PatientForm
 							file.delete();
 						e.printStackTrace();
 					}
-					int sendResponse;
-					if((sendResponse = connection.sendToServer(Constants.dataPath + "tempPatientReport.xml",Constants.finalDataPath + reg_no_field.getText() + ".xml")) < 0)
+					int sendResponse = 0;
+					try
+					{
+						sendResponse = connection.putRequest(Constants.dataPath + "tempPatientReport.xml",reg_no_field.getText() + ".xml",false);
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+					if(sendResponse < 0)
 					{
 						JOptionPane.showMessageDialog(jframe,RHErrors.getErrorDescription(sendResponse));
 						new PatientLogin(connection,employee);
 						patientFormFrame.dispose();
 					}
 					file.delete();
-					connection.unlockFile(reg_no_field.getText() + ".xml");
+					try
+					{
+						connection.unlockRequest(reg_no_field.getText() + ".xml");
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception ex)
+						{
+							ex.printStackTrace();
+						}
+						new KioskLogin();
+						patientFormFrame.dispose();
+					}
 
 					HealthInfoPanel.setBackground(Constants.JPANELCOLOR1);
 					weight.setForeground(Color.BLACK);
@@ -1655,6 +1916,7 @@ public class PatientForm
 					patientComplaintSave_button.setVisible(false);
 					patientComplaintCancel_button.setVisible(false);
 
+					JOptionPane.showMessageDialog(patientFormFrame,"Complaint Updated");
 					setReport(current_report_count);
 				}
 			}
@@ -1664,7 +1926,24 @@ public class PatientForm
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				connection.unlockFile(reg_no_field.getText() + ".xml");
+				try
+				{
+					connection.unlockRequest(reg_no_field.getText() + ".xml");
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					try
+					{
+						connection.logoutRequest();
+					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					new KioskLogin();
+					patientFormFrame.dispose();
+				}
 				HealthInfoPanel.setBackground(Constants.JPANELCOLOR1);
 				weight.setForeground(Color.BLACK);
 				kg.setForeground(Color.BLACK);
@@ -1963,26 +2242,56 @@ public class PatientForm
 		}
 		catch(Exception e){}
 
+		String errorString = "";
+
 		if(weightcheck)
 			weight_field.setBorder(BorderFactory.createLineBorder(Color.black));
-		else weight_field.setBorder(BorderFactory.createLineBorder(Color.red));
+		else
+		{
+			weight_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += "Weight";
+		}
 		// if(bmicheck)
 		// 	bmi_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		// else bmi_field.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(bpcheck)
 			bp_field.setBorder(BorderFactory.createLineBorder(Color.black));
-		else bp_field.setBorder(BorderFactory.createLineBorder(Color.red));
+		else
+		{
+			bp_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " BP";
+		}
 		if(pulsecheck)
 			pulse_field.setBorder(BorderFactory.createLineBorder(Color.black));
-		else pulse_field.setBorder(BorderFactory.createLineBorder(Color.red));
+		else
+		{
+			pulse_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Pulse";
+		}
 		if(temperaturecheck)
 			temperature_field.setBorder(BorderFactory.createLineBorder(Color.black));
-		else temperature_field.setBorder(BorderFactory.createLineBorder(Color.red));
+		else
+		{
+			temperature_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Temperature";
+		}
 		if(spO2check)
 			spO2_field.setBorder(BorderFactory.createLineBorder(Color.black));
-		else spO2_field.setBorder(BorderFactory.createLineBorder(Color.red));
+		else
+		{
+			spO2_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Spo2";
+		}
 
-		return (weightcheck & bpcheck & pulsecheck & temperaturecheck & spO2check);
+		if(weightcheck & bpcheck & pulsecheck & temperaturecheck & spO2check)
+		{
+			return true;
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(patientFormFrame,"Invalid fields: " + errorString);
+			return false;
+		}
 	}
 
 	/**
@@ -1992,8 +2301,8 @@ public class PatientForm
 	private boolean validatePatientBasicData()
 	{
 		boolean ageCheck = true, heightCheck = true;
-		boolean nameCheck = !name_field.getText().matches(".*[0-9]+.*");
-		boolean sdwCheck = !sdw_of_field.getText().matches(".*[0-9]+.*");
+		boolean nameCheck = !name_field.getText().matches(".*[,0-9]+.*");
+		boolean sdwCheck = !sdw_of_field.getText().matches(".*[,0-9]+.*");
 		boolean occupationCheck = !occupation_field.getText().matches(".*[0-9]+.*");
 		boolean genderCheck = !gender_field.getText().matches(".*[0-9]+.*");
 		boolean bloodGroupCheck = !bloodGroupField.getText().matches(".*[0-9]+.*");
@@ -2015,6 +2324,22 @@ public class PatientForm
 		boolean relationCheck = (gender_field.getText().equals("Male") && referenceVar.equals("Son")) || (gender_field.getText().equals("Female") && (referenceVar.equals("Daughter") || referenceVar.equals("Wife")));
 
 
+		String errorString = "";
+
+		if(nameCheck)
+			name_field.setBorder(reg_no_field.getBorder());
+		else
+		{
+			name_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += "Name";
+		}
+		if(sdwCheck)
+			sdw_of_field.setBorder(reg_no_field.getBorder());
+		else
+		{
+			sdw_of_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Relation";
+		}
 		if(relationCheck)
 		{
 			sdw_of_field.setBorder(reg_no_field.getBorder());
@@ -2024,41 +2349,60 @@ public class PatientForm
 		{
 			sdw_of_field.setBorder(BorderFactory.createLineBorder(Color.red));
 			gender_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString = " Gender";
 		}
-		if(nameCheck)
-			name_field.setBorder(reg_no_field.getBorder());
-		else
-			name_field.setBorder(BorderFactory.createLineBorder(Color.red));
-		if(sdwCheck)
-			sdw_of_field.setBorder(reg_no_field.getBorder());
-		else
-			sdw_of_field.setBorder(BorderFactory.createLineBorder(Color.red));
 		if(occupationCheck)
 			occupation_field.setBorder(reg_no_field.getBorder());
 		else
+		{
 			occupation_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Occupation";
+		}
 		if(genderCheck)
 			gender_field.setBorder(reg_no_field.getBorder());
 		else
+		{
 			gender_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Spelling(Male/Female)";
+		}
 		if(bloodGroupCheck)
 			bloodGroupField.setBorder(reg_no_field.getBorder());
 		else
+		{
 			bloodGroupField.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " BloodGroup";
+		}
 		if(phoneCheck)
 			ph_no_field.setBorder(reg_no_field.getBorder());
 		else
+		{
 			ph_no_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Phone no.";
+		}
 		if(ageCheck)
 			age_field.setBorder(reg_no_field.getBorder());
 		else
+		{
 			age_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Age";
+		}
 		if(heightCheck)
 			height_field.setBorder(reg_no_field.getBorder());
 		else
+		{
 			height_field.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Height";
+		}
 
-		return (nameCheck & sdwCheck & occupationCheck & genderCheck & bloodGroupCheck & phoneCheck & ageCheck & heightCheck & relationCheck);
+		if(nameCheck & sdwCheck & occupationCheck & genderCheck & bloodGroupCheck & phoneCheck & ageCheck & heightCheck & relationCheck)
+		{
+			return true;
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(patientFormFrame,"Invalid fields: " + errorString);
+			return false;
+		}
 	}
 //neccessary methods
 
@@ -2142,7 +2486,16 @@ public class PatientForm
 				origFileName += "." + fileNameParts[j];
 			String fileExtension = fileNameParts[fileNameParts.length - 1];
 			String newFileName = origFileName + regNoParts[1] + regNoParts[2] + fileDate.format(new Date()) + i + "." + fileExtension;
-			if(connection.sendToServer(selectedFiles.get(i).getPath(),Constants.finalDataPath + newFileName) < 0)
+			int sendResponse = 0;
+			try
+			{
+				sendResponse = connection.putRequest(selectedFiles.get(i).getPath(),newFileName,true);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			if(sendResponse < 0)
 			{
 				FileSendingComplete = false;
 				JOptionPane.showMessageDialog(patientFormFrame,"File upload failed : " + selectedFiles.get(i).getName());
@@ -2173,37 +2526,60 @@ public class PatientForm
 			jm.marshal(patientReport,new File(Constants.dataPath + "tempPatientReport.xml"));
 			Thread.sleep(2000);
 
-			int sendResponse;
+			int sendResponse = 0;
 
-			if(patientReport.getPatientBasicData().getStatus().equals("New"))
+			// if(patientReport.getPatientBasicData().getStatus().equals("New"))
+			// {
+			// 	String imageFileName = patientReport.getPatientBasicData().getImage();
+			// 	if(imageFileName != null && !imageFileName.equals(""))
+			// 	{
+			// 		File imageFile = new File(Constants.dataPath + imageFileName);
+			// 		int receiveResponse = 0;
+			// 		try
+			// 		{
+			// 			receiveResponse = connection.getRequest(imageFileName,Constants.dataPath + imageFileName);
+			// 		}
+			// 		catch(Exception e)
+			// 		{
+			// 			e.printStackTrace();
+			// 		}
+			// 		if(receiveResponse >= 0)
+			// 		{
+			// 			try
+			// 			{
+			// 				sendResponse = connection.putRequest(Constants.dataPath + imageFileName,imageFileName,true);
+			// 			}
+			// 			catch(Exception e)
+			// 			{
+			// 				e.printStackTrace();
+			// 			}
+			// 			if(sendResponse < 0)
+			// 			{
+			// 				JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(sendResponse));
+			// 				(new File(Constants.dataPath + imageFileName)).delete();
+			// 				new PatientLogin(connection,employee);
+			// 				patientFormFrame.dispose();
+			// 			}
+			// 			else
+			// 				(new File(Constants.dataPath + imageFileName)).delete();
+			// 		}
+			// 		else
+			// 		{
+			// 			if(imageFile.isFile())
+			// 				imageFile.delete();
+			// 			JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(receiveResponse));
+			// 		}
+			// 	}
+			// }
+			try
 			{
-				String imageFileName = patientReport.getPatientBasicData().getImage();
-				if(imageFileName != null && !imageFileName.equals(""))
-				{
-					File imageFile = new File(Constants.dataPath + imageFileName);
-					int receiveResponse = connection.receiveFromServer(imageFileName,Constants.dataPath + imageFileName);
-					if(receiveResponse >= 0)
-					{
-						if((sendResponse = connection.sendToServer(Constants.dataPath + imageFileName,Constants.finalDataPath + imageFileName)) < 0)
-						{
-							JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(sendResponse));
-							(new File(Constants.dataPath + imageFileName)).delete();
-							new PatientLogin(connection,employee);
-							patientFormFrame.dispose();
-						}
-						else
-							(new File(Constants.dataPath + imageFileName)).delete();
-					}
-					else
-					{
-						if(imageFile.isFile())
-							imageFile.delete();
-						JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(receiveResponse));
-					}
-				}
+				sendResponse = connection.putRequest(Constants.dataPath + "tempPatientReport.xml",reg_no_field.getText() + ".xml",false);
 			}
-
-			if((sendResponse = connection.sendToServer(Constants.dataPath + "tempPatientReport.xml",Constants.finalDataPath + reg_no_field.getText() + ".xml")) < 0)
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			if(sendResponse < 0)
 			{
 				JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(sendResponse));
 				(new File(Constants.dataPath + "tempPatientReport.xml")).delete();
@@ -2326,10 +2702,26 @@ public class PatientForm
 	*/
 	private boolean update_log()
 	{
-		int lockResponse = connection.lockFile("Patient_" + Constants.kioskNo + "_Log.xml");
+		int lockResponse = 0;
+		try
+		{
+			lockResponse = connection.lockRequest("Patient_" + Constants.kioskNo + "_Log.xml");
+		}
+		catch(Exception le)
+		{
+
+		}
 		if(lockResponse < 0)
 			return false;
-		int response = connection.receiveFromServer("Patient_" + Constants.kioskNo + "_Log.xml",Constants.dataPath + "log.xml");
+		int response = 0;
+		try
+		{
+			response = connection.getRequest("Patient_" + Constants.kioskNo + "_Log.xml",Constants.dataPath + "log.xml");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		File file = new File(Constants.dataPath + "log.xml");
 		if(response  >= 0)
 		{
@@ -2346,21 +2738,81 @@ public class PatientForm
 				Marshaller jm = jc.createMarshaller();
 				jm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
 				jm.marshal(patientLog,file);
-				if(connection.sendToServer(Constants.dataPath + "log.xml",Constants.finalDataPath + "Patient_" + Constants.kioskNo + "_Log.xml") < 0)
+				int sendResponse = 0;
+				try
+				{
+					sendResponse = connection.putRequest(Constants.dataPath + "log.xml","Patient_" + Constants.kioskNo + "_Log.xml",false);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				if(sendResponse < 0)
 				{
 					file.delete();
 					JOptionPane.showMessageDialog(patientFormFrame,networkErrorMessage);
-					connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
+					try
+					{
+						connection.unlockRequest("Patient_" + Constants.kioskNo + "_Log.xml");
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+						try
+						{
+							connection.logoutRequest();
+						}
+						catch(Exception ex)
+						{
+							ex.printStackTrace();
+						}
+						new KioskLogin();
+						patientFormFrame.dispose();
+					}
 					return false;
 				}
 				file.delete();
-				connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
+				try
+				{
+					connection.unlockRequest("Patient_" + Constants.kioskNo + "_Log.xml");
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					try
+					{
+						connection.logoutRequest();
+					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					new KioskLogin();
+					patientFormFrame.dispose();
+				}
 				return true;
 			}
 			catch(Exception e)
 			{
 				e.printStackTrace();
-				connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
+				try
+				{
+					connection.unlockRequest("Patient_" + Constants.kioskNo + "_Log.xml");
+				}
+				catch(Exception ue)
+				{
+					e.printStackTrace();
+					try
+					{
+						connection.logoutRequest();
+					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					new KioskLogin();
+					patientFormFrame.dispose();
+				}
 				return false;
 			}
 			
@@ -2370,7 +2822,24 @@ public class PatientForm
 			if(file.isFile())
 				file.delete();
 			JOptionPane.showMessageDialog(patientFormFrame,RHErrors.getErrorDescription(response));
-			connection.unlockFile("Patient_" + Constants.kioskNo + "_Log.xml");
+			try
+			{
+				connection.unlockRequest("Patient_" + Constants.kioskNo + "_Log.xml");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				try
+				{
+					connection.logoutRequest();
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+				new KioskLogin();
+				patientFormFrame.dispose();
+			}
 			return false;
 		}
 	}
@@ -2381,7 +2850,15 @@ public class PatientForm
 	*/
 	private void getPatientReport(String PatientId)
 	{
-		int response = connection.receiveFromServer(PatientId + ".xml",Constants.dataPath + "tempPatientReport.xml");
+		int response = 0;
+		try
+		{
+			response = connection.getRequest(PatientId + ".xml",Constants.dataPath + "tempPatientReport.xml");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		File file = new File(Constants.dataPath + "tempPatientReport.xml");
 		if(response >= 0)
 		{
@@ -2430,7 +2907,15 @@ public class PatientForm
 		{
 			if(imageFileName != null && !imageFileName.equals(""))
 			{
-				int response = connection.receiveFromServer(imageFileName , Constants.dataPath + imageFileName);
+				int response = 0;
+				try
+				{
+					response = connection.getRequest(imageFileName , Constants.dataPath + imageFileName);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				File imageFile = new File(Constants.dataPath + imageFileName);
 				if(response >= 0)
 				{

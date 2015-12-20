@@ -68,7 +68,7 @@ public class RegisterNewPatient
 	private int countId;
 
 	private String nameVar,reNameVar,dateVar,referenceVar,genVar,ageVar,phoneVar,addressVar,occuVar,statusVar,heightVar,familyVar,medicalVar;
-	private final Connection connection;
+	private final KioskClient connection;
 	private Employee emp;
 	private PatientReport patientReport;
 
@@ -223,23 +223,82 @@ public class RegisterNewPatient
 			BufferedWriter bout = new BufferedWriter(new FileWriter(file));
 			bout.write(String.valueOf(countId));
 			bout.close();
-			int sendResponse;
-			if((sendResponse = connection.sendToServer(Constants.dataPath + "PatientIdCount.txt",Constants.finalDataPath + "Patient_" + Constants.kioskNo + "_IdCount.txt")) < 0)
+			int sendResponse = 0;
+			try
+			{
+				sendResponse = connection.putRequest(Constants.dataPath + "PatientIdCount.txt","Patient_" + Constants.kioskNo + "_IdCount.txt",false);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			if(sendResponse < 0)
 			{
 				JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
 				file.delete();
-				connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");
+				try
+				{
+					connection.unlockRequest("Patient_" + Constants.kioskNo + "_IdCount.txt");
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					try
+					{
+						connection.logoutRequest();
+					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					new KioskLogin();
+					frame.dispose();
+				}
 				new PatientLogin(connection,emp);
 				frame.dispose();
 				return;
 			}
 			else file.delete();
-			connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");	
+			try
+			{
+				connection.unlockRequest("Patient_" + Constants.kioskNo + "_IdCount.txt");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				try
+				{
+					connection.logoutRequest();
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+				new KioskLogin();
+				frame.dispose();
+			}
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
-			connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");	
+			try
+			{
+				connection.unlockRequest("Patient_" + Constants.kioskNo + "_IdCount.txt");
+			}
+			catch(Exception ue)
+			{
+				e.printStackTrace();
+				try
+				{
+					connection.logoutRequest();
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+				new KioskLogin();
+				frame.dispose();
+			}
 		}
 	}
 
@@ -248,8 +307,15 @@ public class RegisterNewPatient
 	*/
 	private void createId()
 	{
-		// Thread.sleep(100);
-		int lockResponse = connection.lockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");
+		int lockResponse = 0;
+		try
+		{
+			lockResponse = connection.lockRequest("Patient_" + Constants.kioskNo + "_IdCount.txt");
+		}
+		catch(Exception le)
+		{
+
+		}
 		if(lockResponse < 0)
 		{
 			JOptionPane.showMessageDialog(frame, RHErrors.getErrorDescription(lockResponse));
@@ -257,7 +323,15 @@ public class RegisterNewPatient
 			frame.dispose();
 			return;
 		}
-		int response = connection.receiveFromServer("Patient_" + Constants.kioskNo + "_IdCount.txt",Constants.dataPath + "PatientIdCount.txt");
+		int response = 0;
+		try
+		{
+			response = connection.getRequest("Patient_" + Constants.kioskNo + "_IdCount.txt",Constants.dataPath + "PatientIdCount.txt");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		if(response >= 0)
 		{
 			try
@@ -282,7 +356,15 @@ public class RegisterNewPatient
 			else
 			{
 				JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(response));
-				new PatientLogin(connection,emp);
+				try
+				{
+					connection.logoutRequest();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				new KioskLogin();
 				frame.dispose();
 				return;
 			}
@@ -467,10 +549,10 @@ public class RegisterNewPatient
 
 	/**
 	* Creates the GUI
-	* @param myCon Connection object, used for communication with the local server
+	* @param myCon KioskClient object, used for communication with the local server
 	* @param e Employee object, contains information of the employee
 	*/
-	public RegisterNewPatient(Connection myCon,Employee e)
+	public RegisterNewPatient(KioskClient myCon,Employee e)
 	{
 		connection = myCon;
 		emp = e;
@@ -820,7 +902,24 @@ public class RegisterNewPatient
 			public void actionPerformed(ActionEvent arg0) {
 				if(new File(Constants.dataPath + imageFileName).exists())
 					new File(Constants.dataPath + imageFileName).delete();
-				connection.unlockFile("Patient_" + Constants.kioskNo + "_IdCount.txt");
+				try
+				{
+					connection.unlockRequest("Patient_" + Constants.kioskNo + "_IdCount.txt");
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					try
+					{
+						connection.logoutRequest();
+					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					new KioskLogin();
+					frame.dispose();
+				}
 				new PatientLogin(connection,emp);
 				frame.dispose();
 			}
@@ -904,17 +1003,28 @@ public class RegisterNewPatient
 			frame.dispose();
 			return;
 		}
-	    int sendResponse;
+	    int sendResponse = 0;
 
 	    // try
 	    // {
     	File imageFile = new File(Constants.dataPath + imageFileName);
-	    if(imageFile.isFile() && (sendResponse = connection.sendToServer(Constants.dataPath + imageFileName,Constants.tempDataPath + imageFileName)) < 0)
+	    if(imageFile.isFile())
 	    {
-	    	JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
-	    	new PatientLogin(connection,emp);
-	    	frame.dispose();
-	    	return;
+	    	try
+	    	{
+	    		sendResponse = connection.putRequest(Constants.dataPath + imageFileName,imageFileName,true);
+	    	}
+	    	catch(Exception e)
+	    	{
+	    		e.printStackTrace();
+	    	}
+	    	if(sendResponse < 0)
+	    	{
+		    	JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
+		    	new PatientLogin(connection,emp);
+		    	frame.dispose();
+		    	return;
+		    }
 	    }
 	    if(imageFile.isFile())
 		    imageFile.delete();
@@ -923,8 +1033,15 @@ public class RegisterNewPatient
 		// {
 		// 	e.printStackTrace();
 		// }
-
-	    if((sendResponse = connection.sendToServer(Constants.dataPath + "tempPatient.xml",Constants.tempDataPath + patientId + ".xml")) < 0)
+		try
+		{
+			sendResponse = connection.putRequest(Constants.dataPath + "tempPatient.xml",patientId + ".xml",true);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	    if(sendResponse < 0)
 	    {
 	    	JOptionPane.showMessageDialog(frame,RHErrors.getErrorDescription(sendResponse));
 	    	new PatientLogin(connection,emp);
