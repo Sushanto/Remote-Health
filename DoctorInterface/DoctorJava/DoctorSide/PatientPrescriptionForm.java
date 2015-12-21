@@ -59,7 +59,7 @@ public class PatientPrescriptionForm
 	kiosk_coordinator_name, kiosk_coordinator_date,doctorLabel, doctor_name,doctor_date;
 	
 	private JTextField reg_no_field, status_field, date_field, name_field, sdw_of_field, occupation_field, ph_no_field, age_field,
-	 gender_field,bloodGroupField, height_field, bmi_field, bp_field, weight_field, pulse_field, spO2_field, temperature_field,
+	 gender_field,bloodGroupField, height_field, bmi_field, bp_field1,bp_field2, weight_field, pulse_field, spO2_field, temperature_field,
 	  prev_diagnosis_field,final_diagnosis_field,kiosk_coordinator_name_field, kiosk_coordinator_date_field, doctor_name_field,
 	  doctor_date_field;
 	
@@ -238,7 +238,7 @@ public class PatientPrescriptionForm
         back_button.setText("Back");
         refresh_button.setText("Refresh");
         pictureDownloadButton.setText("Download");
-        back2_button.setText("Back");
+        back2_button.setText("Cancel");
         submit_button.setText("Submit");
         next_button.setText("Next");
         prev_button.setText("Prev");
@@ -368,7 +368,8 @@ public class PatientPrescriptionForm
 		bloodGroupField = new JTextField();
 		height_field = new JTextField();
 		bmi_field = new JTextField();
-		bp_field = new JTextField();
+		bp_field1 = new JTextField();
+		bp_field2 = new JTextField();
 		weight_field = new JTextField();
 		pulse_field = new JTextField();
 		spO2_field = new JTextField();
@@ -471,7 +472,8 @@ public class PatientPrescriptionForm
 		height_field.setEditable(false);
 
 		bmi_field.setEditable(false);
-		bp_field.setEditable(false);
+		bp_field1.setEditable(false);
+		bp_field2.setEditable(false);
 		weight_field.setEditable(false);
 		pulse_field.setEditable(false);
 		spO2_field.setEditable(false);
@@ -501,7 +503,8 @@ public class PatientPrescriptionForm
 		* Set border
 		*/
 		bmi_field.setBorder(BorderFactory.createLineBorder(Color.black));
-		bp_field.setBorder(BorderFactory.createLineBorder(Color.black));
+		bp_field1.setBorder(BorderFactory.createLineBorder(Color.black));
+		bp_field2.setBorder(BorderFactory.createLineBorder(Color.black));
 		pulse_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		temperature_field.setBorder(BorderFactory.createLineBorder(Color.black));
 		spO2_field.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -573,7 +576,8 @@ public class PatientPrescriptionForm
 		bmi.setBounds(160,340,35,20);
 		bmi_field.setBounds(190,340,40,20);
 		bp.setBounds(260,340,30,20);
-		bp_field.setBounds(290,340,80,20);
+		bp_field1.setBounds(290,340,40,20);
+		bp_field2.setBounds(335,340,40,20);
 		pulse.setBounds(390,340,60,20);
 		pulse_field.setBounds(450,340,30,20);
 		temperature.setBounds(530,340,60,20);
@@ -1187,7 +1191,8 @@ public class PatientPrescriptionForm
 		patientPrescriptionFormFrame.add(bmi);
 		patientPrescriptionFormFrame.add(bmi_field);
 		patientPrescriptionFormFrame.add(bp);
-		patientPrescriptionFormFrame.add(bp_field);
+		patientPrescriptionFormFrame.add(bp_field1);
+		patientPrescriptionFormFrame.add(bp_field2);
 		patientPrescriptionFormFrame.add(spO2);
 		patientPrescriptionFormFrame.add(spO2_field);
 		patientPrescriptionFormFrame.add(percent);
@@ -1578,7 +1583,12 @@ public class PatientPrescriptionForm
 			Report report = patientReport.getReports().get(reportCount);
 			weight_field.setText(report.getPatientComplaint().getWeight());
 			bmi_field.setText(report.getPatientComplaint().getBmi());
-			bp_field.setText(report.getPatientComplaint().getBp());
+			if(report.getPatientComplaint().getBp() != null)
+			{
+				String[] bpParts = report.getPatientComplaint().getBp().split("/");
+				bp_field1.setText(bpParts[0]);
+				bp_field2.setText(bpParts[1]);
+			}
 			pulse_field.setText(report.getPatientComplaint().getPulse());
 			temperature_field.setText(report.getPatientComplaint().getTemperature());
 			spO2_field.setText(report.getPatientComplaint().getSpo2());

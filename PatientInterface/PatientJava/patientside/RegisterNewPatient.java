@@ -98,6 +98,7 @@ public class RegisterNewPatient
 
 		boolean relationCheck = (genVar.equals("Male") && referenceVar.equals("Son")) || (genVar.equals("Female") && (referenceVar.equals("Daughter") || referenceVar.equals("Wife")));
 
+		String errorString = "";
 
 		if(relationCheck)
 		{
@@ -116,37 +117,67 @@ public class RegisterNewPatient
 			chckbxSon.setForeground(Color.red);
 			chckbxDaughter.setForeground(Color.red);
 			chckbxW.setForeground(Color.red);
+			errorString += "Gender";
 		}
 		if(addrCheck)
 			addressArea.setBorder(BorderFactory.createLineBorder(Color.black));
 		else
+		{
 			addressArea.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Address";
+		}
 		if(nameCheck)
 			nameField.setBorder(BorderFactory.createLineBorder(Color.black));
 		else
+		{
 			nameField.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Name";
+		}
 		if(sdwCheck)
 			referenceField.setBorder(BorderFactory.createLineBorder(Color.black));
 		else
+		{
 			referenceField.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Relation";
+		}
 		if(occupationCheck)
 			occuField.setBorder(BorderFactory.createLineBorder(Color.black));
 		else
+		{
 			occuField.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Occupation";
+		}
 		if(phoneCheck)
 			phoneField.setBorder(BorderFactory.createLineBorder(Color.black));
 		else
+		{
 			phoneField.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Phone no.";
+		}
 		if(ageCheck)
 			ageField.setBorder(BorderFactory.createLineBorder(Color.black));
 		else
+		{
 			ageField.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Age";
+		}
 		if(heightCheck)
 			heightField.setBorder(BorderFactory.createLineBorder(Color.black));
 		else
+		{
 			heightField.setBorder(BorderFactory.createLineBorder(Color.red));
+			errorString += " Height";
+		}
 
-		return (addrCheck & nameCheck & sdwCheck & occupationCheck & phoneCheck & ageCheck & heightCheck & relationCheck);
+		if(addrCheck & nameCheck & sdwCheck & occupationCheck & phoneCheck & ageCheck & heightCheck & relationCheck)
+		{
+			return true;
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(frame,"Invalid fields: " + errorString);
+			return false;
+		}
 	}
 
 	/**
@@ -458,7 +489,7 @@ public class RegisterNewPatient
 			pictureMessage = "There is no picture! Are you sure you want to proceed without picture?";
 			confirmMessage = "Are you sure?";
 			networkErrorMessage = "Connection error! Try again later!";
-			submissionConfirmMessage = "Data Saved";
+			submissionConfirmMessage = "Data Saved! Note the Registration no: " + patientId;
 
 
 			lblBasicInformation.setBounds(220, 12, 500, 43);
