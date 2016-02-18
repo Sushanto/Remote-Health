@@ -889,6 +889,7 @@ public class RegisterNewPatient
 		frame.add(Constants.JPANEL2);
 		frame.add(Constants.JPANEL1);
 		createId();
+		submissionConfirmMessage = "Data Saved! Note the Registration no: " + patientId;
 		imageFileName = patientId + "_image.jpg";
 		lblPidvalue.setText(patientId);
 	}

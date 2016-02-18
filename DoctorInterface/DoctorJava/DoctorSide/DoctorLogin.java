@@ -172,6 +172,16 @@ public class DoctorLogin
 				{
 					if(check(username,password))
 					{
+						try
+						{
+							connection.initSecurityMeasure();
+						}
+						catch(Exception e)
+						{
+							errorLabel.setText(networkErrorMessage);
+							errorLabel.setVisible(true);
+							return;
+						}
 						String filename = Constants.dataFolder+"tempEmployee.xml";
 						errorLabel.setVisible(false);
 						final Doctor doctor = getDoctor(username);

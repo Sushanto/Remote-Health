@@ -1,118 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <PatientReport>
-   <PatientBasicData>
-      <address>Jadavpur</address>
-      <age>20</age>
-      <date>03-11-2015</date>
-      <familyhistory>None</familyhistory>
-      <gender>Male</gender>
-      <height>156</height>
-      <id>Patient_01_001</id>
-      <image>Patient_01_001_image.jpg</image>
-      <name>Sushanto Halder</name>
-      <occupation>Student</occupation>
-      <phone>8276851718</phone>
-      <reference>Son of Mr. Halder</reference>
-      <status>Review</status>
-   </PatientBasicData>
-   <Reports>
-      <Report>
-         <doctorPrescription>
-            <advice>oiahroweuhqeor</advice>
-            <diagnosis>pisdhfoweiufhowuerh</diagnosis>
-            <doctorName>Sushanto Halder</doctorName>
-            <finalDiagnosis>zsdgiusadgasih</finalDiagnosis>
-            <medication>Tablet: T- BACT, 1 time(s) in a day() X 1 Day(s)
-Tablet: RELAXYL SPRAY, 1 time(s) in a day() X 1 Day(s)
-Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)
-Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)</medication>
-            <prescription_date>03-11-2015</prescription_date>
-            <provisionalDiagnosis>slkhfasjdfhsa</provisionalDiagnosis>
-            <referral>ksderhowuerhweiurg</referral>
-         </doctorPrescription>
-         <patientComplaint>
-            <bmi>27.94</bmi>
-            <bp>80/130</bp>
-            <complaint>Pain
+    <PatientBasicData>
+        <id>Patient_01_001</id>
+        <date>03-11-2015</date>
+        <name>Sushanto Halder</name>
+        <bloodGroup></bloodGroup>
+        <image>Patient_01_001_image.jpg</image>
+        <reference>Son of Mr. Halder</reference>
+        <gender>Male</gender>
+        <age>20</age>
+        <phone>8276851718</phone>
+        <address>Jadavpur</address>
+        <occupation>Student</occupation>
+        <status>Review</status>
+        <height>156</height>
+        <familyhistory>None</familyhistory>
+        <medicalhistory></medicalhistory>
+    </PatientBasicData>
+    <Reports>
+        <Report>
+            <patientComplaint>
+                <complaint>Pain
 Where --&gt; Head-Front
 Where --&gt; Teeth
 
 Swelling
 
 </complaint>
-            <complaint_date>03-11-2015</complaint_date>
-            <fileNames>Patient_01_001_15_11_03_14_03_19_0.cfg
-</fileNames>
-            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
-            <otherResults>Anemia
+                <complaint_date>03-11-2015</complaint_date>
+                <weight>68</weight>
+                <bmi>27.94</bmi>
+                <bp>80/130</bp>
+                <pulse>55</pulse>
+                <temperature>38</temperature>
+                <spo2>95</spo2>
+                <otherResults>Anemia
 </otherResults>
-            <prevDiagnosis>No</prevDiagnosis>
-            <pulse>55</pulse>
-            <spo2>95</spo2>
-            <temperature>38</temperature>
-            <weight>68</weight>
-         </patientComplaint>
-      </Report>
-      <Report>
-         <doctorPrescription>
-            <advice>08eyousadhfajshdb</advice>
-            <diagnosis>iausgdisyagd</diagnosis>
-            <doctorName>Sushanto Halder</doctorName>
-            <finalDiagnosis>asuhdiusqgdh</finalDiagnosis>
-            <medication>asyd97qergiaducbdia
+                <fileNames>Patient_01_001_15_11_03_14_03_19_0.cfg
+</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>No</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>03-11-2015</prescription_date>
+                <provisionalDiagnosis>slkhfasjdfhsa</provisionalDiagnosis>
+                <finalDiagnosis>zsdgiusadgasih</finalDiagnosis>
+                <advice>oiahroweuhqeor</advice>
+                <medication>Tablet: T- BACT, 1 time(s) in a day() X 1 Day(s)
+Tablet: RELAXYL SPRAY, 1 time(s) in a day() X 1 Day(s)
 Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)
 Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)</medication>
-            <prescription_date>03-11-2015</prescription_date>
-            <provisionalDiagnosis>osahdoiusahd</provisionalDiagnosis>
-            <referral>osudgiusagd</referral>
-         </doctorPrescription>
-         <patientComplaint>
-            <bmi>27.94</bmi>
-            <bp>80/130</bp>
-            <complaint>hgfhgf</complaint>
-            <complaint_date>03-11-2015</complaint_date>
-            <fileNames>Patient_01_001_15_11_03_14_06_14_0.jar</fileNames>
-            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
-            <otherResults>Anemia
+                <diagnosis>pisdhfoweiufhowuerh</diagnosis>
+                <referral>ksderhowuerhweiurg</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>hgfhgf</complaint>
+                <complaint_date>03-11-2015</complaint_date>
+                <weight>68</weight>
+                <bmi>27.94</bmi>
+                <bp>80/130</bp>
+                <pulse>55</pulse>
+                <temperature>38</temperature>
+                <spo2>95</spo2>
+                <otherResults>Anemia
 </otherResults>
-            <prevDiagnosis>ys</prevDiagnosis>
-            <pulse>55</pulse>
-            <spo2>95</spo2>
-            <temperature>38</temperature>
-            <weight>68</weight>
-         </patientComplaint>
-      </Report>
-      <Report>
-         <doctorPrescription>
-            <advice>oishsahfiashd089qshfosai</advice>
-            <diagnosis>osabdousabcjsabdou</diagnosis>
-            <doctorName>Sushanto Halder</doctorName>
-            <finalDiagnosis>oiahfoisahdfoiashd</finalDiagnosis>
-            <medication>oaishd08sahdipshc08saud8
+                <fileNames>Patient_01_001_15_11_03_14_06_14_0.jar</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>ys</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>03-11-2015</prescription_date>
+                <provisionalDiagnosis>osahdoiusahd</provisionalDiagnosis>
+                <finalDiagnosis>asuhdiusqgdh</finalDiagnosis>
+                <advice>08eyousadhfajshdb</advice>
+                <medication>asyd97qergiaducbdia
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)
+Tablet: ENVAS, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>iausgdisyagd</diagnosis>
+                <referral>osudgiusagd</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>df</complaint>
+                <complaint_date>03-11-2015</complaint_date>
+                <weight>68</weight>
+                <bmi>27.94</bmi>
+                <bp>80/130</bp>
+                <pulse>55</pulse>
+                <temperature>38</temperature>
+                <spo2>95</spo2>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis>dfd</prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Sushanto Halder</doctorName>
+                <prescription_date>03-11-2015</prescription_date>
+                <provisionalDiagnosis>iehfipeqhfoieqh</provisionalDiagnosis>
+                <finalDiagnosis>oiahfoisahdfoiashd</finalDiagnosis>
+                <advice>oishsahfiashd089qshfosai</advice>
+                <medication>oaishd08sahdipshc08saud8
 Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
 Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
-            <prescription_date>03-11-2015</prescription_date>
-            <provisionalDiagnosis>iehfipeqhfoieqh</provisionalDiagnosis>
-            <referral>oiashd98qgojdabfou</referral>
-         </doctorPrescription>
-         <patientComplaint>
-            <bmi>27.94</bmi>
-            <bp>80/130</bp>
-            <complaint>df</complaint>
-            <complaint_date>03-11-2015</complaint_date>
-            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
-            <prevDiagnosis>dfd</prevDiagnosis>
-            <pulse>55</pulse>
-            <spo2>95</spo2>
-            <temperature>38</temperature>
-            <weight>68</weight>
-         </patientComplaint>
-      </Report>
-      <Report>
-         <doctorPrescription/>
-         <patientComplaint>
-            <bmi></bmi>
-            <bp></bp>
-            <complaint>Pain
+                <diagnosis>osabdousabcjsabdou</diagnosis>
+                <referral>oiashd98qgojdabfou</referral>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>Pain
 Where --&gt; Head-Back
 Where --&gt; Arm-Arm
 Where --&gt; Arm-Forearm
@@ -124,17 +124,116 @@ Cannot see --&gt; rtege
 Other
 Description --&gt; hwhw
 </complaint>
-            <complaint_date>03-11-2015</complaint_date>
-            <fileNames>Patient_01_001_effected_image.jpg
+                <complaint_date>03-11-2015</complaint_date>
+                <weight></weight>
+                <bmi></bmi>
+                <bp></bp>
+                <pulse></pulse>
+                <temperature></temperature>
+                <spo2></spo2>
+                <otherResults>anemia</otherResults>
+                <fileNames>Patient_01_001_effected_image.jpg
 </fileNames>
-            <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
-            <otherResults>anemia</otherResults>
-            <prevDiagnosis></prevDiagnosis>
-            <pulse></pulse>
-            <spo2></spo2>
-            <temperature></temperature>
-            <weight></weight>
-         </patientComplaint>
-      </Report>
-   </Reports>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+                <prevDiagnosis></prevDiagnosis>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Dr. S.B Acharya</doctorName>
+                <prescription_date>06-11-2015</prescription_date>
+                <provisionalDiagnosis>efe</provisionalDiagnosis>
+                <finalDiagnosis>fef</finalDiagnosis>
+                <advice>efefe</advice>
+                <medication>f</medication>
+                <diagnosis>fe</diagnosis>
+                <referral>fefe</referral>
+                <signature>Doctor_01_signature.jpg</signature>
+                <registration_number> MBBS , MD/Reg No. 43972</registration_number>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint_date>05-12-2015</complaint_date>
+                <fileNames>Java_Printing010011512051906480.pdf</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Dr. S.B Acharya</doctorName>
+                <prescription_date>05-12-2015</prescription_date>
+                <provisionalDiagnosis>yj</provisionalDiagnosis>
+                <finalDiagnosis>yjyjyj</finalDiagnosis>
+                <advice>yjy</advice>
+                <medication>jyjyj
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <diagnosis>jy</diagnosis>
+                <referral>jyjyjy</referral>
+                <signature>Doctor_01_signature.jpg</signature>
+                <registration_number> MBBS , MD/Reg No. 43972</registration_number>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>rrtr</complaint>
+                <complaint_date>21-12-2015</complaint_date>
+                <otherResults>erer</otherResults>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Dr. S.B Acharya</doctorName>
+                <prescription_date>21-12-2015</prescription_date>
+                <provisionalDiagnosis>h6hh</provisionalDiagnosis>
+                <finalDiagnosis>6h6h</finalDiagnosis>
+                <signature>Doctor_01_signature.jpg</signature>
+                <registration_number> MBBS , MD/Reg No. 43972</registration_number>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>dgrge</complaint>
+                <complaint_date>21-12-2015</complaint_date>
+                <weight>76</weight>
+                <bmi>31.23</bmi>
+                <bp>70/80</bp>
+                <pulse>72</pulse>
+                <temperature>38</temperature>
+                <otherResults>rggr</otherResults>
+                <fileNames>ExamChallanY04S01010011512210028190.pdf</fileNames>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Dr. S.B Acharya</doctorName>
+                <prescription_date>21-12-2015</prescription_date>
+                <provisionalDiagnosis>yjhyj</provisionalDiagnosis>
+                <advice>yjyjy</advice>
+                <medication>Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)
+Tablet: ACAREX, 1 time(s) in a day() X 1 Day(s)</medication>
+                <signature>Doctor_01_signature.jpg</signature>
+                <registration_number> MBBS , MD/Reg No. 43972</registration_number>
+            </doctorPrescription>
+        </Report>
+        <Report>
+            <patientComplaint>
+                <complaint>sg</complaint>
+                <complaint_date>18-02-2016</complaint_date>
+                <weight>76</weight>
+                <bmi>31.23</bmi>
+                <bp>70/80</bp>
+                <pulse>72</pulse>
+                <temperature>38</temperature>
+                <otherResults>et</otherResults>
+                <kioskCoordinatorName>Sushanto Khalder</kioskCoordinatorName>
+            </patientComplaint>
+            <doctorPrescription>
+                <doctorName>Dr. S.B Acharya</doctorName>
+                <prescription_date>18-02-2016</prescription_date>
+                <provisionalDiagnosis>rg</provisionalDiagnosis>
+                <signature>Doctor_01_signature.jpg</signature>
+                <registration_number> MBBS , MD/Reg No. 43972</registration_number>
+            </doctorPrescription>
+        </Report>
+    </Reports>
 </PatientReport>

@@ -2,7 +2,6 @@ package DoctorSide;
 
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.net.ConnectException;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,21 +9,20 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.DirectoryNotEmptyException;
 
-import java.util.Scanner;
-
 import java.io.File;
-
+import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
 *	DoctorClient: a ClientConnection object wrapper for connecting with the server at the doctor end
-* @author Rounak Das
+* 	@author Rounak Das
 */
 public class DoctorClient
 {
 	private ClientConnection con = null; 		/* The connection to the data server (if any) */
 	private String mode = null;	 		/* Either "DS"(directly connected to data server) or "GD" (connected via google drive) */
-	private static String logintype = "DOC";	/* This will only run at the doctor end */
+	private RHClientSecurity rhcs = null;
 
 	/**
 	* Initiate a doctor object with an ID(specific to machine), server name and port
@@ -43,6 +41,7 @@ public class DoctorClient
 			this.mode = "GD";
 			System.out.println("Set DC mode to GD");
 		}
+		this.rhcs = null;
 	}
 
 	/**
@@ -55,8 +54,6 @@ public class DoctorClient
 		try {
 			Socket mysock = new Socket(serverHostName, port);
 			return mysock;
-		} catch (ConnectException ce) {
-			ce.printStackTrace();
 		} catch (UnknownHostException uhe) {
 			uhe.printStackTrace();
 		} catch (IOException ioe) {
@@ -67,6 +64,50 @@ public class DoctorClient
 			iae.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	* Utility function for moving a file from one location to another
+	* @param source source path (including filename)
+	* @param destination destination path (including filename)
+	* @return File a File object of the moved file
+	* @throws DirectoryNotEmptyException see java.nio.files.Files.move()
+	* @throws IOException see java.nio.files.Files.move()
+	* @throws SecurityException see java.nio.files.Files.move()
+	**/
+	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	{
+		Path src = Paths.get(source);
+		Path dst = Paths.get(destination);
+		Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING);
+		File copied = dst.toFile();
+		return copied;
+	}
+
+	/**
+	* Decode a file from encoded xml to normal, in place
+	* @param inFileName Name of input file
+	*/
+	private void decodeFile(String inFileName)
+	{
+		FileConverter.decodeFile(inFileName, inFileName + ".tmp");
+		try {
+			moveFile(inFileName + ".tmp", inFileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	* Encode a file as xml, place in another file by adding a .tmp extension
+	* @param inFileName Name of input file
+	* @return File The file object of the output file
+	*/
+	private File encodeFile(String inFileName)
+	{
+		FileConverter.encodeFile(inFileName, inFileName + ".tmp");
+		return new File(inFileName + ".tmp");
+
 	}
 
 	/**
@@ -110,36 +151,57 @@ public class DoctorClient
 		}
 	}
 
-	/**
-	* Utility function for moving a file from one location to another
-	* @param source source path (including filename)
-	* @param destination destination path (including filename)
-	* @return File a File object of the moved file
-	* @throws DirectoryNotEmptyException see java.nio.files.Files.move()
-	* @throws IOException see java.nio.files.Files.move()
-	* @throws SecurityException see java.nio.files.Files.move()
-	**/
-	private File moveFile(String source, String destination) throws DirectoryNotEmptyException, IOException, SecurityException
+	/*
+	* Request keys from the server (DS or GD)
+	* @return String The Base64 encoded key string, or null in case of error
+	*/
+	private String getEncryptionKey()
 	{
-		Path src = Paths.get(source);
-		Path dst = Paths.get(destination);
-		Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING);
-		File copied = dst.toFile();
-		return copied;
+		if (this.mode.equals("DS")) {
+			String command = "key";
+			con.sendString(command);
+			try {
+				String keystr = con.receiveString();
+				return keystr;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		} else if (this.mode.equals("GD")) {
+			int resp = runGDScript(new String[]{"key", "key.tmp"});
+			if (resp >= 0) {
+				try {
+					File tmpf = new File("key.tmp");
+					BufferedReader br = new BufferedReader(new FileReader(tmpf));
+		                        String keystr = br.readLine();
+		                        br.close();
+					tmpf.delete();
+					return keystr;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+		return null;
 	}
 
-	/**
-	* Check if a file is an xml or txt file. If not, then encode it as such.
-	* @param inFileName Name of input file
+	/*
+	* Initialize Client Security module
+	* @return Error code, or 0 if no error
+	* @throws Exception from RHCS
 	*/
-	private void checkAndDecode(String inFileName)
+	public int initSecurityMeasure() throws Exception
 	{
-		FileConverter.decodeFile(inFileName, inFileName + ".temp");
-		try {
-			moveFile(inFileName + ".temp",inFileName);
-		} catch (Exception e) {
-			e.printStackTrace();
+		this.rhcs = new RHClientSecurity();
+		String keystr = getEncryptionKey();
+		if (keystr == null) {	//Request failed
+			return RHErrors.RHE_GENERAL;
+		} else if (keystr.length() < 24) {	//less than AES min key Length
+			return Integer.parseInt(keystr);	//actually a response code
 		}
+		this.rhcs.loadKey(keystr);
+		return 0;
 	}
 
 	/**
@@ -152,17 +214,25 @@ public class DoctorClient
 	*/
 	public int getRequest(String serverFileName, String localFileName) throws Exception
 	{
+		if (this.rhcs == null) {
+			return RHErrors.RHE_NOTSECURE;
+		}
 		if (this.mode.equals("DS")) {
-			String command = "get " + serverFileName;// + " " + localFileName;
+			String command = "get " + serverFileName;
 			con.sendString(command);
 			int resp = con.receiveInt();
-			if (resp > 0)
+			if (resp > 0) {
 				con.receiveFileln(localFileName, resp);
-			checkAndDecode(localFileName);
+				this.rhcs.decryptFile(localFileName);
+				decodeFile(localFileName);
+			}
 			return resp;
 		} else {
 			System.out.println("get(): Falling back to GD script");
-			return runGDScript(new String[]{"get", serverFileName, localFileName});
+			int resp = runGDScript(new String[]{"get", serverFileName, localFileName});
+			this.rhcs.decryptFile(localFileName);
+			decodeFile(localFileName);
+			return resp;
 		}
 	}
 
@@ -176,6 +246,9 @@ public class DoctorClient
 	*/
 	public int putRequest(String localFileName, String serverFileName) throws Exception
 	{
+		if (this.rhcs == null) {
+			return RHErrors.RHE_NOTSECURE;
+		}
 		File localFile=new File(localFileName);
 		if (this.mode.equals("DS")) {
 			String lenstr = Integer.toString((int)localFile.length());
@@ -183,13 +256,20 @@ public class DoctorClient
 			int resp = RHErrors.RHE_GENERAL;
 			if (localFile.exists()) {
 				con.sendString(command);
-				con.sendFileln(localFile);
+				encodeFile(localFileName);
+				this.rhcs.encryptFile(localFileName + ".tmp");
+				con.sendFileln(new File(localFileName + ".tmp"));
 				resp = con.receiveInt();
+				new File(localFileName + ".tmp").delete();
 			}
 			return resp;
 		} else {
 			System.out.println("put(): Falling back to GD script");
-			return runGDScript(new String[]{"put", serverFileName, localFileName});
+			File ef = encodeFile(localFileName);
+			this.rhcs.encryptFile(localFileName + ".tmp");
+			int resp = runGDScript(new String[]{"put", serverFileName, localFileName + ".tmp"});
+			ef.delete();
+			return resp;
 		}
 	}
 
@@ -204,12 +284,18 @@ public class DoctorClient
 	public int loginRequest(String userid, String passwd) throws Exception
 	{
 		if (this.mode.equals("DS")) {
-			String command = "login " + userid + " " + passwd + " " + logintype;
+			String command = "login " + userid + " " + passwd;
 			con.sendString(command);
 			int resp = con.receiveInt();
 			return resp;
 		} else {
-			/* TODO: add proper authentication mechanism incase stored credentials are missing */
+			/* There is no proper authentication method yet for when we are not connected to the server
+			   The script for GoogleDrive has methods for getting authentication links
+			   That should be used for presenting a nice way for the user to login to the GoogleDrive account
+			   currently the script can not handle saving credentials in this cause
+			   In this current design that can also not be fixed.
+			   The best way to fix this is to use the script from the command line for that one time
+			*/
 			return 0;
 		}
 	}
@@ -244,7 +330,7 @@ public class DoctorClient
 	public int chpasswdRequest(String userid, String oldpasswd, String newpasswd) throws Exception
 	{
 		if (this.mode.equals("DS")) {
-			String command = "chpasswd " + userid + " " + oldpasswd + " " + newpasswd;
+			String command = "chpasswd " + oldpasswd + " " + newpasswd;
 			con.sendString(command);
 			int resp = con.receiveInt();
 			return resp;
@@ -252,6 +338,12 @@ public class DoctorClient
 		return 0;
 	}
 
+	/*
+	* Lock a file in the server for editing
+	* @param serverFileName File at server to lock
+	* @return int The response code of the request
+	* @throws Exception In case the server closed the Connection
+	*/
 	public int lockRequest(String serverFileName) throws Exception
 	{
 		if (this.mode.equals("DS")) {
@@ -263,6 +355,12 @@ public class DoctorClient
 		return 0;
 	}
 
+	/*
+	* Unlock a file after editing it and sending it to the server
+	* @param serverFileName File name at server to unlock
+	* @return int Response code of the request
+	* @throws Exception In case the server closed the Connection
+	*/
 	public int unlockRequest(String serverFileName) throws Exception
 	{
 		if (this.mode.equals("DS")) {

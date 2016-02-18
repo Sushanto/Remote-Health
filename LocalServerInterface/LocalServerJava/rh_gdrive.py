@@ -106,13 +106,24 @@ class RHDrive:
 			toupdate.Upload()
 		return toupdate
 
-	def upload_file(self, filename):
+	def upload_file(self, server_filename, local_filename):
 		"""
 		Upload a new file by name and content of filename, may cause naming conflict, should be unique
 		"""
-		newfile = self.drive.CreateFile({'parents': [{"kind": "drive#fileLink", "id": self.data_id}]})
-		newfile.SetContentFile(filename)
+		newfile = self.drive.CreateFile({'title':server_filename, 'parents': [{"kind": "drive#fileLink", "id": self.data_id}]})
+		newfile.SetContentFile(local_filename)
 		newfile.Upload()
+
+	def write_key(self, localfile):
+		"""
+		get the 'key.txt' file from the top level directory
+		"""
+		filelist = self.get_files()
+		for file in filelist:
+			if file['title'] == 'key.txt':
+				file.GetContentFile(localfile)
+				return file
+		return None
 
 	def retrieve_file(self, server_filename, local_filename):
 		"""
@@ -135,25 +146,26 @@ def main():
 							2. put (Update a file in Drive)
 							3. link (Get authenticator link)
 							4. list (Get list of files in top-level folder)
-							5. new (Upload new file)
+							5. key (Get key file from top level folder)
+							6. new (Upload new file)
 	See individual command calls for aguments
 	"""
-	f = open("pylog", "a")
+	logf = open("pylog", "a")
 	rhd = RHDrive()	#initiate
 	rhd.authorize()	#authorize
 	#check if logged in to correct account
 	if not rhd.check_login_email():
-		f.write("Wrong email addresss!\n")
-		f.close()
+		logf.write("Wrong email addresss!\n")
+		logf.close()
 		sys.exit(1)
 	else:
-		f.write("Valid email\n")
+		logf.write("Valid email\n")
 	rhd.get_data_id()
-	f.write("Command and arguments: " + str(sys.argv[1:]))
+	logf.write("Command and arguments: " + str(sys.argv[1:]) + '\n')
 	command = sys.argv[1]
-	if command not in ['get', 'put', 'link', 'list', 'new']:
-		f.write("Bad command!\n")
-		f.close()
+	if command not in ['get', 'put', 'link', 'list', 'new', 'key']:
+		logf.write("Bad command!\n")
+		logf.close()
 		sys.exit(1)
 	if command == 'get':
 		#get <server_filename> <local_filename>
@@ -161,34 +173,44 @@ def main():
 		l_filename = sys.argv[3]
 		f = rhd.retrieve_file(s_filename, l_filename)
 		if not f:
-			f.write("Could not download file!\n")
-			f.close()
+			logf.write("Could not download file!\n")
+			logf.close()
 			sys.exit(1)
 		else:
-			f.write("Downloaded file\n")
+			logf.write("Downloaded file\n")
 	elif command == 'put':
 		#put <server_filename> <local_filename>
 		s_filename = sys.argv[2]
 		l_filename = sys.argv[3]
 		f = rhd.update_file(s_filename, l_filename)
 		if not f:
-			f.write("Could not upload file!\n")
-			f.close()
+			logf.write("Could not upload file!\n")
+			logf.close()
 			sys.exit(1)
 		else:
-			f.write("Updated file");
+			logf.write("Updated file");
 	elif command == 'link':
 		#link <filename>
 		rhd.write_auth_link(sys.argv[2])
 	elif command == 'list':
 		#list <filename>
 		rhd.write_filelist(sys.argv[2])
+	elif command == 'key':
+		#key <localfile>
+		f = rhd.write_key(sys.argv[2])
+		if not f:
+			logf.write("Could not download key\n")
+			logf.close()
+			sys.exit(1)
+		else:
+			logf.write("Got the key file\n")
 	else:
-		filename = sys.argv[2]
-		rhd.upload_file(filename)
-		f.write("New file created\n")
-	f.write("Done\n")
-	f.close()
+		s_filename = sys.argv[2]
+		l_filename = sys.argv[3]
+		rhd.upload_file(s_filename, l_filename)
+		logf.write("New file created\n")
+	logf.write("Done\n")
+	logf.close()
 
 
 if __name__=='__main__':

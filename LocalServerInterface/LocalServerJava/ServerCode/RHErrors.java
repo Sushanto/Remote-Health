@@ -2,7 +2,6 @@ package ServerCode;
 /**
 *	Defines error numbers used throught the system
 *	error numbers are all negative, starting from -1
-* @author Rounak Das
 **/
 public class RHErrors {
 	/* Error number definitions */
@@ -18,7 +17,8 @@ public class RHErrors {
 	public static final int RHE_NOPERM = -10;
 	public static final int RHE_BADARG = -11;
 	public static final int RHE_LOCKED = -12;
-	public static final int RHE_OP_LOCKED = -13;
+	public static final int RHE_NOTSECURE = -13;
+	public static final int RHE_OP_LOCKED = -14;
 
 	/**
 	* Get a description of the error from an error number
@@ -62,10 +62,13 @@ public class RHErrors {
 			desc = "Wrong arguments";
 			break;
 		case RHE_LOCKED:
-			desc = "File locked by Doctor";
+			desc = "File is in use, try again later";
+			break;
+		case RHE_NOTSECURE:
+			desc = "No security measure in place";
 			break;
 		case RHE_OP_LOCKED:
-			desc = "File locked by Operator";
+			desc = "File is in use(operator), try again later";
 			break;
 		default:
 			desc = "Error";

@@ -17,7 +17,7 @@ public class RHErrors {
 	public static final int RHE_NOPERM = -10;
 	public static final int RHE_BADARG = -11;
 	public static final int RHE_LOCKED = -12;
-	public static final int RHE_OP_LOCKED = -13;
+	public static final int RHE_NOTSECURE = -13;
 
 	/**
 	* Get a description of the error from an error number
@@ -61,10 +61,10 @@ public class RHErrors {
 			desc = "Wrong arguments";
 			break;
 		case RHE_LOCKED:
-			desc = "File locked by Someone";
+			desc = "File locked, someone is modifying it";
 			break;
-		case RHE_OP_LOCKED:
-			desc = "File locked by Someone";
+		case RHE_NOTSECURE:
+			desc = "No security measure in place";
 			break;
 		default:
 			desc = "Error";

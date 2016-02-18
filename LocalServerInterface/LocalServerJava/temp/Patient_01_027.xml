@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PatientReport>
+    <PatientBasicData>
+        <id>Patient_01_027</id>
+        <date>18-02-2016</date>
+        <name>Sushanto</name>
+        <bloodGroup>N/A</bloodGroup>
+        <reference>Son of Mr Halder</reference>
+        <gender>Male</gender>
+        <age>21</age>
+        <phone>123456789</phone>
+        <address>eafg</address>
+        <occupation>adfv</occupation>
+        <status>New</status>
+        <height>156</height>
+        <familyhistory>sdg</familyhistory>
+    </PatientBasicData>
+    <Reports/>
+</PatientReport>

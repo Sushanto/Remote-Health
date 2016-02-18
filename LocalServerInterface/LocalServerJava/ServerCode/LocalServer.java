@@ -54,8 +54,17 @@ public class LocalServer
 				(new File(finalDataPath)).mkdirs();
 			if(!(new File(tempDataPath).exists()))
 				(new File(tempDataPath)).mkdirs();
-			client = new KioskClient(kioskId,serverHostName,serverPort,syncFolder);
+			client = new KioskClient(kioskId,serverHostName,serverPort);
 			client.loginRequest(loginUsername,loginPassword);
+			try
+			{
+				client.initSecurityMeasure();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				return;
+			}
 			System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Local server is running....");
 		}
 		catch(Exception e)

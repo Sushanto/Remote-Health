@@ -6,8 +6,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import sun.misc.BASE64Encoder;
-import sun.misc.BASE64Decoder;
+import java.util.Base64;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -19,8 +18,7 @@ import javax.xml.bind.JAXBException;
 
 
 /**
-* FileConverter: Convert binary files to xml binary data for easier transmission
-* @author Sushanto Halder
+* Convert binary files to xml binary data for easier transmission
 */
 public class FileConverter {
 
@@ -29,7 +27,7 @@ public class FileConverter {
 	* @param inFileName Name of input file
 	* @param outFileName Name of output file
 	*/
-	protected static void decodeFile(String inFileName, String outFileName)
+	public static void decodeFile(String inFileName, String outFileName)
 	{
 		try {
 			File inFile = new File(inFileName);
@@ -40,8 +38,9 @@ public class FileConverter {
 			String encodedStr = fileData.getBinaryData();
 			byte[] byteArray;
 
-			BASE64Decoder decoder = new BASE64Decoder();
-			byteArray = decoder.decodeBuffer(encodedStr);
+			/*BASE64Decoder decoder = new BASE64Decoder();
+			byteArray = decoder.decodeBuffer(encodedStr);*/
+			byteArray = Base64.getDecoder().decode(encodedStr);
 
 			File outFile = new File(outFileName);
 			FileOutputStream ofStream = new FileOutputStream(outFile);
@@ -53,10 +52,7 @@ public class FileConverter {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch(JAXBException jaxbe) {
-			File oldFile = new File(inFileName);
-			File newFile = new File(outFileName);
-			oldFile.renameTo(newFile);
-			// jaxbe.printStackTrace();
+			jaxbe.printStackTrace();
 		}
 	}
 
@@ -65,7 +61,7 @@ public class FileConverter {
 	* @param inFileName name of encoded file
 	* @param outFileName name of output file
 	*/
-	protected static void encodeFile(String inFileName, String outFileName)
+	public static void encodeFile(String inFileName, String outFileName)
 	{
 		try {
 			File inFile = new File(inFileName);
@@ -77,8 +73,9 @@ public class FileConverter {
 			biStream.close();
 			ifStream.close();
 
-			BASE64Encoder encoder = new BASE64Encoder();
-			String encodedStr = encoder.encode(byteArray);
+			/*BASE64Encoder encoder = new BASE64Encoder();
+			String encodedStr = encoder.encode(byteArray);*/
+			String encodedStr = Base64.getEncoder().encodeToString(byteArray);
 
 			FileData fileData = new FileData();
 			fileData.setBinaryData(encodedStr);
@@ -92,14 +89,12 @@ public class FileConverter {
 	        } catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch(JAXBException jaxbe) {
-			// jaxbe.printStackTrace();
+			jaxbe.printStackTrace();
 		}
 	}
 }
 
-/**
-* XML annotated class for binary files
-*/
+
 @XmlRootElement(name="FileData")
 @XmlType(propOrder={"binaryData"})
 class FileData

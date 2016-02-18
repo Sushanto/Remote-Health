@@ -87,7 +87,7 @@ public class Connection extends Thread
 				System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Request : " + request);
 				// try
 				// {
-					System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Check mode......................." + LocalServer.client.getMode());
+					// System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Check mode......................." + LocalServer.client.getMode());
 					// if(LocalServer.client.getMode().equals("GD"))
 					// {
 					// 	System.out.println(dateFormat.format(new Date()) + "   " + "LocalServer\t> Trying to connect to DS...");
@@ -166,6 +166,7 @@ public class Connection extends Thread
 			String fileName = receiveString();
 			System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Unlock request: " + fileName);
 			int response = LocalServer.unlockFile(fileName , connectionId);
+			System.out.println(dateFormat.format(new Date()) + "   " + connectionId + "\t> Unlock response: " + response);
 			sendInt(response);
 			return true;
 		}

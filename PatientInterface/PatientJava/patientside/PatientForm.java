@@ -1151,6 +1151,7 @@ public class PatientForm
 						prev_diagnosis.setForeground(Color.BLACK);
 						complaint_of.setForeground(Color.BLACK);
 						on_examination.setForeground(Color.BLACK);
+						JOptionPane.showMessageDialog(patientFormFrame,"Complaint added");
 					}
 				}
 			}
@@ -1297,6 +1298,7 @@ public class PatientForm
 					if(file.isFile())
 						file.delete();
 					connection.unlockFile(reg_no_field.getText() + ".xml");
+					JOptionPane.showMessageDialog(patientFormFrame,"Basic Data Updated");
 					setPatientReport();
 				}
 			}
@@ -1686,6 +1688,7 @@ public class PatientForm
 					patientComplaintSave_button.setVisible(false);
 					patientComplaintCancel_button.setVisible(false);
 
+					JOptionPane.showMessageDialog(patientFormFrame,"Complaint modified");
 					setReport(current_report_count);
 				}
 			}
